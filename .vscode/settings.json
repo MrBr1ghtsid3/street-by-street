@@ -1,0 +1,5 @@
+{
+  "files.defaultLanguage": "markdown",
+  "editor.wordWrap": "on",
+  "editor.rulers": [80]
+}
