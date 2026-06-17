@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "id": "ana-ventura",
+    "name": "Ana Ventura",
+    "name_bg": "Ана Вентура",
+    "name_historical": null,
+    "status": "active",
+    "last_updated": "2026-06-12",
+    "steward": { "name": "TBD", "contact": "TBD" }
+  },
+  "attributes": {
+    "length_m": 1901.2,
+    "dwellings": null,
+    "parking_spaces": null,
+    "bus_stops": null,
+    "lighting_count": null,
+    "surface_type": "asphalt",
+    "road_class": "tertiary / residential (mixed along its length)"
+  },
+  "attributes_note": "length_m and surface_type are derived from OpenStreetMap geometry/tags via the Overpass API (pulled 2026-06-17), not a ground survey. Remaining null fields require a manual street walk to populate.",
+  "trivia": {
+    "text": "Named after Ana Ventura, a young resistance fighter from a Sephardic Jewish family, killed in 1944 at the age of 18. Her surname derives from a Spanish word meaning fortune or fate.",
+    "sources": [],
+    "verified": false,
+    "note": "DRAFT — unverified. Requires sourcing before being presented as fact. Pre-1944 street name is unknown; treat as TODO until archival research is done."
+  },
+  "official_context": [
+    {
+      "metric": "Municipality population",
+      "value": "11,726",
+      "source": "NSI (National Statistical Institute)",
+      "source_date": "2023",
+      "level": "municipality"
+    }
+  ],
+  "observations": [
+    {
+      "id": 1,
+      "type": "issue",
+      "category": "road",
+      "title": "Pothole near no. 14",
+      "description": "Outside the blue gate, southern verge",
+      "coordinates": null,
+      "status": "open",
+      "reported_date": "2026-06-08",
+      "resolved_date": null
+    },
+    {
+      "id": 2,
+      "type": "issue",
+      "category": "litter",
+      "title": "Litter build-up at the corner",
+      "description": "Junction with the lane to the river",
+      "coordinates": null,
+      "status": "open",
+      "reported_date": "2026-06-10",
+      "resolved_date": null
+    },
+    {
+      "id": 3,
+      "type": "issue",
+      "category": "vegetation",
+      "title": "Overgrown hedge over pavement",
+      "description": "Outside no. 22",
+      "coordinates": null,
+      "status": "open",
+      "reported_date": "2026-06-09",
+      "resolved_date": null
+    },
+    {
+      "id": 4,
+      "type": "asset",
+      "category": "business",
+      "title": "Small grocery shop",
+      "description": "Open daily, 7am-7pm",
+      "coordinates": null,
+      "status": "active",
+      "reported_date": "2026-06-05",
+      "resolved_date": null
+    },
+    {
+      "id": 5,
+      "type": "asset",
+      "category": "green_space",
+      "title": "Old mulberry tree",
+      "description": "Mature tree, shade and fruit in summer",
+      "coordinates": null,
+      "status": "active",
+      "reported_date": "2026-06-05",
+      "resolved_date": null
+    },
+    {
+      "id": 6,
+      "type": "asset",
+      "category": "infrastructure",
+      "title": "Disused village well",
+      "description": "Stone-built, capped but intact",
+      "coordinates": null,
+      "status": "active",
+      "reported_date": "2026-06-06",
+      "resolved_date": null
+    }
+  ]
+}

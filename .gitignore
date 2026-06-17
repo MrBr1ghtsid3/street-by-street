@@ -1,0 +1,18 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editors
+.idea/
+*.swp
+*~
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Local env
+.env
+.env.local
