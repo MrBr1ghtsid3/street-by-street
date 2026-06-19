@@ -1,5 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Quarterly data-refresh PRs (.github/workflows/refresh-data.yml), once
+# merged to main, redeploy automatically via the push trigger below — no
+# separate deploy step is needed for data updates.
+
 on:
   push:
     branches: [main]

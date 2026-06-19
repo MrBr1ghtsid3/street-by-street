@@ -262,3 +262,52 @@ aboutModal.addEventListener("click", (event) => {
     aboutModal.hidden = true;
   }
 });
+
+const tutrakanButton = document.getElementById("tutrakan-button");
+const tutrakanModal = document.getElementById("tutrakan-modal");
+const tutrakanModalClose = document.getElementById("tutrakan-modal-close");
+const tutrakanTabButtons = tutrakanModal.querySelectorAll(".tabs__button");
+const tutrakanTabPanels = tutrakanModal.querySelectorAll(".tabs__panel");
+
+tutrakanButton.addEventListener("click", () => {
+  tutrakanModal.hidden = false;
+});
+
+tutrakanModalClose.addEventListener("click", () => {
+  tutrakanModal.hidden = true;
+});
+
+tutrakanModal.addEventListener("click", (event) => {
+  if (event.target === tutrakanModal) {
+    tutrakanModal.hidden = true;
+  }
+});
+
+tutrakanTabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    tutrakanTabButtons.forEach((b) =>
+      b.classList.toggle("tabs__button--active", b === button)
+    );
+    tutrakanTabPanels.forEach((tabPanel) => {
+      tabPanel.hidden = tabPanel.dataset.tabPanel !== button.dataset.tab;
+    });
+  });
+});
+
+const welcomeOverlay = document.getElementById("welcome-overlay");
+const welcomeEnterButton = document.getElementById("welcome-enter");
+const welcomeDontShowCheckbox = document.getElementById("welcome-dont-show");
+
+welcomeEnterButton.addEventListener("click", () => {
+  if (welcomeDontShowCheckbox.checked) {
+    try {
+      localStorage.setItem("sbs_welcome_seen", "true");
+    } catch (err) {
+      // localStorage unavailable - overlay will simply show again next visit
+    }
+  }
+  welcomeOverlay.classList.add("welcome-overlay--dismissed");
+  setTimeout(() => {
+    welcomeOverlay.hidden = true;
+  }, 250);
+});

@@ -67,6 +67,12 @@ body {
   color: var(--grey-300);
 }
 
+.app-header__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
 .about-button {
   flex-shrink: 0;
   background: transparent;
@@ -455,6 +461,240 @@ body {
   color: var(--color-asset);
 }
 
+.modal--wide {
+  max-width: 680px;
+}
+
+/* Welcome overlay */
+.welcome-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--grey-900);
+  color: var(--grey-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+.welcome-overlay[hidden] {
+  display: none;
+}
+
+.welcome-overlay--dismissed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.welcome-overlay__card {
+  max-width: 480px;
+  text-align: center;
+}
+
+.welcome-overlay__title {
+  margin: 0 0 0.4rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.welcome-overlay__subtitle {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--grey-300);
+}
+
+.welcome-overlay__description {
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--grey-200);
+}
+
+.welcome-overlay__checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.8rem;
+  color: var(--grey-300);
+  cursor: pointer;
+}
+
+.welcome-overlay__enter {
+  background: var(--color-asset);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.welcome-overlay__enter:hover {
+  background: #178a64;
+}
+
+/* Modal tabs */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--grey-200);
+  margin-bottom: 1.1rem;
+}
+
+.tabs__button {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--grey-600);
+  cursor: pointer;
+}
+
+.tabs__button--active {
+  color: var(--grey-900);
+  border-bottom-color: var(--color-asset);
+}
+
+.tabs__panel[hidden] {
+  display: none;
+}
+
+/* Tutrakan city panel */
+.tutrakan-top-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.tutrakan-crest,
+.tutrakan-locator {
+  margin: 0;
+  text-align: center;
+}
+
+.tutrakan-crest img {
+  width: 80px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.tutrakan-crest figcaption {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tutrakan-locator img {
+  width: 160px;
+  height: 120px;
+}
+
+.official-stats-table {
+  width: 100%;
+  font-size: 0.8rem;
+  border-collapse: collapse;
+  margin-bottom: 1.1rem;
+}
+
+.official-stats-table th,
+.official-stats-table td {
+  text-align: left;
+  padding: 0.3rem 0.4rem;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.official-stats-table th {
+  color: var(--grey-600);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tutrakan-history-note {
+  margin: 0 0 0.75rem;
+  background: var(--grey-100);
+  border-left: 3px solid var(--grey-400);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+}
+
+.tutrakan-sources-note {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.tutrakan-unofficial-banner {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--grey-100);
+  border-radius: 4px;
+  font-size: 0.78rem;
+  color: var(--grey-600);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.info-card {
+  border: 1px solid var(--grey-200);
+  border-radius: 6px;
+  padding: 0.75rem;
+}
+
+.info-card__icon {
+  display: block;
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.info-card__title {
+  margin: 0 0 0.3rem;
+  font-size: 0.88rem;
+}
+
+.info-card__notes {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--grey-800);
+}
+
+.info-card__flag {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-issue);
+}
+
+.tutrakan-contribute-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--grey-600);
+}
+
 /* Responsive */
 @media (max-width: 720px) {
   .app-main {
@@ -472,5 +712,13 @@ body {
     border-left: none;
     border-top: 1px solid var(--grey-200);
     height: 45vh;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tutrakan-top-row {
+    flex-wrap: wrap;
   }
 }

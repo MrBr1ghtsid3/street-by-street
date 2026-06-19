@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>street-by-street &middot; Tutrakan</title>
+  <title>Tutrakan, Street-By-Street</title>
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -13,19 +13,51 @@
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
+  <div id="welcome-overlay" class="welcome-overlay">
+    <div class="welcome-overlay__card">
+      <h1 class="welcome-overlay__title">street-by-street &middot; Tutrakan</h1>
+      <p class="welcome-overlay__subtitle">A street-level civic audit, one street at a time</p>
+      <p class="welcome-overlay__description">
+        This map documents the streets of Tutrakan, Bulgaria &mdash;
+        recording what's there, what's missing, and what the official
+        record says versus what you can see on the ground. It is a
+        personal project, openly published.
+      </p>
+      <label class="welcome-overlay__checkbox">
+        <input type="checkbox" id="welcome-dont-show" />
+        Don't show this again
+      </label>
+      <button id="welcome-enter" class="welcome-overlay__enter" type="button">Enter the map &rarr;</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("sbs_welcome_seen") === "true") {
+          document.getElementById("welcome-overlay").hidden = true;
+        }
+      } catch (err) {
+        // localStorage unavailable - show the overlay every time
+      }
+    })();
+  </script>
+
   <header class="app-header">
     <div class="app-header__top">
       <div>
-        <h1>street-by-street &middot; Tutrakan</h1>
+        <h1>Tutrakan, Street-By-Street</h1>
         <p class="app-header__subtitle">A street-level civic audit, one street at a time.</p>
       </div>
-      <button id="about-button" class="about-button" type="button">About</button>
+      <div class="app-header__actions">
+        <button id="tutrakan-button" class="about-button" type="button">Tutrakan</button>
+        <button id="about-button" class="about-button" type="button">About</button>
+      </div>
     </div>
   </header>
   <p class="wip-banner">
     This is a personal civic initiative, actively being built. Data is
     incomplete and some streets are not yet audited. Contributions and
-    corrections welcome.
+    corrections welcome. 
   </p>
 
   <main class="app-main">
@@ -41,14 +73,13 @@
   <div id="about-modal" class="modal-overlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
       <button id="about-modal-close" class="modal__close" type="button" aria-label="Close">&times;</button>
-      <h2 id="about-modal-title">About street-by-street</h2>
+      <h2 id="about-modal-title">About Street-By-Street</h2>
 
       <section>
         <h3>What this is</h3>
         <p>
-          Street-by-street (SBS) is a street-level civic audit of Tutrakan,
-          Bulgaria &mdash; one street at a time. Each audited street is
-          documented with its physical attributes, open issues, notable
+          Street-By-Street (SBS) is a street-level civic audit of my hometown of Tutrakan,
+          Bulgaria. Each audited street is documented with its physical attributes, open issues, notable
           assets, and a piece of local history or trivia.
         </p>
       </section>
@@ -56,10 +87,7 @@
       <section>
         <h3>Why it exists</h3>
         <p>
-          A pothole is data. A pothole that has been there for three years
-          is a pattern. This project tries to look at both &mdash; recording
-          what's there, and asking what keeps producing it. The goal is a
-          ground-truth picture of the town that sits alongside official
+          My goal with this effort is a ground-truth picture of the town. The effort sits alongside official
           statistics, not in place of them.
         </p>
       </section>
@@ -105,10 +133,130 @@
       <section>
         <h3>Author</h3>
         <p>
-          A personal initiative by MrBr1ghtsid3. Built with Leaflet,
-          OpenStreetMap, and GitHub Pages.
+          A personal initiative by yours truly. Built with Leaflet,
+          OpenStreetMap, GitHub Pages & Claude.
         </p>
       </section>
+    </div>
+  </div>
+
+  <div id="tutrakan-modal" class="modal-overlay" hidden>
+    <div class="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="tutrakan-modal-title">
+      <button id="tutrakan-modal-close" class="modal__close" type="button" aria-label="Close">&times;</button>
+      <h2 id="tutrakan-modal-title">Tutrakan</h2>
+
+      <div class="tabs">
+        <button class="tabs__button tabs__button--active" data-tab="official" type="button">Official</button>
+        <button class="tabs__button" data-tab="unofficial" type="button">Unofficial</button>
+      </div>
+
+      <div class="tabs__panel" data-tab-panel="official">
+        <div class="tutrakan-top-row">
+          <figure class="tutrakan-crest">
+            <img src="assets/images/tutrakan-crest.png" alt="Coat of arms of Tutrakan" width="80" height="100" />
+            <figcaption>герб</figcaption>
+          </figure>
+          <figure class="tutrakan-locator">
+            <img src="assets/images/bulgaria-locator.svg" alt="Map of Bulgaria showing Tutrakan's location in the northeast, on the Danube" width="160" height="120" />
+          </figure>
+        </div>
+
+        <table class="official-stats-table">
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Source</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>City population</td><td>6,582</td><td>NSI</td><td>31 Dec 2025</td></tr>
+            <tr><td>Municipality population</td><td>7,258</td><td>NSI</td><td>2025</td></tr>
+            <tr><td>Municipality settlements</td><td>15</td><td>NSI</td><td>2025</td></tr>
+            <tr><td>Municipality area</td><td>440 km&sup2;</td><td>NSI</td><td>&mdash;</td></tr>
+            <tr><td>Municipal administration</td><td>ГЕРБ (GERB) &mdash; independent candidate, ГЕРБ-supported</td><td>CIK (Central Electoral Commission)</td><td>Oct 2023</td></tr>
+            <tr><td>Elevation (plateau)</td><td>107 m</td><td>Wikipedia</td><td>&mdash;</td></tr>
+            <tr><td>Postal code</td><td>7600</td><td>&mdash;</td><td>&mdash;</td></tr>
+            <tr><td>Distance from Ruse</td><td>61 km</td><td>&mdash;</td><td>&mdash;</td></tr>
+            <tr><td>Distance from Silistra</td><td>60 km</td><td>&mdash;</td><td>&mdash;</td></tr>
+            <tr><td>Distance from Sofia</td><td>371 km</td><td>&mdash;</td><td>&mdash;</td></tr>
+          </tbody>
+        </table>
+
+        <blockquote class="tutrakan-history-note">
+          Founded by the Ancient Romans in the 1st century as Transmarisca,
+          part of the Danubian limes. Reached its peak under Diocletian in
+          the 4th century. Incorporated into Romania after the Second
+          Balkan War; returned to Bulgaria via the Treaty of Craiova in
+          1940. Site of the Battle of Tutrakan in WWI. Tutrakan Peak in
+          Antarctica is named after the town.
+        </blockquote>
+
+        <p class="tutrakan-sources-note">Sources: NSI (nsi.bg), Wikipedia, Tutrakan Municipality</p>
+      </div>
+
+      <div class="tabs__panel" data-tab-panel="unofficial" hidden>
+        <p class="tutrakan-unofficial-banner">
+          This section reflects ground observations and may be incomplete or
+          out of date.
+        </p>
+
+        <div class="card-grid">
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x1F43E;</span>
+            <h4 class="info-card__title">Stray animals</h4>
+            <p class="info-card__notes">Stray dogs and cats are a visible and persistent presence throughout the town. Municipal neutering programmes are legally required but inconsistently implemented.</p>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x1F5D1;&#xFE0F;</span>
+            <h4 class="info-card__title">Waste management</h4>
+            <p class="info-card__notes">Litter accumulation is common at street corners and road edges. Segregated collection infrastructure exists but participation is limited.</p>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x1F6D2;</span>
+            <h4 class="info-card__title">Open markets</h4>
+            <p class="info-card__notes">A weekly market operates in the town centre. Permanent small grocery shops are present across residential streets.</p>
+            <span class="info-card__flag">Verify location and schedule</span>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x26EA;</span>
+            <h4 class="info-card__title">Places of worship</h4>
+            <p class="info-card__notes">Orthodox Christian, Muslim, Adventist and Protestant communities are present in the town.</p>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x1F3DB;&#xFE0F;</span>
+            <h4 class="info-card__title">Museum</h4>
+            <p class="info-card__notes">The Historical Museum of Tutrakan covers the town's Roman, medieval, and modern history. The Fisherman's Quarter is a heritage area.</p>
+            <span class="info-card__flag">Verify opening hours</span>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x1FA79;</span>
+            <h4 class="info-card__title">Healthcare</h4>
+            <p class="info-card__notes">A municipal hospital serves the area. Specialist care typically requires travel to Ruse or Silistra.</p>
+            <span class="info-card__flag">Verify current status</span>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x1F3CB;&#xFE0F;</span>
+            <h4 class="info-card__title">Public fitness</h4>
+            <p class="info-card__notes">No publicly accessible gym identified to date.</p>
+            <span class="info-card__flag">Outdoor exercise spaces to be documented</span>
+          </div>
+
+          <div class="info-card">
+            <span class="info-card__icon" aria-hidden="true">&#x2693;</span>
+            <h4 class="info-card__title">Danube port</h4>
+            <p class="info-card__notes">The town has a functioning river port. The former ferry connection to Oltenița (Romania) no longer operates.</p>
+          </div>
+        </div>
+
+        <p class="tutrakan-contribute-note">
+          Have a correction or addition? This data is maintained openly
+          &mdash; contributions welcome via the
+          <a href="https://github.com/MrBr1ghtsid3/street-by-street" target="_blank" rel="noopener">GitHub repository</a>.
+        </p>
+      </div>
     </div>
   </div>
 
