@@ -47,6 +47,13 @@ database would otherwise need a dedicated audit-log table for.
   concurrent writes, validation, and moderation become real requirements
   that flat files can't satisfy safely.
 
+## Deployment notes
+
+- GitHub Pages source must be explicitly saved as "GitHub Actions" in
+  Settings → Pages — the dropdown selection does not persist automatically
+  on first save. Verify by reloading the Settings page before triggering
+  the first workflow run.
+
 ## Alternatives Considered
 
 - **Mapbox** — a capable, well-documented mapping platform, but it's a
