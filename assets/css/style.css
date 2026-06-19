@@ -3,6 +3,11 @@
   --color-issue: #d85a30;
   --color-asset: #1d9e75;
 
+  /* Street audit status */
+  --color-street-not-started: #9ca3af;
+  --color-street-active: #f59e0b;
+  --color-street-complete: #1d9e75;
+
   /* Neutral scale for base/unaudited elements */
   --grey-50: #fafafa;
   --grey-100: #f0f0f0;
@@ -31,10 +36,22 @@ body {
   background: var(--grey-50);
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 .app-header {
   padding: 0.75rem 1.25rem;
   background: var(--grey-900);
   color: var(--grey-50);
+}
+
+.app-header__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .app-header h1 {
@@ -50,9 +67,34 @@ body {
   color: var(--grey-300);
 }
 
+.about-button {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--grey-600);
+  color: var(--grey-50);
+  padding: 0.35rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.about-button:hover {
+  background: var(--grey-800);
+}
+
+.wip-banner {
+  margin: 0;
+  padding: 0.35rem 1.25rem;
+  background: var(--grey-100);
+  color: var(--grey-600);
+  font-size: 0.75rem;
+  border-bottom: 1px solid var(--grey-200);
+}
+
 .app-main {
   display: flex;
-  height: calc(100vh - 58px);
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 #map {
@@ -251,9 +293,166 @@ body {
   color: #fff;
 }
 
-.status-badge--inactive {
+.status-badge--inactive,
+.status-badge--not_started {
   background: var(--grey-300);
   color: var(--grey-800);
+}
+
+.street-panel__source-note {
+  margin: 0.5rem 0 0;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.street-panel__wip-note {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--grey-600);
+  font-style: italic;
+}
+
+/* Map legend */
+.map-legend {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--grey-800);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.map-legend__section {
+  margin-bottom: 0.45rem;
+}
+
+.map-legend__section:last-child {
+  margin-bottom: 0;
+}
+
+.map-legend__section h4 {
+  margin: 0 0 0.25rem;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--grey-600);
+}
+
+.map-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.15rem;
+}
+
+.map-legend__item:last-child {
+  margin-bottom: 0;
+}
+
+.map-legend__line {
+  display: inline-block;
+  width: 16px;
+  height: 0;
+  border-top-style: solid;
+}
+
+.map-legend__line--active {
+  border-top-width: 3px;
+  border-top-color: var(--color-street-active);
+}
+
+.map-legend__line--complete {
+  border-top-width: 4px;
+  border-top-color: var(--color-street-complete);
+}
+
+.map-legend__line--not-started {
+  border-top-width: 2px;
+  border-top-color: var(--color-street-not-started);
+}
+
+.map-legend__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.map-legend__dot--issue {
+  background: var(--color-issue);
+}
+
+.map-legend__dot--asset {
+  background: var(--color-asset);
+}
+
+/* About modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+.modal__close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.75rem;
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--grey-600);
+}
+
+.modal h2 {
+  margin: 0 0 1.1rem;
+  font-size: 1.2rem;
+}
+
+.modal section {
+  margin-bottom: 1.1rem;
+}
+
+.modal section h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--grey-600);
+}
+
+.modal section p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--grey-800);
+}
+
+.modal a {
+  color: var(--color-asset);
 }
 
 /* Responsive */

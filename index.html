@@ -14,9 +14,19 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>street-by-street &middot; Tutrakan</h1>
-    <p class="app-header__subtitle">A street-level civic audit, one street at a time.</p>
+    <div class="app-header__top">
+      <div>
+        <h1>street-by-street &middot; Tutrakan</h1>
+        <p class="app-header__subtitle">A street-level civic audit, one street at a time.</p>
+      </div>
+      <button id="about-button" class="about-button" type="button">About</button>
+    </div>
   </header>
+  <p class="wip-banner">
+    This is a personal civic initiative, actively being built. Data is
+    incomplete and some streets are not yet audited. Contributions and
+    corrections welcome.
+  </p>
 
   <main class="app-main">
     <div id="map"></div>
@@ -27,6 +37,80 @@
       </p>
     </aside>
   </main>
+
+  <div id="about-modal" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
+      <button id="about-modal-close" class="modal__close" type="button" aria-label="Close">&times;</button>
+      <h2 id="about-modal-title">About street-by-street</h2>
+
+      <section>
+        <h3>What this is</h3>
+        <p>
+          Street-by-street (SBS) is a street-level civic audit of Tutrakan,
+          Bulgaria &mdash; one street at a time. Each audited street is
+          documented with its physical attributes, open issues, notable
+          assets, and a piece of local history or trivia.
+        </p>
+      </section>
+
+      <section>
+        <h3>Why it exists</h3>
+        <p>
+          A pothole is data. A pothole that has been there for three years
+          is a pattern. This project tries to look at both &mdash; recording
+          what's there, and asking what keeps producing it. The goal is a
+          ground-truth picture of the town that sits alongside official
+          statistics, not in place of them.
+        </p>
+      </section>
+
+      <section>
+        <h3>How it works</h3>
+        <p>
+          Streets are audited on foot. Photos are captured via Mapillary.
+          Observations are logged as issues (problems) or assets (things of
+          value). Official figures from Bulgaria's National Statistical
+          Institute are included where relevant, always with a source and
+          date.
+        </p>
+      </section>
+
+      <section>
+        <h3>Status</h3>
+        <p>
+          This is a personal project and a work in progress. Data is
+          incomplete. Unaudited streets show available OpenStreetMap data
+          only.
+        </p>
+      </section>
+
+      <section>
+        <h3>Methodology and data</h3>
+        <p>
+          Full methodology, data taxonomy, and architecture decisions are
+          documented in the
+          <a href="https://github.com/MrBr1ghtsid3/street-by-street" target="_blank" rel="noopener">GitHub repository</a>.
+        </p>
+      </section>
+
+      <section>
+        <h3>Licence</h3>
+        <p>
+          Content is published under
+          <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+          You are free to reuse and adapt with attribution.
+        </p>
+      </section>
+
+      <section>
+        <h3>Author</h3>
+        <p>
+          A personal initiative by MrBr1ghtsid3. Built with Leaflet,
+          OpenStreetMap, and GitHub Pages.
+        </p>
+      </section>
+    </div>
+  </div>
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
