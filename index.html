@@ -153,11 +153,16 @@
       <div class="tabs__panel" data-tab-panel="official">
         <div class="tutrakan-top-row">
           <figure class="tutrakan-crest">
-            <img src="assets/images/tutrakan-crest.png" alt="Coat of arms of Tutrakan" width="80" height="100" />
-            <figcaption>герб</figcaption>
+            <img src="assets/images/tutrakan-crest.png" alt="Coat of arms of Tutrakan" width="72" height="90" />
           </figure>
           <figure class="tutrakan-locator">
-            <img src="assets/images/bulgaria-locator.svg" alt="Map of Bulgaria showing 28 oblasti, with Silistra oblast highlighted and Tutrakan marked in the northeast, on the Danube" width="160" height="107" />
+            <img
+              src="assets/images/bulgaria-locator.svg"
+              alt="Map of Bulgaria showing 28 oblasti, with Silistra oblast highlighted and Tutrakan marked in the northeast, on the Danube"
+              width="100%"
+              height="auto"
+              title="Click to expand"
+            />
           </figure>
         </div>
 
@@ -259,6 +264,40 @@
       </div>
     </div>
   </div>
+
+  <div id="locator-lightbox" class="modal-overlay" hidden>
+    <button id="locator-lightbox-close" class="lightbox__close" type="button" aria-label="Close">&times;</button>
+    <img
+      class="lightbox__image"
+      src="assets/images/bulgaria-locator.svg"
+      alt="Map of Bulgaria showing 28 oblasti, with Silistra oblast highlighted and Tutrakan marked in the northeast, on the Danube"
+    />
+  </div>
+  <script>
+    (function () {
+      var lightboxTrigger = document.querySelector(".tutrakan-locator img");
+      var lightbox = document.getElementById("locator-lightbox");
+      var lightboxClose = document.getElementById("locator-lightbox-close");
+
+      if (!lightboxTrigger || !lightbox || !lightboxClose) {
+        return;
+      }
+
+      lightboxTrigger.addEventListener("click", function () {
+        lightbox.hidden = false;
+      });
+
+      lightboxClose.addEventListener("click", function () {
+        lightbox.hidden = true;
+      });
+
+      lightbox.addEventListener("click", function (event) {
+        if (event.target === lightbox) {
+          lightbox.hidden = true;
+        }
+      });
+    })();
+  </script>
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
