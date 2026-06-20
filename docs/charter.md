@@ -17,6 +17,11 @@ time, producing a public record of issues and assets that residents,
 local government, and civic groups can use, and that can be replicated by
 anyone in any other town without specialist tools or budget.
 
+This work operates under an explicit ethics commitment — see
+[docs/ethics.md](ethics.md) — particularly around what gets published
+about identifiable people and animals, as distinct from structural facts
+about the place itself.
+
 ## Scope (In / Out)
 
 **In scope:**
@@ -73,6 +78,14 @@ anyone in any other town without specialist tools or budget.
 - **Three-level data model** — City → Street → Observation, with street
   attributes and observations stored separately. See
   [decisions/003-data-model.md](../decisions/003-data-model.md).
+- **Data update strategy** — quarterly automated OSM refresh via a
+  reviewed pull request; official statistics flagged stale, never
+  auto-updated. See
+  [decisions/004-data-update-strategy.md](../decisions/004-data-update-strategy.md).
+- **Case tracking** — GitHub Issues plus a Project (v2) board for
+  triage/ownership/resolution, kept separate from the observation state
+  model. See
+  [decisions/005-case-tracking.md](../decisions/005-case-tracking.md).
 
 ## Open Questions
 
@@ -104,3 +117,27 @@ extended to more streets:
   instruction.
 - At least one of the open questions above has a concrete answer recorded
   in this charter or in a follow-up decision record.
+
+## Roadmap / Not yet implemented
+
+In keeping with [docs/ethics.md](ethics.md)'s own commitment to not
+overstate where things stand, a few things sometimes discussed for this
+project are deliberately **not built yet** and shouldn't be read as
+implied by anything elsewhere in these docs:
+
+- **A public submission form for non-technical contributors.** Today,
+  every observation is logged by the project steward via a direct JSON
+  edit. There is no form, app, or other intake mechanism for a resident
+  to submit a report themselves.
+- **Automated, LLM-assisted inspection of public submissions, with
+  mandatory human review before merge.** No such pipeline exists. If a
+  submission form is ever built, anything resembling automated triage of
+  incoming reports would need a human review gate before anything reaches
+  the published record — not just as a nice-to-have, but as a hard
+  requirement.
+- **Photo capture with automatic privacy blurring at ingestion.** The
+  observation popup on the map already reserves a UI slot for a photo
+  with a caption describing this intent (see
+  [docs/ethics.md](ethics.md)), but no image upload, storage, or
+  face/animal-feature blurring pipeline exists. It's a placeholder, not a
+  working feature.

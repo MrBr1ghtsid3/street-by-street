@@ -35,18 +35,63 @@ They are added continuously as the street is revisited, and each one is
 independently dated and statused. They live in the `observations` array of
 a street's JSON record.
 
-| Field | Description |
-| --- | --- |
-| `id` | Unique identifier within the street. |
-| `type` | `issue` or `asset`. |
-| `category` | See category lists below. |
-| `title` | Short label. |
-| `description` | Free-text detail, including location notes. |
-| `coordinates` | `{ "lat": <number>, "lng": <number> }` if geotagged, otherwise `null` pending field capture. |
-| `status` | See status values below. |
-| `reported_date` | Date first logged. |
-| `resolved_date` | Date resolved, if applicable; otherwise `null`. |
-| `tracking_issue` | *(optional)* GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`. |
+### Canonical observation example
+
+The schema has grown incrementally (`coordinates`, `tracking_issue`,
+`nearby_streets`, `reported_time`), so here is one fully-annotated example
+showing every field that currently exists. This is illustrative, not a
+literal record — most real observations today don't have most of the
+optional fields populated; see the note after the table.
+
+```json
+{
+  "id": 2,
+  "type": "issue",
+  "category": "litter",
+  "title": "Litter build-up at the corner",
+  "description": "Junction with the lane to the river",
+  "coordinates": { "lat": 44.042045, "lng": 26.614071 },
+  "status": "open",
+  "reported_date": "2026-06-10",
+  "reported_time": "09:15",
+  "resolved_date": null,
+  "tracking_issue": 14,
+  "nearby_streets": [
+    { "street_id": "ana-ventura", "distance_m": 29.7, "primary": true },
+    { "street_id": "panayot-volov", "distance_m": 37.6, "primary": false }
+  ]
+}
+```
+
+| Field | Required? | Description |
+| --- | --- | --- |
+| `id` | Required | Unique identifier within the street. |
+| `type` | Required | `issue` or `asset`. |
+| `category` | Required | See category lists below. |
+| `title` | Required | Short label. |
+| `description` | Required | Free-text detail, including location notes. |
+| `coordinates` | Optional | `{ "lat": <number>, "lng": <number> }` if geotagged, otherwise `null`. See below. |
+| `status` | Required | See status values below. |
+| `reported_date` | Required | Date first logged. |
+| `reported_time` | Optional | Time first logged, `HH:MM`, alongside `reported_date`. Rendered if present; its absence is handled gracefully, it is never required at audit time. |
+| `resolved_date` | Required (value nullable) | Date resolved, if applicable; otherwise `null`. |
+| `tracking_issue` | Optional | GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`/absent. |
+| `nearby_streets` | Optional | Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. |
+
+Verified against `data/streets/ana-ventura.json`, the one real record that
+exists today: every observation has the seven required fields plus
+`coordinates`, which is `null` on five of six and a real value on one.
+None currently has `reported_time`, `tracking_issue`, or `nearby_streets`
+— those three are documented ahead of use, not retrofitted onto data that
+doesn't have them yet.
+
+`coordinates` carries an additional constraint beyond its shape: per
+[docs/ethics.md](ethics.md), do not record a precise, persistent
+coordinate for an observation that would locate a specific living being
+(for example, a particular stray animal, as opposed to "litter accumulates
+at this junction," which is a structural fact about the place). Nothing in
+the coordinate-picker tool or the renderer enforces this — it's a
+judgement call at data-entry time, the same way category and status are.
 
 `tracking_issue` is optional and absent from every existing observation
 record — it is documented here so future Cases (see
@@ -54,6 +99,13 @@ record — it is documented here so future Cases (see
 the link, not as a retroactive requirement. Do not backfill it onto
 existing observations; add it only when a Case is actually opened for that
 observation.
+
+`nearby_streets` lists every street within 50m of the observation's
+`coordinates`, closest first, with the closest marked `primary: true` — a
+signal that more than one street might be involved, not an assertion of
+responsibility. It's computed, not hand-entered; see
+[methodology.md](methodology.md) for when and how to run the script that
+fills it in.
 
 The practical test for which bucket a field belongs in: if it can change
 every time someone walks the street, it's an observation; if it only

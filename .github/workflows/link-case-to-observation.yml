@@ -1,0 +1,42 @@
+name: Link Case to observation
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  link:
+    if: contains(github.event.issue.labels.*.name, 'case')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Link case to observation
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: python scripts/link_case_to_observation.py
+
+      - name: Open PR if data changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "data: link Case #${{ github.event.issue.number }} to observation"
+          branch: data/link-case-${{ github.event.issue.number }}
+          delete-branch: true
+          title: "data: link Case #${{ github.event.issue.number }} to observation"
+          labels: automated,data-refresh
+          body: |
+            Automatically links Case #${{ github.event.issue.number }} to the observation it references via `street-ref` and `observation-ref`.
+
+            Review the diff before merging — confirm the correct observation was matched.

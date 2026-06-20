@@ -80,10 +80,14 @@ cross-system sync overhead the rest of the data model already avoids
   project-wide pattern (which kinds of problems keep coming back) rather
   than something only visible by reading one street's observation
   history.
-- Creating the `case` label, any milestones, and the Project (v2) board
-  itself are manual/authenticated steps outside this change — the
-  template and documentation exist now so they can be created without
-  also designing the workflow at that point.
+- The Project (v2) board has since been created — named "SBS Cases",
+  built from GitHub's "Bug tracker" template with columns To Triage,
+  Backlog, Ready, In Progress, In Review, and Done (see
+  [case-tracking.md](../docs/case-tracking.md)). Creating it, the `case`
+  label, and any milestones were manual/authenticated steps outside the
+  original change that produced the template and this ADR — they were
+  done separately, once the workflow they'd support was already
+  documented.
 - If SBS later needs resident-facing reporting, FixMyStreet/Open311
   becomes the natural migration target; this ADR doesn't block that, it
   just declines to build it before there's demand for it.
