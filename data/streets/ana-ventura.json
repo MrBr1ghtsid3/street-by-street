@@ -24,15 +24,6 @@
     "verified": false,
     "note": "DRAFT — unverified. Requires sourcing before being presented as fact. Pre-1944 street name is unknown; treat as TODO until archival research is done."
   },
-  "official_context": [
-    {
-      "metric": "Municipality population",
-      "value": "11,726",
-      "source": "NSI (National Statistical Institute)",
-      "source_date": "2023",
-      "level": "municipality"
-    }
-  ],
   "observations": [
     {
       "id": 1,

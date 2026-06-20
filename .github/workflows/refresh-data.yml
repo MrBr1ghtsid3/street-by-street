@@ -1,0 +1,65 @@
+name: Quarterly data refresh
+
+on:
+  schedule:
+    - cron: '0 6 1 */3 *'   # 6am UTC, first day of every quarter
+  workflow_dispatch:          # allow manual trigger
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Refresh OSM street data
+        run: python scripts/refresh_osm.py
+
+      - name: Check data freshness
+        run: python scripts/check_data_freshness.py
+
+      # branch: data/osm-refresh-<run> — branches under the data/ prefix are
+      # created only by this automation, never by a human feature branch.
+      # The main-protection ruleset's PR-review requirement should exclude
+      # the data/* prefix from its "human approval required" gate, or every
+      # quarterly refresh PR will block on a reviewer for a change that's
+      # already constrained to OSM-derived fields and reviewed via the
+      # checklist below.
+      - name: Open PR if data changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "data: quarterly OSM refresh (${{ github.run_number }})"
+          branch: data/osm-refresh-${{ github.run_number }}
+          delete-branch: true
+          title: "data: quarterly OSM refresh"
+          labels: automated,data-refresh
+          body: |
+            Automated quarterly refresh of OSM-derived street data.
+
+            **What changed**
+            - Street geometries re-queried from Overpass API
+            - OSM attributes updated (length, surface type, road class)
+            - Existing audit data (status, observations, trivia) preserved
+
+            **Freshness report**
+            See `data/freshness-report.json` for any stale official statistics
+            that may need manual updating.
+
+            **Review checklist before merging**
+            - [ ] Street count change is plausible (check diff on tutrakan-streets.geojson)
+            - [ ] No audited streets have been unexpectedly removed
+            - [ ] Length/attribute changes look reasonable
+            - [ ] Check any `osm_status: not_found` warnings in the Action log
+            - [ ] Review freshness-report.json for stale official metrics
+
+            *This PR was opened automatically. Merge only after review.*

@@ -17,21 +17,39 @@ L.tileLayer(
   }
 ).addTo(map);
 
+const STREET_STATUS_STYLES = {
+  not_started: { color: "#9CA3AF", weight: 2, opacity: 0.6 },
+  active: { color: "#F59E0B", weight: 3, opacity: 0.9 },
+  complete: { color: "#1D9E75", weight: 4, opacity: 0.9 },
+};
+
+const legend = L.control({ position: "bottomleft" });
+legend.onAdd = function () {
+  const div = L.DomUtil.create("div", "map-legend");
+  div.innerHTML = `
+    <div class="map-legend__section">
+      <h4>Streets</h4>
+      <div class="map-legend__item"><span class="map-legend__line map-legend__line--active"></span>Active</div>
+      <div class="map-legend__item"><span class="map-legend__line map-legend__line--complete"></span>Complete</div>
+      <div class="map-legend__item"><span class="map-legend__line map-legend__line--not-started"></span>Not started</div>
+    </div>
+    <div class="map-legend__section">
+      <h4>Observations</h4>
+      <div class="map-legend__item"><span class="map-legend__dot map-legend__dot--issue"></span>Issue</div>
+      <div class="map-legend__item"><span class="map-legend__dot map-legend__dot--asset"></span>Asset</div>
+    </div>
+  `;
+  return div;
+};
+legend.addTo(map);
+
 const panel = document.getElementById("street-panel");
 
 function styleForStreet(properties) {
-  if (properties.audited) {
-    return {
-      color: "#1d9e75",
-      weight: 5,
-      opacity: 0.9,
-    };
-  }
-  return {
-    color: "#a3a3a3",
-    weight: 2,
-    opacity: 0.6,
-  };
+  return (
+    STREET_STATUS_STYLES[properties.status] ||
+    STREET_STATUS_STYLES.not_started
+  );
 }
 
 function showPlaceholder(message) {
@@ -140,6 +158,48 @@ function renderStreetDetail(record) {
   `;
 }
 
+function renderUnauditedStreetDetail(properties) {
+  panel.classList.remove("street-panel--empty");
+
+  const attributeRows = [];
+  if (properties.length_m != null) {
+    attributeRows.push(`<dt>length m</dt><dd>${properties.length_m}</dd>`);
+  }
+  if (properties.surface_type) {
+    attributeRows.push(`<dt>surface type</dt><dd>${properties.surface_type}</dd>`);
+  }
+  if (properties.road_class) {
+    attributeRows.push(`<dt>road class</dt><dd>${properties.road_class}</dd>`);
+  }
+
+  const attributesHtml = attributeRows.length
+    ? `<dl class="attributes-grid">${attributeRows.join("")}</dl>`
+    : '<p class="street-panel__placeholder">No OSM attributes available for this street.</p>';
+
+  const sourceNote = properties.source
+    ? `<p class="street-panel__source-note">Source: ${properties.source}${
+        properties.source_pulled ? ` (pulled ${properties.source_pulled})` : ""
+      }</p>`
+    : "";
+
+  panel.innerHTML = `
+    <h2>${properties.name}</h2>
+    <p class="street-panel__name-bg">${properties.name_bg || ""}</p>
+    <span class="status-badge status-badge--not_started">Not yet audited</span>
+
+    <section>
+      <h3>Attributes</h3>
+      ${attributesHtml}
+      ${sourceNote}
+    </section>
+
+    <p class="street-panel__wip-note">
+      This street hasn't been documented yet. Observations, trivia, and full
+      attributes will appear here once an audit has been completed.
+    </p>
+  `;
+}
+
 async function loadStreetDetail(streetId) {
   showPlaceholder("Loading street record…");
   try {
@@ -170,12 +230,10 @@ async function init() {
         const props = feature.properties;
         layer.bindTooltip(props.name);
         layer.on("click", () => {
-          if (props.audited) {
+          if (props.audited && props.status !== "not_started") {
             loadStreetDetail(props.id);
           } else {
-            showPlaceholder(
-              `<strong>${props.name}</strong> (${props.name_bg}) has not been audited yet.`
-            );
+            renderUnauditedStreetDetail(props);
           }
         });
       },
@@ -186,3 +244,70 @@ async function init() {
 }
 
 init();
+
+const aboutButton = document.getElementById("about-button");
+const aboutModal = document.getElementById("about-modal");
+const aboutModalClose = document.getElementById("about-modal-close");
+
+aboutButton.addEventListener("click", () => {
+  aboutModal.hidden = false;
+});
+
+aboutModalClose.addEventListener("click", () => {
+  aboutModal.hidden = true;
+});
+
+aboutModal.addEventListener("click", (event) => {
+  if (event.target === aboutModal) {
+    aboutModal.hidden = true;
+  }
+});
+
+const tutrakanButton = document.getElementById("tutrakan-button");
+const tutrakanModal = document.getElementById("tutrakan-modal");
+const tutrakanModalClose = document.getElementById("tutrakan-modal-close");
+const tutrakanTabButtons = tutrakanModal.querySelectorAll(".tabs__button");
+const tutrakanTabPanels = tutrakanModal.querySelectorAll(".tabs__panel");
+
+tutrakanButton.addEventListener("click", () => {
+  tutrakanModal.hidden = false;
+});
+
+tutrakanModalClose.addEventListener("click", () => {
+  tutrakanModal.hidden = true;
+});
+
+tutrakanModal.addEventListener("click", (event) => {
+  if (event.target === tutrakanModal) {
+    tutrakanModal.hidden = true;
+  }
+});
+
+tutrakanTabButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    tutrakanTabButtons.forEach((b) =>
+      b.classList.toggle("tabs__button--active", b === button)
+    );
+    tutrakanTabPanels.forEach((tabPanel) => {
+      tabPanel.hidden = tabPanel.dataset.tabPanel !== button.dataset.tab;
+    });
+  });
+});
+
+const welcomeOverlay = document.getElementById("welcome-overlay");
+const welcomeEnterButton = document.getElementById("welcome-enter");
+const welcomeDontShowCheckbox = document.getElementById("welcome-dont-show");
+
+welcomeEnterButton.addEventListener("click", () => {
+  if (welcomeDontShowCheckbox.checked) {
+    try {
+      localStorage.setItem("sbs_welcome_seen", "true");
+    } catch (err) {
+      // localStorage unavailable - overlay will simply show again next visit
+    }
+  }
+  welcomeOverlay.classList.add("welcome-overlay--dismissed");
+  setTimeout(() => {
+    welcomeOverlay.hidden = true;
+  }, 250);
+});

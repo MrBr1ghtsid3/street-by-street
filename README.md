@@ -1,6 +1,6 @@
-# street-by-street
+# Street-By-Street
 
-**street-by-street (SBS)** is a street-level civic audit methodology, piloted
+**Street-By-Street (SBS)** is a street-level civic audit methodology, piloted
 in Tutrakan, Bulgaria. It is a repeatable way to document a town one street
 at a time, capturing both *issues* (potholes, litter, overgrown vegetation,
 hazards) and *assets* (shops, green space, infrastructure, heritage) at the
