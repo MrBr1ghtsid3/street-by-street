@@ -1,5 +1,28 @@
 # Architecture
 
+## Two models: state and process
+
+SBS is built from two separate systems, not one hierarchy with an extra
+level bolted on:
+
+- **The state model** — City → Street → Observation, described below.
+  Everything in it lives in this repository's tracked JSON/GeoJSON files,
+  and it describes *what's currently true* about a street.
+- **The process model** — Cases, tracked as GitHub Issues with a Project
+  (v2) board on top (see [decisions/005-case-tracking.md](../decisions/005-case-tracking.md)
+  and [case-tracking.md](case-tracking.md)). It describes *what's being
+  done about* something, separately from whether the underlying
+  observation has been marked resolved.
+
+A Case is not a fourth level of the state hierarchy. It lives in a
+different system (GitHub's issue tracker, not this repo's data files) and
+links back to an observation by a documented text convention
+(`tracking_issue` on the observation, `Tracks:`/`Follows-from:` in the
+Issue body) rather than a shared schema or a foreign key. The two systems
+are kept deliberately separate so that "is this fixed" (state) and "who's
+working on it and what's been tried" (process) don't get conflated into
+one record that tries to do both jobs.
+
 ## The three-level hierarchy
 
 SBS organises everything into three levels:
@@ -42,6 +65,36 @@ page load is:
 This flow has no server-side moving parts: every fetch is a static file,
 versioned in Git, and the entire site can be cloned and served from any
 static host.
+
+## POI markers and street proximity
+
+Beyond the street's detail panel, observations with a non-null
+`coordinates` field render as individual point markers on the map itself,
+not just as cards in the panel:
+
+- **Rendering** (`assets/js/map.js`) — for the currently selected street
+  only, each geotagged observation gets a teardrop-shaped `L.divIcon` pin
+  (coral for issues, teal for assets, matching the existing legend
+  colours), with a Tabler icon inset for its category. Markers are held
+  in a single `L.layerGroup` that's cleared every time a different street
+  is clicked, so pins never accumulate across streets. Clicking a pin
+  opens a popup with the observation's title, category, status, a photo
+  placeholder (see [ethics.md](ethics.md) — no image upload or blurring
+  pipeline exists yet, this is a reserved UI slot), its date, any nearby
+  streets, and its Case link if one exists. Clicking the matching card in
+  the side panel does the same thing in reverse: `map.flyTo()` to the
+  marker's coordinates and opens its popup, giving the panel and the map
+  two-way navigation between the same observation.
+- **Street proximity** (`scripts/compute_street_proximity.py`) — a
+  stdlib-only script, run manually as part of the data-entry workflow
+  (see [methodology.md](methodology.md)), not in CI. For every geotagged
+  observation, it projects the point and every street's geometry from
+  `data/tutrakan-streets.geojson` onto a local equirectangular plane and
+  computes point-to-segment distance, writing a `nearby_streets` array
+  back onto the observation: the closest street as `primary: true`, and
+  any other street within 50m flagged as a secondary candidate. This is a
+  signal for a human to consider, not an automatic reassignment of which
+  street "owns" an observation.
 
 ## Data model
 
@@ -96,7 +149,38 @@ taxonomy; `observations` is the observations half. `trivia` and
 `official_context` are additional blocks specific to the detail record —
 trivia carries a `verified` flag so unsourced claims are visibly marked as
 such, and official context carries a mandatory `source` and `source_date`
-on every entry.
+on every entry. `official_context` is real, supported end-to-end by the
+rendering code (`map.js` renders it conditionally when present) — but as
+of writing, `data/streets/ana-ventura.json` has no `official_context`
+entries yet, so the only official figures currently visible on the live
+site are the ones hardcoded into the Tutrakan context modal in
+`index.html` (population, administration, distances, etc.), which is
+city-level context, not a per-street `official_context` block. The two
+are separate, legitimate uses of "official context" at different levels
+of the hierarchy; neither has been populated for a street yet.
+
+## Deployment
+
+Two GitHub Actions workflows run this project; neither requires a manual
+step under normal operation:
+
+- **`.github/workflows/deploy.yml`** — triggers on every push to `main`
+  (and via manual `workflow_dispatch`). It uses GitHub's native Pages
+  actions (`configure-pages`, `upload-pages-artifact`, `deploy-pages`),
+  which means the repository's **Settings → Pages → Source** must be set
+  to **"GitHub Actions"**, not "Deploy from a branch" — see the
+  deployment note in
+  [decisions/002-static-site-architecture.md](../decisions/002-static-site-architecture.md).
+  There is no build step; the entire repository is uploaded as the Pages
+  artifact as-is.
+- **`.github/workflows/refresh-data.yml`** — runs quarterly on a cron
+  schedule (and via manual `workflow_dispatch`), re-running
+  `scripts/refresh_osm.py` and `scripts/check_data_freshness.py`, then
+  opening a pull request with any changes rather than committing to
+  `main` directly (see [decisions/004-data-update-strategy.md](../decisions/004-data-update-strategy.md)).
+  Merging that PR is an ordinary push to `main`, which the deploy workflow
+  above picks up automatically — the two workflows don't call each other
+  directly.
 
 ## Official-vs-observed juxtaposition
 

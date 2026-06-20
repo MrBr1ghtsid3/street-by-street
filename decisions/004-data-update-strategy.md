@@ -36,10 +36,16 @@ about this ADR changes how they're authored.
 2. **Official statistics** (population, administration, distances) —
    `scripts/check_data_freshness.py` flags entries whose `source_date` is
    more than a year old; the value itself is updated manually once a
-   human has located and verified a current source.
+   human has located and verified a current source. The same script also
+   flags a whole street record as stale if its `meta.last_updated` is
+   more than 180 days old — this is a reporting signal only (it writes to
+   `data/freshness-report.json`, never to the street record itself), so
+   it doesn't contradict tier 3's "no automation" below.
 3. **Observations** (issues and assets) — manual JSON edit and commit,
-   per street, as the audit happens. No automation; this is the part of
-   the data that only a person walking the street can produce.
+   per street, as the audit happens. The data itself has no automation;
+   this is the part of the data that only a person walking the street can
+   produce. (Its staleness can be *flagged*, per tier 2 above — only the
+   value is never auto-written.)
 4. **Trivia / unofficial context** — manual research only, marked
    `verified: false` until sourced, per the existing data model
    ([ADR 003](003-data-model.md)).

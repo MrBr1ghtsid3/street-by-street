@@ -60,7 +60,7 @@ text convention:
 
 - In a Case's description, reference the observation it tracks with:
 
-  ```
+  ```text
   Tracks: streets/{street-id} observation #{id}
   ```
 
@@ -71,7 +71,7 @@ text convention:
 - If a Case is opened for a problem that recurs after an earlier Case
   resolved it, reference the earlier Case with:
 
-  ```
+  ```text
   Follows-from: #{issue-number}
   ```
 
@@ -93,29 +93,32 @@ edit is manual. This task does not add automation for that step; see
 [ADR 005](../decisions/005-case-tracking.md) for why the link stays
 convention-based rather than scripted.
 
-## Lifecycle
+## Board
 
-A Case moves through five stages. Not every Case passes through all of
-them — a quick request might go straight from Triaged to Resolved with no
-workaround — but the fields below are what's expected to be filled in by
-the time a Case reaches each stage.
+Cases are tracked on a GitHub Project (v2) board named **"SBS Cases"**,
+created from GitHub's built-in "Bug tracker" template. Its actual columns,
+in order, are:
 
-1. **Backlog** — Case opened via the `case.yml` template. `Case type`,
-   `Description`, and `Priority` are filled in. Nothing else is expected
-   yet.
-2. **Triaged** — Someone has read it and confirmed it's real and
-   in-scope. `Linked street` / `Linked observation ID` filled in if
-   applicable; `Recurrence ref` filled in if this follows an earlier
-   Case.
-3. **Owned** — Someone is actively working it. No new dedicated field for
-   this stage — ownership is whoever is assigned to the Issue, and a
-   comment marking the start of work is enough.
-4. **Workaround** *(if any)* — An interim fix is in place. `Workaround
-   applied` filled in, including its known limitations, so it's clear the
-   symptom is suppressed but the root cause may not be addressed yet.
-5. **Resolved** — `Resolution summary` filled in, stating what was
-   actually done and whether it addressed the root cause or just the
-   symptom — that distinction is what makes a later recurrence legible as
-   a recurrence rather than a surprise. The Case is closed. The linked
+1. **To Triage** — newly opened, not yet read closely enough to confirm
+   it's real, in-scope, and not a duplicate.
+2. **Backlog** — confirmed and in-scope, but not yet being worked.
+   `Linked street` / `Linked observation ID` filled in if applicable;
+   `Recurrence ref` filled in if this follows an earlier Case.
+3. **Ready** — next in line to be picked up; no blockers.
+4. **In Progress** — actively being worked. `Workaround applied` filled
+   in if an interim fix is in place, including its known limitations, so
+   it's clear the symptom is suppressed but the root cause may not be
+   addressed yet.
+5. **In Review** — work is done and is being checked before close (e.g.
+   confirming a fix actually holds, not just that something was done).
+6. **Done** — `Resolution summary` filled in, stating what was actually
+   done and whether it addressed the root cause or just the symptom —
+   that distinction is what makes a later recurrence legible as a
+   recurrence rather than a surprise. The Case is closed. The linked
    observation's `status`, if any, is updated to `resolved` as a separate
-   manual step.
+   manual step — moving a Case to Done does not do this automatically.
+
+Not every Case passes through every column — a quick request might move
+straight from Backlog to In Progress with no review step — but a Case
+shouldn't skip backwards except to correct a mistake (e.g. moved to In
+Progress before it was actually picked up).

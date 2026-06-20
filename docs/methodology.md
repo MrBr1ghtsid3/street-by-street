@@ -44,6 +44,28 @@ into CI and never runs automatically, since which street is "primary"
 for a borderline observation is ultimately a judgement call the script
 only assists, it doesn't make.
 
+## Where Case tracking fits in
+
+Logging an observation and tracking it through to resolution are two
+different steps, deliberately kept apart — see
+[case-tracking.md](case-tracking.md) for the full state-vs-process
+rationale. In the audit workflow specifically:
+
+- Most observations need nothing further than what's described above —
+  they're logged, and stay as a dated state record until a later revisit
+  changes their `status`.
+- When an observation needs active follow-up (it's urgent, it needs
+  someone assigned, it needs a workaround while a proper fix is pending,
+  or it's a recurrence of something already patched once), open a Case
+  using the `case.yml` issue form rather than trying to track that
+  process inside the JSON record. Reference the observation in the
+  Case's description (`Tracks: streets/{street-id} observation #{id}`)
+  and set that observation's `tracking_issue` field to the new Issue
+  number.
+- When the Case is closed, update the observation's `status` to
+  `resolved` (and set `resolved_date`) as a manual step — closing the
+  Case does not do this automatically.
+
 ## Attribute capture
 
 Attributes are captured once per street, ideally during or shortly after
