@@ -17,10 +17,18 @@ L.tileLayer(
   }
 ).addTo(map);
 
+// fill/fillColor/className are explicit on every entry - Leaflet's own
+// Polyline default is already fill:false, but spelling it out here means
+// it can't be silently re-enabled by a future style merge, and className
+// gives style.css something to target if Leaflet's own fill rendering
+// ever needs overriding directly.
 const STREET_STATUS_STYLES = {
-  not_started: { color: "#9CA3AF", weight: 2, opacity: 0.6 },
-  active: { color: "#F59E0B", weight: 3, opacity: 0.9 },
-  complete: { color: "#1D9E75", weight: 4, opacity: 0.9 },
+  // opacity 0, not filtered out of the map - keeps the street clickable
+  // (and tooltip-able) with no visible grey trace. The stroke is still
+  // "painted" just transparent, so it stays hit-testable.
+  not_started: { color: "#9CA3AF", weight: 6, opacity: 0, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
+  active: { color: "#F59E0B", weight: 10, opacity: 0.9, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
+  complete: { color: "#1D9E75", weight: 14, opacity: 0.9, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
 };
 
 const legend = L.control({ position: "bottomleft" });
@@ -31,7 +39,6 @@ legend.onAdd = function () {
       <h4>Streets</h4>
       <div class="map-legend__item"><span class="map-legend__line map-legend__line--active"></span>Active</div>
       <div class="map-legend__item"><span class="map-legend__line map-legend__line--complete"></span>Complete</div>
-      <div class="map-legend__item"><span class="map-legend__line map-legend__line--not-started"></span>Not started</div>
     </div>
     <div class="map-legend__section">
       <h4>Observations</h4>
@@ -43,13 +50,16 @@ legend.onAdd = function () {
 };
 legend.addTo(map);
 
-// Holds observation markers for whichever street is currently selected.
-// Cleared on every street click so markers never accumulate across streets.
+// Holds every audited street's observation markers, all at once, regardless
+// of which street's panel is currently open. Populated once at startup and
+// never cleared on street switch - marker visibility is independent of
+// panel selection.
 const observationMarkersLayer = L.layerGroup().addTo(map);
 
-// obs.id -> Leaflet marker, for the currently selected street only. Lets a
+// `${streetId}::${obs.id}` -> Leaflet marker, across all audited streets.
+// Composite-keyed because obs.id is only unique within a street. Lets a
 // click on a side-panel card find and open the matching map marker's popup.
-let currentMarkersByObsId = {};
+const markersByKey = {};
 
 // street id -> display name, populated from the GeoJSON on load. Used to
 // label nearby streets in the observation popup.
@@ -78,13 +88,71 @@ const CATEGORY_ICON = {
 
 const REPO_ISSUES_URL = "https://github.com/MrBr1ghtsid3/street-by-street/issues";
 
+// Street audit status -> display label, for the badge shown in the side
+// panel. Distinct from statusLabel() below, which formats observation
+// status (open/in_progress/resolved/active/inactive), not street status.
+const STATUS_LABEL = {
+  not_started: "Not yet audited",
+  active: "Audit in progress",
+  complete: "Fully documented",
+};
+
+function formatLength(metres) {
+  if (metres == null) return "—";
+  if (metres >= 1000) {
+    return (metres / 1000).toFixed(2) + " km";
+  }
+  if (metres < 1) {
+    return Math.round(metres * 100) + " cm";
+  }
+  return metres.toFixed(1) + " m";
+}
+
 const panel = document.getElementById("street-panel");
+
+// The currently-selected street's own layer and status, so it can be
+// restored to its base style when a different street is selected. There
+// is no separate glow/highlight layer - selection is a restyle of the
+// street's own line, not an additional element on top of it.
+let selectedStreetLayer = null;
+let selectedStreetStatus = null;
 
 function styleForStreet(properties) {
   return (
     STREET_STATUS_STYLES[properties.status] ||
     STREET_STATUS_STYLES.not_started
   );
+}
+
+// Base colour by status - same source STREET_STATUS_STYLES already uses,
+// exposed as its own function (status string in, colour out) so selection
+// styling can call it with the same signature as the weight lookup below,
+// without reaching into the full style object for one field.
+function getStreetColour(status) {
+  return (STREET_STATUS_STYLES[status] || STREET_STATUS_STYLES.not_started).color;
+}
+
+function selectStreetLayer(layer, status) {
+  if (selectedStreetLayer && selectedStreetLayer !== layer) {
+    const baseStyle = STREET_STATUS_STYLES[selectedStreetStatus] || STREET_STATUS_STYLES.not_started;
+    selectedStreetLayer.setStyle({
+      weight: baseStyle.weight,
+      opacity: baseStyle.opacity,
+      color: baseStyle.color,
+      fill: false,
+    });
+  }
+
+  const baseStyle = STREET_STATUS_STYLES[status] || STREET_STATUS_STYLES.not_started;
+  layer.setStyle({
+    weight: baseStyle.weight + 6,
+    opacity: 0.55, // translucent - the street's own colour, not a solid bright one
+    color: getStreetColour(status),
+    fill: false,
+  });
+
+  selectedStreetLayer = layer;
+  selectedStreetStatus = status;
 }
 
 function showPlaceholder(message) {
@@ -227,9 +295,7 @@ function renderObservationPopup(obs, streetId) {
   `;
 }
 
-function renderObservationMarkers(observations, streetId) {
-  observationMarkersLayer.clearLayers();
-  currentMarkersByObsId = {};
+function addObservationMarkers(streetId, observations) {
   observations
     .filter((obs) => obs.coordinates)
     .forEach((obs) => {
@@ -241,16 +307,38 @@ function renderObservationMarkers(observations, streetId) {
         className: "observation-popup-wrapper",
       });
       observationMarkersLayer.addLayer(marker);
-      currentMarkersByObsId[obs.id] = marker;
+      markersByKey[`${streetId}::${obs.id}`] = marker;
     });
 }
 
-function wireObservationCardClicks(observations) {
+async function loadAllObservationMarkers(geojson) {
+  const auditedFeatures = geojson.features.filter(
+    (feature) => feature.properties.audited === true
+  );
+
+  await Promise.all(
+    auditedFeatures.map(async (feature) => {
+      const streetId = feature.properties.id;
+      try {
+        const response = await fetch(`data/streets/${streetId}.json`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const record = await response.json();
+        addObservationMarkers(streetId, record.observations || []);
+      } catch (err) {
+        console.error(`Could not load observations for ${streetId}. (${err.message})`);
+      }
+    })
+  );
+}
+
+function wireObservationCardClicks(observations, streetId) {
   panel.querySelectorAll(".observation-card--locatable").forEach((card) => {
     card.addEventListener("click", () => {
       const obsId = Number(card.dataset.obsId);
       const obs = observations.find((o) => o.id === obsId);
-      const marker = currentMarkersByObsId[obsId];
+      const marker = markersByKey[`${streetId}::${obsId}`];
       if (!obs || !obs.coordinates || !marker) {
         return;
       }
@@ -277,10 +365,12 @@ function renderStreetDetail(record) {
 
   const attrs = record.attributes;
   const attributesHtml = Object.entries(attrs)
-    .map(
-      ([key, value]) =>
-        `<dt>${key.replace(/_/g, " ")}</dt><dd>${value === null ? "—" : value}</dd>`
-    )
+    .map(([key, value]) => {
+      if (key === "length_m") {
+        return `<dt>length</dt><dd>${formatLength(value)}</dd>`;
+      }
+      return `<dt>${key.replace(/_/g, " ")}</dt><dd>${value === null ? "—" : value}</dd>`;
+    })
     .join("");
 
   const trivia = record.trivia;
@@ -314,11 +404,14 @@ function renderStreetDetail(record) {
     ? observations.map(renderObservationCard).join("")
     : '<p class="street-panel__placeholder">No observations logged yet.</p>';
 
-  renderObservationMarkers(observations, record.meta.id);
-
   panel.innerHTML = `
-    <h2>${record.meta.name}</h2>
-    <p class="street-panel__name-bg">${record.meta.name_bg || ""}</p>
+    <div class="panel-header-row">
+      <div class="panel-header-names">
+        <h2>${record.meta.name}</h2>
+        <p class="street-panel__name-bg">${record.meta.name_bg || ""}</p>
+      </div>
+      <span class="status-badge" data-status="${record.meta.status}">${STATUS_LABEL[record.meta.status] || record.meta.status}</span>
+    </div>
 
     <section>
       <h3>Attributes</h3>
@@ -334,7 +427,7 @@ function renderStreetDetail(record) {
     </section>
   `;
 
-  wireObservationCardClicks(observations);
+  wireObservationCardClicks(observations, record.meta.id);
 }
 
 function renderUnauditedStreetDetail(properties) {
@@ -342,7 +435,7 @@ function renderUnauditedStreetDetail(properties) {
 
   const attributeRows = [];
   if (properties.length_m != null) {
-    attributeRows.push(`<dt>length m</dt><dd>${properties.length_m}</dd>`);
+    attributeRows.push(`<dt>length</dt><dd>${formatLength(properties.length_m)}</dd>`);
   }
   if (properties.surface_type) {
     attributeRows.push(`<dt>surface type</dt><dd>${properties.surface_type}</dd>`);
@@ -356,26 +449,31 @@ function renderUnauditedStreetDetail(properties) {
     : '<p class="street-panel__placeholder">No OSM attributes available for this street.</p>';
 
   const sourceNote = properties.source
-    ? `<p class="street-panel__source-note">Source: ${properties.source}${
+    ? `<p class="panel-source-footer">Source: ${properties.source}${
         properties.source_pulled ? ` (pulled ${properties.source_pulled})` : ""
       }</p>`
     : "";
 
   panel.innerHTML = `
-    <h2>${properties.name}</h2>
-    <p class="street-panel__name-bg">${properties.name_bg || ""}</p>
-    <span class="status-badge status-badge--not_started">Not yet audited</span>
+    <div class="panel-header-row">
+      <div class="panel-header-names">
+        <h2>${properties.name}</h2>
+        <p class="street-panel__name-bg">${properties.name_bg || ""}</p>
+      </div>
+      <span class="status-badge" data-status="${properties.status}">${STATUS_LABEL[properties.status] || properties.status}</span>
+    </div>
 
     <section>
       <h3>Attributes</h3>
       ${attributesHtml}
-      ${sourceNote}
     </section>
 
     <p class="street-panel__wip-note">
       This street hasn't been documented yet. Observations, trivia, and full
       attributes will appear here once an audit has been completed.
     </p>
+
+    ${sourceNote}
   `;
 }
 
@@ -403,23 +501,47 @@ async function init() {
     }
     const geojson = await response.json();
 
+    function selectStreet(layer, props) {
+      selectStreetLayer(layer, props.status);
+      if (props.audited && props.status !== "not_started") {
+        loadStreetDetail(props.id);
+      } else {
+        renderUnauditedStreetDetail(props);
+      }
+    }
+
     L.geoJSON(geojson, {
       style: (feature) => styleForStreet(feature.properties),
       onEachFeature: (feature, layer) => {
         const props = feature.properties;
         streetNamesById[props.id] = props.name;
         layer.bindTooltip(props.name);
-        layer.on("click", () => {
-          observationMarkersLayer.clearLayers();
-          currentMarkersByObsId = {};
-          if (props.audited && props.status !== "not_started") {
-            loadStreetDetail(props.id);
-          } else {
-            renderUnauditedStreetDetail(props);
+        layer.on("click", () => selectStreet(layer, props));
+
+        // Leaflet's own interactive paths aren't keyboard-focusable by
+        // default (no tabindex/role is set for vector layers, only for
+        // markers) - make street selection genuinely reachable by
+        // keyboard rather than relying on a focus outline that wouldn't
+        // otherwise appear. Same selection logic as a click, on Enter/Space.
+        layer.on("add", () => {
+          const el = layer.getElement();
+          if (!el) {
+            return;
           }
+          el.setAttribute("tabindex", "0");
+          el.setAttribute("role", "button");
+          el.setAttribute("aria-label", `${props.name} street`);
+          el.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              selectStreet(layer, props);
+            }
+          });
         });
       },
     }).addTo(map);
+
+    loadAllObservationMarkers(geojson);
   } catch (err) {
     showError(`Could not load the street network. (${err.message})`);
   }

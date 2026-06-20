@@ -163,6 +163,55 @@ body {
   background: var(--grey-100);
 }
 
+/* Default arrow over empty map; Leaflet's own higher-specificity
+   .leaflet-dragging .leaflet-grab rule still wins during an active drag,
+   so panning still shows its grab/grabbing cursor. */
+.leaflet-container {
+  cursor: default;
+}
+
+.leaflet-interactive:hover {
+  cursor: pointer;
+}
+
+/* Mobile WebKit shows a default tap-highlight rectangle on any clickable
+   element on touch, independent of :focus/ARIA entirely - belt-and-
+   suspenders alongside the focus-outline suppression below. */
+.leaflet-interactive {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Belt-and-suspenders: street-line layers already render with fill:false
+   (Leaflet's own Polyline default, and explicit in STREET_STATUS_STYLES),
+   but suppress it here too in case anything ever re-enables it. */
+.leaflet-interactive.street-line {
+  fill: none !important;
+  fill-opacity: 0 !important;
+}
+
+.leaflet-interactive.street-line:hover {
+  fill: none !important;
+}
+
+/* Suppress browser focus outline / bounding box on Leaflet vector paths.
+   Selection state is already communicated visually by selectStreetLayer()
+   restyling the clicked line itself (thicker, brighter) - see map.js - so
+   removing the native outline here doesn't remove the only indicator. */
+.leaflet-interactive:focus {
+  outline: none;
+}
+
+path.leaflet-interactive:focus,
+path.street-line:focus {
+  outline: none;
+  outline-offset: 0;
+}
+
+.leaflet-container svg:focus,
+.leaflet-container path:focus {
+  outline: none;
+}
+
 .street-panel {
   flex: 0 0 360px;
   max-width: 90vw;
@@ -190,13 +239,25 @@ body {
   font-size: 0.9rem;
 }
 
+.street-panel .panel-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.street-panel .panel-header-names {
+  min-width: 0;
+}
+
 .street-panel h2 {
   margin: 0 0 0.1rem;
   font-size: 1.2rem;
 }
 
 .street-panel .street-panel__name-bg {
-  margin: 0 0 1rem;
+  margin: 0;
   color: var(--grey-600);
   font-size: 0.9rem;
 }
@@ -374,16 +435,41 @@ body {
   color: #fff;
 }
 
-.status-badge--inactive,
-.status-badge--not_started {
+.status-badge--inactive {
   background: var(--grey-300);
   color: var(--grey-800);
 }
 
-.street-panel__source-note {
-  margin: 0.5rem 0 0;
+/* Street audit status badge (data-attribute, not a BEM modifier) - kept
+   separate from .status-badge--active/--not_started above, which are for
+   observation status (asset active/inactive, issue not_started) and would
+   collide in meaning with street status if reused here. */
+.status-badge[data-status] {
+  flex-shrink: 0;
+}
+
+.status-badge[data-status="not_started"] {
+  background: var(--grey-300);
+  color: var(--grey-800);
+}
+
+.status-badge[data-status="active"] {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-street-active);
+}
+
+.status-badge[data-status="complete"] {
+  background: rgba(29, 158, 117, 0.15);
+  color: var(--color-street-complete);
+}
+
+.panel-source-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--grey-200);
   font-size: 0.7rem;
   color: var(--grey-600);
+  line-height: 1.5;
 }
 
 .street-panel__wip-note {
