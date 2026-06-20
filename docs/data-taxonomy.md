@@ -47,24 +47,6 @@ a street's JSON record.
 | `reported_date` | Date first logged. |
 | `resolved_date` | Date resolved, if applicable; otherwise `null`. |
 | `tracking_issue` | *(optional)* GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`. |
-| `nearby_streets` | *(optional)* Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. |
-
-`coordinates` is an object with `lat`/`lng` keys, not a bare `[lat, lon]`
-pair, so the two axes can't be silently transposed when read back. For
-example:
-
-```json
-"coordinates": { "lat": 44.038200, "lng": 26.619950 }
-```
-
-The long-term intent is for this to be populated automatically from
-Mapillary/EXIF photo metadata captured during the audit walk (see
-[methodology.md](methodology.md)), once that pipeline exists. Until then,
-it's entered by hand using `tools/coordinate-picker.html` — click the
-matching point on the map, copy the generated snippet, and paste it into
-the observation's `coordinates` field. Most existing observations
-predate this field and are `null`; that's expected, not a data-quality
-issue to fix retroactively.
 
 `tracking_issue` is optional and absent from every existing observation
 record — it is documented here so future Cases (see
@@ -72,13 +54,6 @@ record — it is documented here so future Cases (see
 the link, not as a retroactive requirement. Do not backfill it onto
 existing observations; add it only when a Case is actually opened for that
 observation.
-
-`nearby_streets` lists every street within 50m of the observation's
-`coordinates`, closest first, with the closest marked `primary: true` —
-a signal that more than one street might be involved, not an assertion
-of responsibility. It's computed, not hand-entered; see
-[methodology.md](methodology.md) for when and how to run the script that
-fills it in.
 
 The practical test for which bucket a field belongs in: if it can change
 every time someone walks the street, it's an observation; if it only
