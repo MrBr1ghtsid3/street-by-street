@@ -45,7 +45,8 @@
       "coordinates": { "lat": 44.042045, "lng": 26.614071 },
       "status": "open",
       "reported_date": "2026-06-10",
-      "resolved_date": null
+      "resolved_date": null,
+      "tracking_issue": 1
     },
     {
       "id": 3,
