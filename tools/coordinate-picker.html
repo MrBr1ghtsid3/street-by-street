@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coordinate Picker (internal tool) &middot; Street-By-Street</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+    }
+
+    #map {
+      position: absolute;
+      inset: 0;
+    }
+
+    .picker-readout {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+      min-width: 190px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid var(--grey-200);
+      border-radius: 6px;
+      padding: 0.75rem 0.9rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .picker-readout__hint {
+      margin: 0 0 0.5rem;
+      font-size: 0.72rem;
+      color: var(--grey-600);
+    }
+
+    .picker-readout__coords {
+      margin: 0 0 0.6rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      color: var(--grey-900);
+    }
+
+    .picker-readout__copy {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--grey-300);
+      color: var(--grey-800);
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .picker-readout__copy:hover {
+      background: var(--grey-100);
+    }
+
+    .picker-readout__copied {
+      margin: 0.4rem 0 0;
+      font-size: 0.7rem;
+      color: var(--color-asset);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <div id="readout" class="picker-readout" hidden>
+    <p class="picker-readout__hint">Click the map to drop a point.</p>
+    <pre class="picker-readout__coords" id="readout-coords"></pre>
+    <button id="copy-button" class="picker-readout__copy" type="button">Copy</button>
+    <p class="picker-readout__copied" id="copied-note" hidden>Copied to clipboard.</p>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script>
+    (function () {
+      var TUTRAKAN_CENTER = [44.0386, 26.6195];
+      var map = L.map("map").setView(TUTRAKAN_CENTER, 14);
+
+      // CartoDB Positron — same greyscale basemap used on the main site.
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: "abcd",
+          maxZoom: 19,
+        }
+      ).addTo(map);
+
+      var marker = null;
+      var currentSnippet = "";
+
+      var readout = document.getElementById("readout");
+      var coordsEl = document.getElementById("readout-coords");
+      var copyButton = document.getElementById("copy-button");
+      var copiedNote = document.getElementById("copied-note");
+
+      map.on("click", function (event) {
+        var lat = event.latlng.lat.toFixed(6);
+        var lng = event.latlng.lng.toFixed(6);
+
+        if (marker) {
+          map.removeLayer(marker);
+        }
+        marker = L.marker(event.latlng).addTo(map);
+
+        coordsEl.textContent = "lat: " + lat + "\nlng: " + lng;
+        currentSnippet = '{ "lat": ' + lat + ', "lng": ' + lng + " }";
+
+        readout.hidden = false;
+        copiedNote.hidden = true;
+      });
+
+      copyButton.addEventListener("click", function () {
+        if (!currentSnippet) {
+          return;
+        }
+
+        function showCopied() {
+          copiedNote.hidden = false;
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(currentSnippet).then(showCopied);
+          return;
+        }
+
+        // Clipboard API unavailable (e.g. non-HTTPS local use) - fall back
+        // to a hidden textarea + execCommand.
+        var textarea = document.createElement("textarea");
+        textarea.value = currentSnippet;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        showCopied();
+      });
+    })();
+  </script>
+</body>
+</html>

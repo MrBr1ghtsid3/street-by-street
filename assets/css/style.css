@@ -328,6 +328,27 @@ body {
   color: var(--grey-600);
 }
 
+.observation-card--locatable {
+  cursor: pointer;
+}
+
+.observation-card--locatable:hover {
+  border-color: var(--grey-400);
+}
+
+.observation-card__unmapped {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.62rem;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: var(--grey-200);
+  color: var(--grey-600);
+}
+
 .status-badge {
   display: inline-block;
   padding: 0.05rem 0.35rem;
@@ -445,6 +466,135 @@ body {
 
 .map-legend__dot--asset {
   background: var(--color-asset);
+}
+
+/* Observation pin markers (replaces the old plain circleMarker) */
+.observation-pin {
+  background: transparent;
+  border: none;
+}
+
+.observation-pin__body {
+  position: relative;
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50% 50% 50% 0;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transform: rotate(-45deg);
+}
+
+.observation-pin__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  color: #fff;
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+/* Observation marker popups */
+.observation-popup {
+  font-size: 0.8rem;
+}
+
+.observation-popup__title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.observation-popup__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.observation-popup__category {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.observation-popup__category--issue {
+  background: var(--color-issue);
+}
+
+.observation-popup__category--asset {
+  background: var(--color-asset);
+}
+
+.observation-popup__photo {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: var(--grey-100);
+  border: 1px dashed var(--grey-300);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.observation-popup__photo > i {
+  font-size: 1.6rem;
+  color: var(--grey-400);
+}
+
+.observation-popup__photo-caption {
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: var(--grey-600);
+}
+
+.observation-popup__photo-caption a {
+  color: var(--color-asset);
+}
+
+.observation-popup__date {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  color: var(--grey-600);
+}
+
+.observation-popup__nearby {
+  margin: 0 0 0.5rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.observation-popup__case-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.observation-popup__case {
+  font-weight: 600;
+  color: var(--color-asset);
+}
+
+.observation-popup__no-case {
+  color: var(--grey-600);
+}
+
+.observation-popup__open-case {
+  color: var(--color-issue);
+  font-weight: 600;
 }
 
 /* About modal */

@@ -25,6 +25,25 @@ these records flow into the map.
    captures the obvious issues and assets is more useful published than a
    perfect record that never ships. Revisits add to it over time.
 
+When an observation's exact location is wanted, open
+`tools/coordinate-picker.html` locally (or via the deployed site if
+accessible) — it's an internal workflow tool, not linked from the main
+site. Click the matching point on the map, copy the resulting `{ "lat":
+…, "lng": … }` snippet, and paste it into that observation's
+`coordinates` field in its street's JSON file before committing. See
+[data-taxonomy.md](data-taxonomy.md) for the field's exact shape.
+
+After adding coordinates and before committing, run
+`python3 scripts/compute_street_proximity.py` from the repo root. It
+walks every street's geometry in `data/tutrakan-streets.geojson` and
+writes a `nearby_streets` array back onto each geotagged observation,
+flagging the closest street as `primary` and any other street within
+50m as a secondary candidate. This is a manual, on-demand step in the
+same data-entry workflow as the coordinate picker — it is **not** wired
+into CI and never runs automatically, since which street is "primary"
+for a borderline observation is ultimately a judgement call the script
+only assists, it doesn't make.
+
 ## Attribute capture
 
 Attributes are captured once per street, ideally during or shortly after

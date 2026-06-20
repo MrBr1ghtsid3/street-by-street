@@ -42,7 +42,7 @@ a street's JSON record.
 | `category` | See category lists below. |
 | `title` | Short label. |
 | `description` | Free-text detail, including location notes. |
-| `coordinates` | `[lat, lon]` if geotagged, otherwise `null` pending field capture. |
+| `coordinates` | `{ "lat": <number>, "lng": <number> }` if geotagged, otherwise `null` pending field capture. |
 | `status` | See status values below. |
 | `reported_date` | Date first logged. |
 | `resolved_date` | Date resolved, if applicable; otherwise `null`. |
