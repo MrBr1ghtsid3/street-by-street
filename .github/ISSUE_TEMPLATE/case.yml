@@ -1,0 +1,79 @@
+name: Case
+description: Track an incident, request, or follow-up through triage, ownership, and resolution.
+title: "[Case]: "
+labels: ["case"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for anything that needs to be tracked through to resolution — not for logging a street observation itself (those go in the street's JSON record).
+
+  - type: dropdown
+    id: case-type
+    attributes:
+      label: Case type
+      options:
+        - New incident
+        - Recurrence of a prior case
+        - General request
+        - Process / non-street-specific
+    validations:
+      required: true
+
+  - type: input
+    id: recurrence-ref
+    attributes:
+      label: If recurrence — link the prior case
+      description: "e.g. Follows-from #12. Leave blank if not a recurrence."
+      placeholder: "#12"
+
+  - type: input
+    id: street-ref
+    attributes:
+      label: Linked street (if applicable)
+      description: "Street id as used in data/streets/, e.g. ana-ventura"
+      placeholder: ana-ventura
+
+  - type: input
+    id: observation-ref
+    attributes:
+      label: Linked observation ID (if applicable)
+      description: "The numeric id from that street's observations array"
+      placeholder: "1"
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What's happening, and why it needs tracking.
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround applied (if any)
+      description: Any interim fix already in place, and its known limitations.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+    validations:
+      required: true
+
+  - type: input
+    id: target-date
+    attributes:
+      label: Target resolution date
+      placeholder: "YYYY-MM-DD"
+
+  - type: textarea
+    id: resolution
+    attributes:
+      label: Resolution summary
+      description: Fill in when closing — what was actually done, and whether it addressed the root cause or just the symptom.

@@ -46,6 +46,14 @@ a street's JSON record.
 | `status` | See status values below. |
 | `reported_date` | Date first logged. |
 | `resolved_date` | Date resolved, if applicable; otherwise `null`. |
+| `tracking_issue` | *(optional)* GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`. |
+
+`tracking_issue` is optional and absent from every existing observation
+record — it is documented here so future Cases (see
+[docs/case-tracking.md](case-tracking.md)) have a defined place to record
+the link, not as a retroactive requirement. Do not backfill it onto
+existing observations; add it only when a Case is actually opened for that
+observation.
 
 The practical test for which bucket a field belongs in: if it can change
 every time someone walks the street, it's an observation; if it only
