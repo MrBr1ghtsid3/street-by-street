@@ -89,18 +89,72 @@ body {
 }
 
 .wip-banner {
+  position: relative;
   margin: 0;
-  padding: 0.35rem 1.25rem;
+  padding: 0.35rem 2.5rem;
   background: var(--grey-100);
   color: var(--grey-600);
   font-size: 0.75rem;
+  text-align: center;
   border-bottom: 1px solid var(--grey-200);
+}
+
+.wip-banner__text {
+  margin: 0;
+}
+
+.wip-banner__dismiss {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--grey-600);
+}
+
+.wip-banner__dismiss:hover {
+  color: var(--grey-900);
 }
 
 .app-main {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
+}
+
+.app-footer {
+  flex-shrink: 0;
+  padding: 0.3rem 1.25rem;
+  background: var(--grey-900);
+  color: var(--grey-400);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.68rem;
+}
+
+.app-footer__text {
+  margin: 0;
+}
+
+.app-footer__link {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--grey-300);
+  font-size: 0.68rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+.app-footer__link:hover {
+  color: var(--grey-50);
 }
 
 #map {
@@ -461,11 +515,7 @@ body {
   color: var(--color-asset);
 }
 
-.modal--wide {
-  max-width: 680px;
-}
-
-/* Locator lightbox - reuses .modal-overlay for the dark backdrop */
+/* Lightbox - reuses .modal-overlay for the dark backdrop */
 .lightbox__image {
   max-width: 90vw;
   max-height: 80vh;
@@ -484,6 +534,10 @@ body {
   line-height: 1;
   cursor: pointer;
   color: var(--grey-50);
+}
+
+.modal--wide {
+  max-width: 680px;
 }
 
 /* Welcome overlay */
@@ -591,39 +645,83 @@ body {
 }
 
 /* Tutrakan city panel */
-.tutrakan-top-row {
+.tutrakan-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.4rem;
   margin-bottom: 1.25rem;
 }
 
 .tutrakan-crest {
-  flex: 0 0 72px;
   margin: 0;
-  text-align: left;
+  text-align: center;
 }
 
 .tutrakan-crest img {
   width: 72px;
   height: 90px;
   object-fit: contain;
+  cursor: pointer;
+}
+
+.tutrakan-crest__caption {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.tutrakan-divider {
+  width: 100%;
+  max-width: 240px;
+  border: none;
+  border-top: 1px solid var(--grey-200);
+  margin: 0.5rem 0;
 }
 
 .tutrakan-locator {
-  flex: 1 1 auto;
-  min-width: 0;
-  min-height: 180px;
+  width: 100%;
+  max-width: 320px;
   margin: 0;
-  display: flex;
-  align-items: center;
 }
 
 .tutrakan-locator img {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.tutrakan-locator__caption {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+  text-align: center;
+}
+
+.tutrakan-coordinates {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+  text-align: center;
+}
+
+.tutrakan-directions-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+  background: transparent;
+  border: 1px solid var(--grey-300);
+  color: var(--grey-800);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-decoration: none;
   cursor: pointer;
+}
+
+.tutrakan-directions-btn:hover {
+  background: var(--grey-100);
 }
 
 .official-stats-table {
@@ -685,10 +783,15 @@ body {
   padding: 0.75rem;
 }
 
-.info-card__icon {
-  display: block;
-  font-size: 1.3rem;
+.info-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 0.3rem;
+}
+
+.info-card__icon {
+  font-size: 1.3rem;
 }
 
 .info-card__title {
@@ -705,12 +808,21 @@ body {
 
 .info-card__flag {
   display: inline-block;
-  margin-top: 0.4rem;
   font-size: 0.65rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   color: var(--color-issue);
+}
+
+.info-card__warning {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  background: rgba(216, 90, 48, 0.12);
+  color: var(--color-issue);
+  font-size: 0.68rem;
+  font-weight: 600;
 }
 
 .tutrakan-contribute-note {
@@ -740,9 +852,5 @@ body {
 
   .card-grid {
     grid-template-columns: 1fr;
-  }
-
-  .tutrakan-top-row {
-    flex-wrap: wrap;
   }
 }

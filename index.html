@@ -10,6 +10,10 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+  />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
@@ -49,16 +53,41 @@
         <p class="app-header__subtitle">A street-level civic audit, one street at a time.</p>
       </div>
       <div class="app-header__actions">
-        <button id="tutrakan-button" class="about-button" type="button">Tutrakan</button>
-        <button id="about-button" class="about-button" type="button">About</button>
+        <button id="tutrakan-button" class="about-button" type="button">Context</button>
       </div>
     </div>
   </header>
-  <p class="wip-banner">
-    This is a personal civic initiative, actively being built. Data is
-    incomplete and some streets are not yet audited. Contributions and
-    corrections welcome. 
-  </p>
+  <div id="wip-banner" class="wip-banner">
+    <p class="wip-banner__text">
+      This is a personal civic initiative, actively being built. Data is
+      incomplete and some streets are not yet audited. Contributions and
+      corrections welcome.
+    </p>
+    <button id="wip-banner-dismiss" class="wip-banner__dismiss" type="button" aria-label="Hide this message">&times;</button>
+  </div>
+  <script>
+    (function () {
+      var banner = document.getElementById("wip-banner");
+      var dismiss = document.getElementById("wip-banner-dismiss");
+
+      try {
+        if (localStorage.getItem("sbs_wip_banner_dismissed") === "true") {
+          banner.hidden = true;
+        }
+      } catch (err) {
+        // localStorage unavailable - show the banner every time
+      }
+
+      dismiss.addEventListener("click", function () {
+        banner.hidden = true;
+        try {
+          localStorage.setItem("sbs_wip_banner_dismissed", "true");
+        } catch (err) {
+          // localStorage unavailable - dismissal won't persist
+        }
+      });
+    })();
+  </script>
 
   <main class="app-main">
     <div id="map"></div>
@@ -69,6 +98,11 @@
       </p>
     </aside>
   </main>
+
+  <footer class="app-footer">
+    <p class="app-footer__text">Street-By-Street &middot; an open source (personal) project / 2026</p>
+    <button id="about-button" class="app-footer__link" type="button">about</button>
+  </footer>
 
   <div id="about-modal" class="modal-overlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
@@ -143,7 +177,7 @@
   <div id="tutrakan-modal" class="modal-overlay" hidden>
     <div class="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="tutrakan-modal-title">
       <button id="tutrakan-modal-close" class="modal__close" type="button" aria-label="Close">&times;</button>
-      <h2 id="tutrakan-modal-title">Context</h2>
+      <h2 id="tutrakan-modal-title">Tutrakan, at a glance</h2>
 
       <div class="tabs">
         <button class="tabs__button tabs__button--active" data-tab="official" type="button">Official Data</button>
@@ -151,20 +185,50 @@
       </div>
 
       <div class="tabs__panel" data-tab-panel="official">
-        <div class="tutrakan-top-row">
+        <div class="tutrakan-header">
           <figure class="tutrakan-crest">
-            <img src="assets/images/tutrakan-crest.png" alt="Coat of arms of Tutrakan" width="72" height="90" />
+            <img
+              src="assets/images/tutrakan-crest.png"
+              alt="Coat of arms of Tutrakan"
+              width="72"
+              height="90"
+              title="Click to expand"
+            />
+            <figcaption class="tutrakan-crest__caption">Coat of arms of Tutrakan</figcaption>
           </figure>
+
+          <hr class="tutrakan-divider" />
+
           <figure class="tutrakan-locator">
             <img
               src="assets/images/bulgaria-locator.svg"
               alt="Map of Bulgaria showing 28 oblasti, with Silistra oblast highlighted and Tutrakan marked in the northeast, on the Danube"
               width="100%"
               height="auto"
-              title="Click to expand"
             />
+            <figcaption class="tutrakan-locator__caption">Location of Tutrakan &middot; Местоположение на Тутракан</figcaption>
           </figure>
+
+          <p class="tutrakan-coordinates">44&deg;3&prime;N 26&deg;37&prime;E</p>
+
+          <a
+            class="tutrakan-directions-btn"
+            href="https://www.google.com/maps/dir/?api=1&amp;destination=44.0384144,26.6199715"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i class="ti ti-map-pin" aria-hidden="true"></i> Get directions
+          </a>
         </div>
+
+        <blockquote class="tutrakan-history-note">
+          Founded by the Ancient Romans in the 1st century as Transmarisca,
+          part of the Danubian limes. Reached its peak under Diocletian in
+          the 4th century. Incorporated into Romania after the Second
+          Balkan War; returned to Bulgaria via the Treaty of Craiova in
+          1940. Site of the Battle of Tutrakan in WWI. Tutrakan Peak in
+          Antarctica is named after the town.
+        </blockquote>
 
         <table class="official-stats-table">
           <thead>
@@ -178,20 +242,9 @@
             <tr><td>Municipal administration</td><td>ГЕРБ (GERB) &mdash; independent candidate, ГЕРБ-supported</td><td>CIK (Central Electoral Commission)</td><td>Oct 2023</td></tr>
             <tr><td>Elevation (plateau)</td><td>107 m</td><td>Wikipedia</td><td>&mdash;</td></tr>
             <tr><td>Postal code</td><td>7600</td><td>&mdash;</td><td>&mdash;</td></tr>
-            <tr><td>Distance from Ruse</td><td>61 km</td><td>&mdash;</td><td>&mdash;</td></tr>
-            <tr><td>Distance from Silistra</td><td>60 km</td><td>&mdash;</td><td>&mdash;</td></tr>
             <tr><td>Distance from Sofia</td><td>371 km</td><td>&mdash;</td><td>&mdash;</td></tr>
           </tbody>
         </table>
-
-        <blockquote class="tutrakan-history-note">
-          Founded by the Ancient Romans in the 1st century as Transmarisca,
-          part of the Danubian limes. Reached its peak under Diocletian in
-          the 4th century. Incorporated into Romania after the Second
-          Balkan War; returned to Bulgaria via the Treaty of Craiova in
-          1940. Site of the Battle of Tutrakan in WWI. Tutrakan Peak in
-          Antarctica is named after the town.
-        </blockquote>
 
         <p class="tutrakan-sources-note">Sources: NSI (nsi.bg), Wikipedia, Tutrakan Municipality</p>
       </div>
@@ -204,55 +257,82 @@
 
         <div class="card-grid">
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x1F43E;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1F43E;</span>
+              <span class="info-card__warning"><span aria-hidden="true">&#x26A0;&#xFE0F;</span> Ongoing issue</span>
+            </div>
             <h4 class="info-card__title">Stray animals</h4>
             <p class="info-card__notes">Stray dogs and cats are a visible and persistent presence throughout the town. Municipal neutering programmes are legally required but inconsistently implemented.</p>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x1F5D1;&#xFE0F;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1F5D1;&#xFE0F;</span>
+              <span class="info-card__warning"><span aria-hidden="true">&#x26A0;&#xFE0F;</span> Ongoing issue</span>
+            </div>
             <h4 class="info-card__title">Waste management</h4>
             <p class="info-card__notes">Litter accumulation is common at street corners and road edges. Segregated collection infrastructure exists but participation is limited.</p>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x1F6D2;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1F6D2;</span>
+              <span class="info-card__flag">Verify schedule</span>
+            </div>
             <h4 class="info-card__title">Open markets</h4>
-            <p class="info-card__notes">A weekly market operates in the town centre. Permanent small grocery shops are present across residential streets.</p>
-            <span class="info-card__flag">Verify location and schedule</span>
+            <p class="info-card__notes">A municipal market (Общински пазар) operates on Geo Milev Street in the Vazhodi neighbourhood, confirmed via OpenStreetMap. Permanent small grocery shops are present across residential streets.</p>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x26EA;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x26EA;</span>
+            </div>
             <h4 class="info-card__title">Places of worship</h4>
-            <p class="info-card__notes">Orthodox Christian, Muslim, Jewish, Adventist and Protestant communities are present in the town.</p>
+            <p class="info-card__notes">Orthodox Christian, Muslim, Adventist and Protestant communities are present in the town.</p>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x1F3DB;&#xFE0F;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1F3DB;&#xFE0F;</span>
+              <span class="info-card__flag">Verify opening hours</span>
+            </div>
             <h4 class="info-card__title">Museum</h4>
             <p class="info-card__notes">The Historical Museum of Tutrakan covers the town's Roman, medieval, and modern history. The Fisherman's Quarter is a heritage area.</p>
-            <span class="info-card__flag">Verify opening hours</span>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x1FA79;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1FA79;</span>
+              <span class="info-card__flag">Verify current status</span>
+            </div>
             <h4 class="info-card__title">Healthcare</h4>
             <p class="info-card__notes">A municipal hospital serves the area. Specialist care typically requires travel to Ruse or Silistra.</p>
-            <span class="info-card__flag">Verify current status</span>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x1F3CB;&#xFE0F;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1F3CB;&#xFE0F;</span>
+              <span class="info-card__warning"><span aria-hidden="true">&#x26A0;&#xFE0F;</span> Work in progress</span>
+            </div>
             <h4 class="info-card__title">Public fitness</h4>
             <p class="info-card__notes">No publicly accessible gym identified to date.</p>
-            <span class="info-card__flag">Outdoor exercise spaces to be documented</span>
           </div>
 
           <div class="info-card">
-            <span class="info-card__icon" aria-hidden="true">&#x2693;</span>
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x2693;</span>
+            </div>
             <h4 class="info-card__title">Danube port</h4>
             <p class="info-card__notes">The town has a functioning river port. The former ferry connection to Oltenița (Romania) no longer operates.</p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card__header">
+              <span class="info-card__icon" aria-hidden="true">&#x1F697;</span>
+              <span class="info-card__warning"><span aria-hidden="true">&#x26A0;&#xFE0F;</span> Ongoing issue</span>
+            </div>
+            <h4 class="info-card__title">Traffic safety</h4>
+            <p class="info-card__notes">Pedestrian and vehicle collisions have been observed at several uncontrolled intersections and along the main thoroughfare. No public municipal data on accident frequency or road-safety interventions has been identified to date.</p>
           </div>
         </div>
 
@@ -265,19 +345,19 @@
     </div>
   </div>
 
-  <div id="locator-lightbox" class="modal-overlay" hidden>
-    <button id="locator-lightbox-close" class="lightbox__close" type="button" aria-label="Close">&times;</button>
+  <div id="crest-lightbox" class="modal-overlay" hidden>
+    <button id="crest-lightbox-close" class="lightbox__close" type="button" aria-label="Close">&times;</button>
     <img
       class="lightbox__image"
-      src="assets/images/bulgaria-locator.svg"
-      alt="Map of Bulgaria showing 28 oblasti, with Silistra oblast highlighted and Tutrakan marked in the northeast, on the Danube"
+      src="assets/images/tutrakan-crest.png"
+      alt="Coat of arms of Tutrakan"
     />
   </div>
   <script>
     (function () {
-      var lightboxTrigger = document.querySelector(".tutrakan-locator img");
-      var lightbox = document.getElementById("locator-lightbox");
-      var lightboxClose = document.getElementById("locator-lightbox-close");
+      var lightboxTrigger = document.querySelector(".tutrakan-crest img");
+      var lightbox = document.getElementById("crest-lightbox");
+      var lightboxClose = document.getElementById("crest-lightbox-close");
 
       if (!lightboxTrigger || !lightbox || !lightboxClose) {
         return;
