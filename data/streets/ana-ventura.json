@@ -6,7 +6,10 @@
     "name_historical": null,
     "status": "active",
     "last_updated": "2026-06-12",
-    "steward": { "name": "TBD", "contact": "TBD" }
+    "steward": {
+      "name": "TBD",
+      "contact": "TBD"
+    }
   },
   "attributes": {
     "length_m": 1901.2,
@@ -42,11 +45,31 @@
       "category": "litter",
       "title": "Litter build-up at the corner",
       "description": "Junction with the lane to the river",
-      "coordinates": { "lat": 44.042045, "lng": 26.614071 },
+      "coordinates": {
+        "lat": 44.042045,
+        "lng": 26.614071
+      },
       "status": "open",
       "reported_date": "2026-06-10",
       "resolved_date": null,
-      "tracking_issue": 5
+      "tracking_issue": 5,
+      "nearby_streets": [
+        {
+          "street_id": "ana-ventura",
+          "distance_m": 29.7,
+          "primary": true
+        },
+        {
+          "street_id": "panayot-volov",
+          "distance_m": 37.6,
+          "primary": false
+        },
+        {
+          "street_id": "geo-milev",
+          "distance_m": 43.6,
+          "primary": false
+        }
+      ]
     },
     {
       "id": 3,
