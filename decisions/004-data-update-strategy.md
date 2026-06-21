@@ -81,6 +81,14 @@ re-diffing 100+ streets by hand).
   because forcing an automatic update would mean trusting a script to
   pick the right replacement source unsupervised, which is a worse
   failure mode than a visible staleness flag.
+- The freshness check (`scripts/check_data_freshness.py`) only scans
+  `official_context` blocks inside `data/streets/*.json`. The city-level
+  statistics currently shown on the live site are hardcoded in
+  `index.html` (see [architecture.md](../docs/architecture.md)), which the
+  script does not read — so those figures can go out of date without being
+  flagged. Closing this gap (e.g. moving city stats into a scanned data
+  file the freshness check covers) is deferred; for now those figures are
+  maintained and verified by hand.
 
 ## Alternatives Considered
 

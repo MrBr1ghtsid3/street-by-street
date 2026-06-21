@@ -72,12 +72,15 @@ Beyond the street's detail panel, observations with a non-null
 `coordinates` field render as individual point markers on the map itself,
 not just as cards in the panel:
 
-- **Rendering** (`assets/js/map.js`) — for the currently selected street
-  only, each geotagged observation gets a teardrop-shaped `L.divIcon` pin
-  (coral for issues, teal for assets, matching the existing legend
-  colours), with a Tabler icon inset for its category. Markers are held
-  in a single `L.layerGroup` that's cleared every time a different street
-  is clicked, so pins never accumulate across streets. Clicking a pin
+- **Rendering** (`assets/js/map.js`) — every audited street's geotagged
+  observations are rendered at once. On load, `loadAllObservationMarkers`
+  iterates all features with `audited: true`, fetches each street's
+  record, and adds a teardrop-shaped `L.divIcon` pin per geotagged
+  observation (coral for issues, teal for assets, matching the existing
+  legend colours), with a Tabler icon inset for its category. All pins
+  live in a single `L.layerGroup` that is populated once at startup and
+  never cleared on street switch — marker visibility is independent of
+  which street's panel is open. Clicking a pin
   opens a popup with the observation's title, category, status, a photo
   placeholder (see [ethics.md](ethics.md) — no image upload or blurring
   pipeline exists yet, this is a reserved UI slot), its date, any nearby
@@ -135,7 +138,7 @@ blocks described in [data-taxonomy.md](data-taxonomy.md):
   "attributes": { "length_m": null, "dwellings": null, "parking_spaces": null,
                    "bus_stops": null, "lighting_count": null, "surface_type": null,
                    "road_class": null },
-  "trivia": { "text": "...", "sources": [], "verified": false },
+  "trivia": { "text": "...", "sources": [], "verified": false, "note": "..." },
   "official_context": [ { "metric": "...", "value": "...", "source": "...",
                             "source_date": "...", "level": "municipality" } ],
   "observations": [ { "id": 1, "type": "issue", "category": "road", "title": "...",
@@ -148,8 +151,10 @@ blocks described in [data-taxonomy.md](data-taxonomy.md):
 taxonomy; `observations` is the observations half. `trivia` and
 `official_context` are additional blocks specific to the detail record —
 trivia carries a `verified` flag so unsourced claims are visibly marked as
-such, and official context carries a mandatory `source` and `source_date`
-on every entry. `official_context` is real, supported end-to-end by the
+such (plus an optional `note`, a free-text data-entry caveat such as
+"DRAFT — unverified, needs sourcing" that is not rendered on the site),
+and official context carries a mandatory `source` and `source_date` on
+every entry. `official_context` is real, supported end-to-end by the
 rendering code (`map.js` renders it conditionally when present) — but as
 of writing, `data/streets/ana-ventura.json` has no `official_context`
 entries yet, so the only official figures currently visible on the live
@@ -181,6 +186,32 @@ step under normal operation:
   Merging that PR is an ordinary push to `main`, which the deploy workflow
   above picks up automatically — the two workflows don't call each other
   directly.
+
+### Manual prerequisites (configured in GitHub, not in this repo)
+
+These cannot be set from within this repository and aren't verifiable from
+its contents — tracked here as a checklist, not changed by this pass:
+
+- [ ] **Settings → Pages → Source = "GitHub Actions"** (not "Deploy from a
+  branch"). ADR 002 notes this dropdown does not persist on first save —
+  verify by reloading the Settings page.
+- [ ] **Settings → Actions → General → Workflow permissions → "Allow GitHub
+  Actions to create and approve pull requests" is enabled.** Both
+  `.github/workflows/refresh-data.yml` and
+  `.github/workflows/link-case-to-observation.yml` use
+  `peter-evans/create-pull-request`, which **fails to open a PR** if this is
+  off.
+- [ ] **The `case` label exists** (required by the Case issue form's
+  `labels:` and by the link workflow's `if:` condition).
+- [ ] **The "SBS Cases" Project (v2) board exists** with its six columns
+  (To Triage, Backlog, Ready, In Progress, In Review, Done), per ADR 005.
+- [ ] **The `main` branch-protection ruleset** behaves as the comment in
+  `refresh-data.yml` assumes — i.e. the `data/*` branch prefix is excluded
+  from any "review required" gate, so quarterly refresh PRs don't block on
+  a reviewer that a solo maintainer can't provide.
+- [ ] **Case #5 exists on GitHub** — `ana-ventura.json` observation #2
+  points at it via `tracking_issue: 5`, and the map popup links to
+  `/issues/5`.
 
 ## Official-vs-observed juxtaposition
 

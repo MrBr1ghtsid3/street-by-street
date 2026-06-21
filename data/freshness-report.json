@@ -1,8 +1,6 @@
 {
-  "generated": "2026-06-19",
+  "generated": "2026-06-21",
   "stale_streets": [],
-  "stale_official_metrics": [
-    "Municipality population"
-  ],
-  "all_current": false
+  "stale_official_metrics": [],
+  "all_current": true
 }

@@ -441,9 +441,11 @@ path.street-line:focus {
 }
 
 /* Street audit status badge (data-attribute, not a BEM modifier) - kept
-   separate from .status-badge--active/--not_started above, which are for
-   observation status (asset active/inactive, issue not_started) and would
-   collide in meaning with street status if reused here. */
+   separate from the .status-badge--* modifiers above, which are for
+   observation status (issue open/in_progress/resolved, asset
+   active/inactive). The street-status token "active" would otherwise
+   collide in meaning with the asset "active" status if a modifier class
+   were reused here, hence the data-attribute selector. */
 .status-badge[data-status] {
   flex-shrink: 0;
 }
