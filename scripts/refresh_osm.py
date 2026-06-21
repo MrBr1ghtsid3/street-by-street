@@ -135,8 +135,8 @@ def group_streets(elements):
 
 def build_feature(slug, street, existing_properties=None):
     existing_properties = existing_properties or {}
-    coordinates = [point for segment in street["segments"] for point in segment]
-    length_m = round(sum(line_length_m(segment) for segment in street["segments"]), 1)
+    segments = street["segments"]
+    length_m = round(sum(line_length_m(segment) for segment in segments), 1)
     today = date.today().isoformat()
 
     properties = {
@@ -156,10 +156,20 @@ def build_feature(slug, street, existing_properties=None):
         "source_pulled": today,
     }
 
+    # Preserve OSM topology: a street split across several disjoint ways
+    # stays a MultiLineString (one array per segment) rather than being
+    # flattened into a single LineString, which would draw phantom
+    # connector lines across the gaps between parts.
+    geometry = (
+        {"type": "LineString", "coordinates": segments[0]}
+        if len(segments) == 1
+        else {"type": "MultiLineString", "coordinates": segments}
+    )
+
     return {
         "type": "Feature",
         "properties": properties,
-        "geometry": {"type": "LineString", "coordinates": coordinates},
+        "geometry": geometry,
     }
 
 
