@@ -155,5 +155,7 @@ changes when the street itself physically changes, it's an attribute.
 progress, not the street's physical condition):
 
 - `not_started` — not yet audited.
-- `in_progress` — audit under way.
-- `active` — audit complete and the street record is being maintained.
+- `active` — audit under way; the street record is being actively built
+  (rendered amber, labelled "Audit in progress").
+- `complete` — audit finished; the record is complete and maintained
+  (rendered green, labelled "Fully documented").
