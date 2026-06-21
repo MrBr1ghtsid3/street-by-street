@@ -80,10 +80,11 @@ optional fields populated; see the note after the table.
 
 Verified against `data/streets/ana-ventura.json`, the one real record that
 exists today: every observation has the seven required fields plus
-`coordinates`, which is `null` on five of six and a real value on one.
-None currently has `reported_time`, `tracking_issue`, or `nearby_streets`
-— those three are documented ahead of use, not retrofitted onto data that
-doesn't have them yet.
+`coordinates`, which is `null` on five of six and a real value on one
+(observation #2). That same geotagged observation also carries a
+`tracking_issue` (linking it to a Case) and a `nearby_streets` array
+(written by `scripts/compute_street_proximity.py`). No observation
+currently uses `reported_time` — it stays documented ahead of use.
 
 `coordinates` carries an additional constraint beyond its shape: per
 [docs/ethics.md](ethics.md), do not record a precise, persistent
@@ -93,12 +94,11 @@ at this junction," which is a structural fact about the place). Nothing in
 the coordinate-picker tool or the renderer enforces this — it's a
 judgement call at data-entry time, the same way category and status are.
 
-`tracking_issue` is optional and absent from every existing observation
-record — it is documented here so future Cases (see
-[docs/case-tracking.md](case-tracking.md)) have a defined place to record
-the link, not as a retroactive requirement. Do not backfill it onto
-existing observations; add it only when a Case is actually opened for that
-observation.
+`tracking_issue` is optional. It is present on observation #2 of
+`ana-ventura.json` (tracked by a Case) and absent from the rest — see
+[docs/case-tracking.md](case-tracking.md) for the linking convention. Add
+it only when a Case is actually opened for an observation; do not backfill
+it onto observations that have no Case.
 
 `nearby_streets` lists every street within 50m of the observation's
 `coordinates`, closest first, with the closest marked `primary: true` — a
