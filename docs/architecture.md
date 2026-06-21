@@ -187,6 +187,32 @@ step under normal operation:
   above picks up automatically — the two workflows don't call each other
   directly.
 
+### Manual prerequisites (configured in GitHub, not in this repo)
+
+These cannot be set from within this repository and aren't verifiable from
+its contents — tracked here as a checklist, not changed by this pass:
+
+- [ ] **Settings → Pages → Source = "GitHub Actions"** (not "Deploy from a
+  branch"). ADR 002 notes this dropdown does not persist on first save —
+  verify by reloading the Settings page.
+- [ ] **Settings → Actions → General → Workflow permissions → "Allow GitHub
+  Actions to create and approve pull requests" is enabled.** Both
+  `.github/workflows/refresh-data.yml` and
+  `.github/workflows/link-case-to-observation.yml` use
+  `peter-evans/create-pull-request`, which **fails to open a PR** if this is
+  off.
+- [ ] **The `case` label exists** (required by the Case issue form's
+  `labels:` and by the link workflow's `if:` condition).
+- [ ] **The "SBS Cases" Project (v2) board exists** with its six columns
+  (To Triage, Backlog, Ready, In Progress, In Review, Done), per ADR 005.
+- [ ] **The `main` branch-protection ruleset** behaves as the comment in
+  `refresh-data.yml` assumes — i.e. the `data/*` branch prefix is excluded
+  from any "review required" gate, so quarterly refresh PRs don't block on
+  a reviewer that a solo maintainer can't provide.
+- [ ] **Case #5 exists on GitHub** — `ana-ventura.json` observation #2
+  points at it via `tracking_issue: 5`, and the map popup links to
+  `/issues/5`.
+
 ## Official-vs-observed juxtaposition
 
 A core part of SBS is putting official statistics next to what's actually
