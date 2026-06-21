@@ -104,6 +104,27 @@ extended to more streets:
 - Is a single steward sustainable, or does the update cadence need to
   relax once more than a handful of streets are tracked?
 
+## Answers so far
+
+The Ana Ventura pilot has produced a concrete answer to one of the open
+questions above:
+
+- **Can street length and basic geometry be sourced reliably from
+  OpenStreetMap?** Yes. The whole `data/tutrakan-streets.geojson` base
+  layer, including Ana Ventura's length (1,901.2 m), is derived from
+  Overpass geometry rather than hand measurement, and is accurate enough at
+  town scale. One caveat surfaced: streets that OSM splits across several
+  ways must be represented as a `MultiLineString` (one array per segment).
+  Flattening them into a single `LineString` draws phantom connector lines
+  across the gaps — handled in `scripts/refresh_osm.py`.
+
+<!-- TODO (maintainer): record the actual end-to-end time of the Ana Ventura
+     audit (walk → log → write-up) here once measured — that's another of
+     the open questions this pilot is meant to answer. -->
+
+The remaining open questions, including end-to-end audit time, are still to
+be answered as the pilot continues.
+
 ## Success Criteria for the Ana Ventura PoC
 
 - A complete street record exists: attributes captured where available,
