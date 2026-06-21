@@ -30,7 +30,9 @@ The authoritative source for population, housing, and demographic figures
 at municipality and town level, including the 2021 census. The
 municipality population figure used in this project (11,726, 2023
 estimate) comes from NSI. NSI is the first place to check for any
-demographic or housing figure.
+demographic or housing figure. (⚠ Discrepancy to resolve: `index.html`'s
+stats table currently shows 7,258 for the municipality, dated 2025 —
+reconcile to a single sourced, dated figure before relying on either.)
 
 ### Silistra oblast census release
 
