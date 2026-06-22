@@ -14,8 +14,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -72,8 +74,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -126,8 +130,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -164,16 +170,44 @@
         "name_historical": null,
         "status": "not_started",
         "audited": false,
-        "length_m": 1185.8,
+        "length_m": 1237.1,
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "tertiary",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
         "coordinates": [
+          [
+            [
+              26.6022285,
+              44.047069
+            ],
+            [
+              26.6023788,
+              44.0470602
+            ],
+            [
+              26.6025447,
+              44.0470478
+            ],
+            [
+              26.602646,
+              44.0470397
+            ],
+            [
+              26.6027326,
+              44.0470361
+            ],
+            [
+              26.6028679,
+              44.0470337
+            ]
+          ],
           [
             [
               26.6028679,
@@ -386,8 +420,10 @@
         "observations_count": 6,
         "issues_open": 3,
         "last_updated": "2026-06-12",
+        "surface_type": "asphalt",
+        "road_class": "tertiary",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -550,8 +586,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -600,8 +638,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -634,8 +674,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -672,8 +714,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -710,8 +754,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "track",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -788,8 +834,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -826,8 +874,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -888,8 +938,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -938,8 +990,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -964,27 +1018,67 @@
         "name_historical": null,
         "status": "not_started",
         "audited": false,
-        "length_m": 173.3,
+        "length_m": 417.9,
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
-        "type": "LineString",
+        "type": "MultiLineString",
         "coordinates": [
           [
-            26.6033138,
-            44.0424359
+            [
+              26.6033138,
+              44.0424359
+            ],
+            [
+              26.6047758,
+              44.0424097
+            ],
+            [
+              26.6054811,
+              44.0424011
+            ]
           ],
           [
-            26.6047758,
-            44.0424097
+            [
+              26.6047758,
+              44.0424097
+            ],
+            [
+              26.6048087,
+              44.0435095
+            ]
           ],
           [
-            26.6054811,
-            44.0424011
+            [
+              26.6032266,
+              44.0430099
+            ],
+            [
+              26.6033363,
+              44.0431828
+            ],
+            [
+              26.6034833,
+              44.0433928
+            ],
+            [
+              26.6035319,
+              44.0434331
+            ],
+            [
+              26.6035931,
+              44.043449
+            ],
+            [
+              26.6043909,
+              44.0434892
+            ]
           ]
         ]
       }
@@ -1002,8 +1096,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1068,8 +1164,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1118,8 +1216,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1196,8 +1296,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1338,8 +1440,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1380,8 +1484,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1474,8 +1580,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1556,8 +1664,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1586,8 +1696,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1628,8 +1740,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1674,8 +1788,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1720,8 +1836,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "concrete",
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1770,8 +1888,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1864,8 +1984,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -1970,8 +2092,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2016,8 +2140,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2058,8 +2184,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2140,8 +2268,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2218,8 +2348,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2248,211 +2380,243 @@
         "name_historical": null,
         "status": "not_started",
         "audited": false,
-        "length_m": 3003.4,
+        "length_m": 3092.2,
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "tertiary",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
-        "type": "LineString",
+        "type": "MultiLineString",
         "coordinates": [
           [
-            26.6389871,
-            44.0378659
+            [
+              26.6392857,
+              44.0375291
+            ],
+            [
+              26.6391674,
+              44.0377189
+            ],
+            [
+              26.6389871,
+              44.0378659
+            ]
           ],
           [
-            26.6388658,
-            44.0379821
+            [
+              26.6389871,
+              44.0378659
+            ],
+            [
+              26.6390964,
+              44.0376538
+            ],
+            [
+              26.6391854,
+              44.037498
+            ]
           ],
           [
-            26.6384015,
-            44.0383411
-          ],
-          [
-            26.635535,
-            44.04034
-          ],
-          [
-            26.6335455,
-            44.0417153
-          ],
-          [
-            26.6323442,
-            44.0425629
-          ],
-          [
-            26.632024,
-            44.0427999
-          ],
-          [
-            26.6318053,
-            44.0429997
-          ],
-          [
-            26.6316276,
-            44.0432257
-          ],
-          [
-            26.6315166,
-            44.0435465
-          ],
-          [
-            26.6314778,
-            44.0438594
-          ],
-          [
-            26.6314413,
-            44.0454952
-          ],
-          [
-            26.6314186,
-            44.0465084
-          ],
-          [
-            26.6313916,
-            44.0479416
-          ],
-          [
-            26.6314198,
-            44.0483922
-          ],
-          [
-            26.6314938,
-            44.0487609
-          ],
-          [
-            26.6316452,
-            44.049335
-          ],
-          [
-            26.6317398,
-            44.049781
-          ],
-          [
-            26.6317796,
-            44.0501552
-          ],
-          [
-            26.6317203,
-            44.050455
-          ],
-          [
-            26.6315402,
-            44.0507874
-          ],
-          [
-            26.6313041,
-            44.0510408
-          ],
-          [
-            26.630938,
-            44.0512839
-          ],
-          [
-            26.6306005,
-            44.0514434
-          ],
-          [
-            26.6301668,
-            44.0515747
-          ],
-          [
-            26.6298642,
-            44.0516298
-          ],
-          [
-            26.6295682,
-            44.0516547
-          ],
-          [
-            26.6293292,
-            44.0516558
-          ],
-          [
-            26.6288886,
-            44.0516131
-          ],
-          [
-            26.623905,
-            44.0509867
-          ],
-          [
-            26.623398,
-            44.0509329
-          ],
-          [
-            26.6231701,
-            44.0509231
-          ],
-          [
-            26.6230402,
-            44.0509346
-          ],
-          [
-            26.622938,
-            44.050962
-          ],
-          [
-            26.6227782,
-            44.0510345
-          ],
-          [
-            26.6226232,
-            44.0511052
-          ],
-          [
-            26.6221968,
-            44.0512762
-          ],
-          [
-            26.622083,
-            44.0513196
-          ],
-          [
-            26.6219973,
-            44.0513523
-          ],
-          [
-            26.6218478,
-            44.0513908
-          ],
-          [
-            26.6216701,
-            44.0514055
-          ],
-          [
-            26.6214917,
-            44.0514034
-          ],
-          [
-            26.6189914,
-            44.0513158
-          ],
-          [
-            26.6169371,
-            44.0512831
-          ],
-          [
-            26.6165222,
-            44.0512786
-          ],
-          [
-            26.6162844,
-            44.0512682
-          ],
-          [
-            26.6162352,
-            44.0512645
-          ],
-          [
-            26.6159191,
-            44.0512202
-          ],
-          [
-            26.6157584,
-            44.0511976
+            [
+              26.6389871,
+              44.0378659
+            ],
+            [
+              26.6388658,
+              44.0379821
+            ],
+            [
+              26.6384015,
+              44.0383411
+            ],
+            [
+              26.635535,
+              44.04034
+            ],
+            [
+              26.6335455,
+              44.0417153
+            ],
+            [
+              26.6323442,
+              44.0425629
+            ],
+            [
+              26.632024,
+              44.0427999
+            ],
+            [
+              26.6318053,
+              44.0429997
+            ],
+            [
+              26.6316276,
+              44.0432257
+            ],
+            [
+              26.6315166,
+              44.0435465
+            ],
+            [
+              26.6314778,
+              44.0438594
+            ],
+            [
+              26.6314413,
+              44.0454952
+            ],
+            [
+              26.6314186,
+              44.0465084
+            ],
+            [
+              26.6313916,
+              44.0479416
+            ],
+            [
+              26.6314198,
+              44.0483922
+            ],
+            [
+              26.6314938,
+              44.0487609
+            ],
+            [
+              26.6316452,
+              44.049335
+            ],
+            [
+              26.6317398,
+              44.049781
+            ],
+            [
+              26.6317796,
+              44.0501552
+            ],
+            [
+              26.6317203,
+              44.050455
+            ],
+            [
+              26.6315402,
+              44.0507874
+            ],
+            [
+              26.6313041,
+              44.0510408
+            ],
+            [
+              26.630938,
+              44.0512839
+            ],
+            [
+              26.6306005,
+              44.0514434
+            ],
+            [
+              26.6301668,
+              44.0515747
+            ],
+            [
+              26.6298642,
+              44.0516298
+            ],
+            [
+              26.6295682,
+              44.0516547
+            ],
+            [
+              26.6293292,
+              44.0516558
+            ],
+            [
+              26.6288886,
+              44.0516131
+            ],
+            [
+              26.623905,
+              44.0509867
+            ],
+            [
+              26.623398,
+              44.0509329
+            ],
+            [
+              26.6231701,
+              44.0509231
+            ],
+            [
+              26.6230402,
+              44.0509346
+            ],
+            [
+              26.622938,
+              44.050962
+            ],
+            [
+              26.6227782,
+              44.0510345
+            ],
+            [
+              26.6226232,
+              44.0511052
+            ],
+            [
+              26.6221968,
+              44.0512762
+            ],
+            [
+              26.622083,
+              44.0513196
+            ],
+            [
+              26.6219973,
+              44.0513523
+            ],
+            [
+              26.6218478,
+              44.0513908
+            ],
+            [
+              26.6216701,
+              44.0514055
+            ],
+            [
+              26.6214917,
+              44.0514034
+            ],
+            [
+              26.6189914,
+              44.0513158
+            ],
+            [
+              26.6169371,
+              44.0512831
+            ],
+            [
+              26.6165222,
+              44.0512786
+            ],
+            [
+              26.6162844,
+              44.0512682
+            ],
+            [
+              26.6162352,
+              44.0512645
+            ],
+            [
+              26.6159191,
+              44.0512202
+            ],
+            [
+              26.6157584,
+              44.0511976
+            ]
           ]
         ]
       }
@@ -2470,8 +2634,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2512,8 +2678,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2550,8 +2718,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -2616,8 +2786,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2646,8 +2818,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2676,8 +2850,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "paving_stones",
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -2750,8 +2926,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2788,8 +2966,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2846,8 +3026,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -2928,8 +3110,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -2970,8 +3154,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -3036,8 +3222,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3070,8 +3258,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3108,8 +3298,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3174,8 +3366,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3204,8 +3398,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3270,8 +3466,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3316,8 +3514,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3398,63 +3598,105 @@
         "name_historical": null,
         "status": "not_started",
         "audited": false,
-        "length_m": 288.0,
+        "length_m": 524.3,
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
-        "type": "LineString",
+        "type": "MultiLineString",
         "coordinates": [
           [
-            26.6085113,
-            44.0476909
+            [
+              26.6085113,
+              44.0476909
+            ],
+            [
+              26.6084213,
+              44.0476737
+            ],
+            [
+              26.6083718,
+              44.047663
+            ],
+            [
+              26.6083063,
+              44.0476397
+            ],
+            [
+              26.608136,
+              44.0475892
+            ],
+            [
+              26.6079777,
+              44.0475479
+            ],
+            [
+              26.6077006,
+              44.0474793
+            ],
+            [
+              26.6075721,
+              44.0474269
+            ],
+            [
+              26.607102,
+              44.0471395
+            ],
+            [
+              26.6065178,
+              44.046789
+            ],
+            [
+              26.6063853,
+              44.0467027
+            ],
+            [
+              26.6055977,
+              44.0462196
+            ]
           ],
           [
-            26.6084213,
-            44.0476737
-          ],
-          [
-            26.6083718,
-            44.047663
-          ],
-          [
-            26.6083063,
-            44.0476397
-          ],
-          [
-            26.608136,
-            44.0475892
-          ],
-          [
-            26.6079777,
-            44.0475479
-          ],
-          [
-            26.6077006,
-            44.0474793
-          ],
-          [
-            26.6075721,
-            44.0474269
-          ],
-          [
-            26.607102,
-            44.0471395
-          ],
-          [
-            26.6065178,
-            44.046789
-          ],
-          [
-            26.6063853,
-            44.0467027
-          ],
-          [
-            26.6055977,
-            44.0462196
+            [
+              26.6037869,
+              44.0463191
+            ],
+            [
+              26.6029184,
+              44.0458406
+            ],
+            [
+              26.6026043,
+              44.0456736
+            ],
+            [
+              26.6024588,
+              44.0456341
+            ],
+            [
+              26.6022679,
+              44.0455953
+            ],
+            [
+              26.601984,
+              44.0455576
+            ],
+            [
+              26.6017678,
+              44.0455442
+            ],
+            [
+              26.6014957,
+              44.0455102
+            ],
+            [
+              26.601173,
+              44.0454444
+            ]
           ]
         ]
       }
@@ -3472,8 +3714,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3530,8 +3774,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3560,8 +3806,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -3686,8 +3934,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3724,8 +3974,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3826,8 +4078,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3864,8 +4118,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3902,8 +4158,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3936,8 +4194,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -3982,8 +4242,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4036,8 +4298,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4086,8 +4350,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "track",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -4164,8 +4430,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4234,8 +4502,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4268,8 +4538,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4322,8 +4594,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4376,8 +4650,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4418,8 +4694,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4512,27 +4790,41 @@
         "name_historical": null,
         "status": "not_started",
         "audited": false,
-        "length_m": 109.2,
+        "length_m": 157.2,
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
-        "type": "LineString",
+        "type": "MultiLineString",
         "coordinates": [
           [
-            26.6126511,
-            44.0494983
+            [
+              26.6126511,
+              44.0494983
+            ],
+            [
+              26.6121579,
+              44.0499421
+            ],
+            [
+              26.6118072,
+              44.0502706
+            ]
           ],
           [
-            26.6121579,
-            44.0499421
-          ],
-          [
-            26.6118072,
-            44.0502706
+            [
+              26.6118072,
+              44.0502706
+            ],
+            [
+              26.6117603,
+              44.0507012
+            ]
           ]
         ]
       }
@@ -4550,8 +4842,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4620,8 +4914,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4654,8 +4950,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4696,8 +4994,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4778,8 +5078,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "tertiary",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -4872,8 +5174,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4914,8 +5218,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -4952,8 +5258,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5018,8 +5326,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5068,8 +5378,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5154,8 +5466,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5228,8 +5542,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5346,8 +5662,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5404,8 +5722,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5438,8 +5758,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5488,8 +5810,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5542,8 +5866,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5572,8 +5898,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5602,123 +5930,189 @@
         "name_historical": null,
         "status": "not_started",
         "audited": false,
-        "length_m": 1194.7,
+        "length_m": 2740.4,
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "tertiary",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
-        "type": "LineString",
+        "type": "MultiLineString",
         "coordinates": [
           [
-            26.6157584,
-            44.0511976
+            [
+              26.6157584,
+              44.0511976
+            ],
+            [
+              26.6154463,
+              44.0511693
+            ],
+            [
+              26.6153285,
+              44.0511567
+            ],
+            [
+              26.6152019,
+              44.0511432
+            ],
+            [
+              26.614387,
+              44.0510562
+            ],
+            [
+              26.612087,
+              44.0507462
+            ],
+            [
+              26.6117603,
+              44.0507012
+            ],
+            [
+              26.6116352,
+              44.050684
+            ],
+            [
+              26.6113811,
+              44.0506397
+            ],
+            [
+              26.611113,
+              44.0505809
+            ],
+            [
+              26.6108338,
+              44.0504962
+            ],
+            [
+              26.6103498,
+              44.0503602
+            ],
+            [
+              26.6098742,
+              44.0502264
+            ],
+            [
+              26.6095824,
+              44.0501453
+            ],
+            [
+              26.6087453,
+              44.0499093
+            ],
+            [
+              26.6077682,
+              44.0496105
+            ],
+            [
+              26.6071043,
+              44.0494074
+            ],
+            [
+              26.6065547,
+              44.0492418
+            ],
+            [
+              26.6057264,
+              44.0489625
+            ],
+            [
+              26.605624,
+              44.0489162
+            ],
+            [
+              26.6055054,
+              44.048864
+            ],
+            [
+              26.6045427,
+              44.0483056
+            ],
+            [
+              26.6038544,
+              44.0479426
+            ],
+            [
+              26.6028016,
+              44.0473857
+            ],
+            [
+              26.6025621,
+              44.047254
+            ],
+            [
+              26.6024776,
+              44.0472094
+            ],
+            [
+              26.6022285,
+              44.047069
+            ]
           ],
           [
-            26.6154463,
-            44.0511693
-          ],
-          [
-            26.6153285,
-            44.0511567
-          ],
-          [
-            26.6152019,
-            44.0511432
-          ],
-          [
-            26.614387,
-            44.0510562
-          ],
-          [
-            26.612087,
-            44.0507462
-          ],
-          [
-            26.6117603,
-            44.0507012
-          ],
-          [
-            26.6116352,
-            44.050684
-          ],
-          [
-            26.6113811,
-            44.0506397
-          ],
-          [
-            26.611113,
-            44.0505809
-          ],
-          [
-            26.6108338,
-            44.0504962
-          ],
-          [
-            26.6103498,
-            44.0503602
-          ],
-          [
-            26.6098742,
-            44.0502264
-          ],
-          [
-            26.6095824,
-            44.0501453
-          ],
-          [
-            26.6087453,
-            44.0499093
-          ],
-          [
-            26.6077682,
-            44.0496105
-          ],
-          [
-            26.6071043,
-            44.0494074
-          ],
-          [
-            26.6065547,
-            44.0492418
-          ],
-          [
-            26.6057264,
-            44.0489625
-          ],
-          [
-            26.605624,
-            44.0489162
-          ],
-          [
-            26.6055054,
-            44.048864
-          ],
-          [
-            26.6045427,
-            44.0483056
-          ],
-          [
-            26.6038544,
-            44.0479426
-          ],
-          [
-            26.6028016,
-            44.0473857
-          ],
-          [
-            26.6025621,
-            44.047254
-          ],
-          [
-            26.6024776,
-            44.0472094
-          ],
-          [
-            26.6022285,
-            44.047069
+            [
+              26.6022285,
+              44.047069
+            ],
+            [
+              26.6017665,
+              44.0468235
+            ],
+            [
+              26.6016794,
+              44.0467716
+            ],
+            [
+              26.6005143,
+              44.0461269
+            ],
+            [
+              26.5996353,
+              44.0456729
+            ],
+            [
+              26.599432,
+              44.0455715
+            ],
+            [
+              26.5992482,
+              44.0454857
+            ],
+            [
+              26.5990721,
+              44.0454264
+            ],
+            [
+              26.5968402,
+              44.0448103
+            ],
+            [
+              26.5962406,
+              44.0446567
+            ],
+            [
+              26.5883884,
+              44.0425379
+            ],
+            [
+              26.5876826,
+              44.0423354
+            ],
+            [
+              26.5875007,
+              44.0422841
+            ],
+            [
+              26.5858504,
+              44.0418393
+            ],
+            [
+              26.5846284,
+              44.04151
+            ]
           ]
         ]
       }
@@ -5736,8 +6130,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5770,8 +6166,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -5908,8 +6306,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "tertiary",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -5990,8 +6390,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6040,8 +6442,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6070,8 +6474,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6108,8 +6514,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6138,8 +6546,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6168,8 +6578,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6202,8 +6614,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6252,8 +6666,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": null,
+        "road_class": "residential",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6294,8 +6710,10 @@
         "observations_count": 0,
         "issues_open": 0,
         "last_updated": "2026-06-17",
+        "surface_type": "asphalt",
+        "road_class": "pedestrian",
         "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-06-17"
+        "source_pulled": "2026-06-22"
       },
       "geometry": {
         "type": "LineString",
@@ -6335,6 +6753,1660 @@
           [
             26.6115109,
             44.0489064
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ribarska",
+        "name": "Ribarska",
+        "name_bg": "Рибарска",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 1036.3,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              26.6235048,
+              44.0541596
+            ],
+            [
+              26.6231949,
+              44.0541092
+            ],
+            [
+              26.6230907,
+              44.0540946
+            ],
+            [
+              26.6229979,
+              44.0540877
+            ],
+            [
+              26.6228898,
+              44.0540872
+            ],
+            [
+              26.6227726,
+              44.0540889
+            ],
+            [
+              26.6226697,
+              44.0540848
+            ],
+            [
+              26.6225453,
+              44.0540743
+            ],
+            [
+              26.6224178,
+              44.054059
+            ],
+            [
+              26.6210493,
+              44.0538785
+            ],
+            [
+              26.6209482,
+              44.0538592
+            ],
+            [
+              26.6208674,
+              44.0538306
+            ],
+            [
+              26.6206445,
+              44.0537572
+            ],
+            [
+              26.620559,
+              44.0537208
+            ],
+            [
+              26.6204861,
+              44.0536804
+            ],
+            [
+              26.6204067,
+              44.0536321
+            ],
+            [
+              26.6203475,
+              44.0536017
+            ],
+            [
+              26.6199008,
+              44.0534512
+            ],
+            [
+              26.6182723,
+              44.052964
+            ],
+            [
+              26.6182062,
+              44.0529442
+            ],
+            [
+              26.6179121,
+              44.0528578
+            ],
+            [
+              26.6174698,
+              44.0527278
+            ],
+            [
+              26.6171496,
+              44.0526317
+            ],
+            [
+              26.6170599,
+              44.0526056
+            ],
+            [
+              26.6163314,
+              44.0523901
+            ],
+            [
+              26.6162881,
+              44.0523759
+            ],
+            [
+              26.6162486,
+              44.0523588
+            ],
+            [
+              26.6161794,
+              44.0523157
+            ],
+            [
+              26.6161281,
+              44.052292
+            ],
+            [
+              26.6160712,
+              44.0522796
+            ],
+            [
+              26.6159314,
+              44.0522605
+            ],
+            [
+              26.6156177,
+              44.0522343
+            ],
+            [
+              26.6152182,
+              44.0522293
+            ],
+            [
+              26.6151737,
+              44.0522282
+            ],
+            [
+              26.6151405,
+              44.0522226
+            ],
+            [
+              26.6140454,
+              44.0519496
+            ],
+            [
+              26.6137945,
+              44.0518627
+            ],
+            [
+              26.6128623,
+              44.0515418
+            ]
+          ],
+          [
+            [
+              26.6212049,
+              44.0532594
+            ],
+            [
+              26.6210605,
+              44.0532159
+            ],
+            [
+              26.6206648,
+              44.0531447
+            ],
+            [
+              26.620521,
+              44.0531334
+            ],
+            [
+              26.6202299,
+              44.0531498
+            ],
+            [
+              26.6200545,
+              44.0531788
+            ],
+            [
+              26.6200054,
+              44.0532077
+            ],
+            [
+              26.6199478,
+              44.0533427
+            ],
+            [
+              26.6199008,
+              44.0534512
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "trepetlika",
+        "name": "Trepetlika",
+        "name_bg": "Трепетлика",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 367.2,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6047002,
+            44.0401458
+          ],
+          [
+            26.604463,
+            44.0400979
+          ],
+          [
+            26.6042989,
+            44.0400798
+          ],
+          [
+            26.6040938,
+            44.0400766
+          ],
+          [
+            26.6037521,
+            44.0400864
+          ],
+          [
+            26.6032783,
+            44.0401162
+          ],
+          [
+            26.6028884,
+            44.0400749
+          ],
+          [
+            26.6024509,
+            44.0400258
+          ],
+          [
+            26.6021416,
+            44.0399868
+          ],
+          [
+            26.6019289,
+            44.0399509
+          ],
+          [
+            26.601765,
+            44.0399182
+          ],
+          [
+            26.6002749,
+            44.0394621
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "perunika",
+        "name": "Perunika",
+        "name_bg": "Перуника",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 110.2,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              26.6032933,
+              44.0412228
+            ],
+            [
+              26.6032703,
+              44.0416866
+            ]
+          ],
+          [
+            [
+              26.6032783,
+              44.0401162
+            ],
+            [
+              26.6032577,
+              44.0406425
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lyulin",
+        "name": "Lyulin",
+        "name_bg": "Люлин",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 256.2,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.5987646,
+            44.0414533
+          ],
+          [
+            26.5991556,
+            44.0409278
+          ],
+          [
+            26.5994044,
+            44.0406858
+          ],
+          [
+            26.5994437,
+            44.0406771
+          ],
+          [
+            26.5994789,
+            44.0406781
+          ],
+          [
+            26.599505,
+            44.0406708
+          ],
+          [
+            26.5995739,
+            44.0405867
+          ],
+          [
+            26.5995983,
+            44.0405053
+          ],
+          [
+            26.6002749,
+            44.0394621
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ruen",
+        "name": "Ruen",
+        "name_bg": "Руен",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 192.3,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6008306,
+            44.0415108
+          ],
+          [
+            26.6011446,
+            44.0410305
+          ],
+          [
+            26.601765,
+            44.0399182
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "simeon-dochev",
+        "name": "Simeon Dochev",
+        "name_bg": "Симеон Дочев",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 158.0,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.602825,
+            44.0454022
+          ],
+          [
+            26.6027225,
+            44.0453983
+          ],
+          [
+            26.6024913,
+            44.0453255
+          ],
+          [
+            26.602281,
+            44.0452361
+          ],
+          [
+            26.6020857,
+            44.0451449
+          ],
+          [
+            26.6019363,
+            44.0450481
+          ],
+          [
+            26.6018487,
+            44.0449694
+          ],
+          [
+            26.6017641,
+            44.0448694
+          ],
+          [
+            26.601669,
+            44.0447422
+          ],
+          [
+            26.6015831,
+            44.0446413
+          ],
+          [
+            26.6015077,
+            44.0445909
+          ],
+          [
+            26.6014375,
+            44.0445619
+          ],
+          [
+            26.6013484,
+            44.0445492
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "timok",
+        "name": "Timok",
+        "name_bg": "Тимок",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 332.8,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6032684,
+            44.0417593
+          ],
+          [
+            26.6027834,
+            44.0421601
+          ],
+          [
+            26.6014082,
+            44.0435671
+          ],
+          [
+            26.6013608,
+            44.0436271
+          ],
+          [
+            26.6013218,
+            44.0437012
+          ],
+          [
+            26.6012902,
+            44.0437556
+          ],
+          [
+            26.6012677,
+            44.0438078
+          ],
+          [
+            26.6012518,
+            44.0438509
+          ],
+          [
+            26.6012505,
+            44.0438946
+          ],
+          [
+            26.6012599,
+            44.0439385
+          ],
+          [
+            26.6012754,
+            44.0439842
+          ],
+          [
+            26.6012956,
+            44.044023
+          ],
+          [
+            26.6013252,
+            44.0440631
+          ],
+          [
+            26.6014821,
+            44.0442445
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "vacha",
+        "name": "Vacha",
+        "name_bg": "Въча",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 314.1,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6047356,
+            44.0446103
+          ],
+          [
+            26.6043682,
+            44.0446576
+          ],
+          [
+            26.6041636,
+            44.0447075
+          ],
+          [
+            26.6039937,
+            44.0447441
+          ],
+          [
+            26.6038809,
+            44.0447592
+          ],
+          [
+            26.6036936,
+            44.0447745
+          ],
+          [
+            26.6035299,
+            44.044771
+          ],
+          [
+            26.6033612,
+            44.0447309
+          ],
+          [
+            26.6028841,
+            44.044637
+          ],
+          [
+            26.6022826,
+            44.0444718
+          ],
+          [
+            26.6014821,
+            44.0442445
+          ],
+          [
+            26.6011506,
+            44.0442226
+          ],
+          [
+            26.6010956,
+            44.0442271
+          ],
+          [
+            26.6010423,
+            44.0442398
+          ],
+          [
+            26.6009758,
+            44.0442645
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lyuben-karavelov",
+        "name": "Lyuben Karavelov",
+        "name_bg": "Любен Каравелов",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 394.0,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6169371,
+            44.0512831
+          ],
+          [
+            26.617329,
+            44.0515791
+          ],
+          [
+            26.6176382,
+            44.051791
+          ],
+          [
+            26.6179207,
+            44.0519279
+          ],
+          [
+            26.6180658,
+            44.0519864
+          ],
+          [
+            26.6182573,
+            44.0520419
+          ],
+          [
+            26.6185037,
+            44.0520999
+          ],
+          [
+            26.6190684,
+            44.0522133
+          ],
+          [
+            26.6194436,
+            44.0522612
+          ],
+          [
+            26.6196071,
+            44.0522666
+          ],
+          [
+            26.6200615,
+            44.0522666
+          ],
+          [
+            26.6211947,
+            44.0522706
+          ],
+          [
+            26.621287,
+            44.052268
+          ],
+          [
+            26.6213699,
+            44.0522487
+          ],
+          [
+            26.6214254,
+            44.052227
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "treti-mart",
+        "name": "Treti mart",
+        "name_bg": "Трети март",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 196.3,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              26.6200277,
+              44.0527332
+            ],
+            [
+              26.6211093,
+              44.052936
+            ]
+          ],
+          [
+            [
+              26.621287,
+              44.052268
+            ],
+            [
+              26.6211093,
+              44.052936
+            ],
+            [
+              26.6210605,
+              44.0532159
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "krastyu-stoyanov",
+        "name": "Krastyu Stoyanov",
+        "name_bg": "Кръстю Стоянов",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 118.9,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6162352,
+            44.0512645
+          ],
+          [
+            26.6162469,
+            44.052258
+          ],
+          [
+            26.6161794,
+            44.0523157
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "malchika",
+        "name": "Malchika",
+        "name_bg": "Малчика",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 139.8,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6155149,
+            44.0510122
+          ],
+          [
+            26.6154463,
+            44.0511693
+          ],
+          [
+            26.6154846,
+            44.0514064
+          ],
+          [
+            26.6155491,
+            44.0515918
+          ],
+          [
+            26.6156781,
+            44.0519055
+          ],
+          [
+            26.615693,
+            44.0519501
+          ],
+          [
+            26.615688,
+            44.0519875
+          ],
+          [
+            26.6156177,
+            44.0522343
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "nikopol",
+        "name": "Nikopol",
+        "name_bg": "Никопол",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 129.0,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6176382,
+            44.051791
+          ],
+          [
+            26.6175562,
+            44.0519167
+          ],
+          [
+            26.6175066,
+            44.0519737
+          ],
+          [
+            26.6173851,
+            44.052029
+          ],
+          [
+            26.616819,
+            44.0521671
+          ],
+          [
+            26.6167198,
+            44.0521867
+          ],
+          [
+            26.6162469,
+            44.052258
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "yasen",
+        "name": "Yasen",
+        "name_bg": "Ясен",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 247.5,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.5996353,
+            44.0456729
+          ],
+          [
+            26.5998702,
+            44.045223
+          ],
+          [
+            26.5999374,
+            44.045071
+          ],
+          [
+            26.5999474,
+            44.0450156
+          ],
+          [
+            26.5999424,
+            44.0449298
+          ],
+          [
+            26.599935,
+            44.0448518
+          ],
+          [
+            26.5999051,
+            44.0447456
+          ],
+          [
+            26.5998624,
+            44.0445956
+          ],
+          [
+            26.5997647,
+            44.0443549
+          ],
+          [
+            26.5996935,
+            44.04423
+          ],
+          [
+            26.5996106,
+            44.0441266
+          ],
+          [
+            26.5990706,
+            44.0436703
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "vasil-levski",
+        "name": "Vasil Levski",
+        "name_bg": "Васил Левски",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 440.1,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.5990706,
+            44.0436703
+          ],
+          [
+            26.5992455,
+            44.043748
+          ],
+          [
+            26.599509,
+            44.0438942
+          ],
+          [
+            26.5997381,
+            44.0440572
+          ],
+          [
+            26.6001989,
+            44.0443746
+          ],
+          [
+            26.600511,
+            44.0446211
+          ],
+          [
+            26.6006313,
+            44.0447275
+          ],
+          [
+            26.6007313,
+            44.0448331
+          ],
+          [
+            26.6008598,
+            44.0450264
+          ],
+          [
+            26.6009209,
+            44.0451213
+          ],
+          [
+            26.601173,
+            44.0454444
+          ],
+          [
+            26.6019122,
+            44.0463982
+          ],
+          [
+            26.6020128,
+            44.0465716
+          ],
+          [
+            26.6020066,
+            44.0466123
+          ],
+          [
+            26.601938,
+            44.046674
+          ],
+          [
+            26.6017665,
+            44.0468235
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ivan-gabrovski",
+        "name": "Ivan Gabrovski",
+        "name_bg": "Иван Габровски",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 616.6,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "unclassified",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6032703,
+            44.0416866
+          ],
+          [
+            26.602395,
+            44.0417104
+          ],
+          [
+            26.6019925,
+            44.041723
+          ],
+          [
+            26.6017278,
+            44.0417293
+          ],
+          [
+            26.6016463,
+            44.0417263
+          ],
+          [
+            26.6015659,
+            44.0417183
+          ],
+          [
+            26.6014822,
+            44.0417043
+          ],
+          [
+            26.601404,
+            44.0416852
+          ],
+          [
+            26.6008306,
+            44.0415108
+          ],
+          [
+            26.5991556,
+            44.0409278
+          ],
+          [
+            26.5961726,
+            44.0398231
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "isperih",
+        "name": "Isperih",
+        "name_bg": "Исперих",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 837.4,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6049603,
+            44.0409402
+          ],
+          [
+            26.6043684,
+            44.0410403
+          ],
+          [
+            26.6036859,
+            44.0411677
+          ],
+          [
+            26.603471,
+            44.0412026
+          ],
+          [
+            26.6032933,
+            44.0412228
+          ],
+          [
+            26.6027278,
+            44.041201
+          ],
+          [
+            26.6022134,
+            44.0411816
+          ],
+          [
+            26.6018331,
+            44.041155
+          ],
+          [
+            26.6015064,
+            44.0411059
+          ],
+          [
+            26.6013003,
+            44.0410678
+          ],
+          [
+            26.6011446,
+            44.0410305
+          ],
+          [
+            26.6007479,
+            44.0409084
+          ],
+          [
+            26.6000745,
+            44.0406866
+          ],
+          [
+            26.5995983,
+            44.0405053
+          ],
+          [
+            26.5974645,
+            44.0396973
+          ],
+          [
+            26.5966843,
+            44.0394119
+          ],
+          [
+            26.5964714,
+            44.0393346
+          ],
+          [
+            26.5962335,
+            44.0392471
+          ],
+          [
+            26.5952711,
+            44.0388871
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ropotamo",
+        "name": "Ropotamo",
+        "name_bg": "Ропотамо",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 198.9,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6047437,
+            44.0462718
+          ],
+          [
+            26.6042039,
+            44.0473207
+          ],
+          [
+            26.6038544,
+            44.0479426
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "strumitsa",
+        "name": "Strumitsa",
+        "name_bg": "Струмица",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 186.1,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6118072,
+            44.0502706
+          ],
+          [
+            26.6136956,
+            44.0504695
+          ],
+          [
+            26.6137727,
+            44.0504594
+          ],
+          [
+            26.6139718,
+            44.0502595
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "lom",
+        "name": "Lom",
+        "name_bg": "Лом",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 220.1,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6189914,
+            44.0513158
+          ],
+          [
+            26.6193252,
+            44.0514348
+          ],
+          [
+            26.6213981,
+            44.0521913
+          ],
+          [
+            26.6214254,
+            44.052227
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "pirin",
+        "name": "Pirin",
+        "name_bg": "Пирин",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 174.1,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.61253,
+            44.0518309
+          ],
+          [
+            26.6128623,
+            44.0515418
+          ],
+          [
+            26.6128302,
+            44.0514743
+          ],
+          [
+            26.6127807,
+            44.051377
+          ],
+          [
+            26.6118265,
+            44.0508089
+          ],
+          [
+            26.611768,
+            44.0507653
+          ],
+          [
+            26.6117603,
+            44.0507012
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "docho-mihaylov",
+        "name": "Docho Mihaylov",
+        "name_bg": "Дочо Михайлов",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 81.4,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "pedestrian",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              26.6104803,
+              44.0511829
+            ],
+            [
+              26.6107101,
+              44.0507372
+            ]
+          ],
+          [
+            [
+              26.6107101,
+              44.0507372
+            ],
+            [
+              26.6108338,
+              44.0504962
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "svishtov",
+        "name": "Svishtov",
+        "name_bg": "Свищов",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 164.0,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": null,
+        "road_class": "residential",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "MultiLineString",
+        "coordinates": [
+          [
+            [
+              26.6152019,
+              44.0511432
+            ],
+            [
+              26.61517,
+              44.0512956
+            ],
+            [
+              26.6151553,
+              44.0513176
+            ],
+            [
+              26.6151018,
+              44.0513683
+            ],
+            [
+              26.6149773,
+              44.0514044
+            ],
+            [
+              26.61472,
+              44.0514736
+            ]
+          ],
+          [
+            [
+              26.614087,
+              44.0514428
+            ],
+            [
+              26.6140589,
+              44.0514578
+            ],
+            [
+              26.614027,
+              44.0515347
+            ],
+            [
+              26.6139741,
+              44.0516002
+            ],
+            [
+              26.6139543,
+              44.051634
+            ],
+            [
+              26.6139525,
+              44.0516567
+            ],
+            [
+              26.6137945,
+              44.0518627
+            ]
+          ],
+          [
+            [
+              26.61472,
+              44.0514736
+            ],
+            [
+              26.614617,
+              44.0514986
+            ],
+            [
+              26.614489,
+              44.0514799
+            ],
+            [
+              26.6142912,
+              44.0514585
+            ],
+            [
+              26.614087,
+              44.0514428
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "ploshtad-nikola-vaptsarov",
+        "name": "ploshtad \"Nikola Vaptsarov\"",
+        "name_bg": "площад \"Никола Вапцаров\"",
+        "name_historical": null,
+        "status": "not_started",
+        "audited": false,
+        "length_m": 128.6,
+        "observations_count": 0,
+        "issues_open": 0,
+        "last_updated": "2026-06-22",
+        "surface_type": "asphalt",
+        "road_class": "pedestrian",
+        "source": "OpenStreetMap contributors, via Overpass API",
+        "source_pulled": "2026-06-22"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            26.6153285,
+            44.0511567
+          ],
+          [
+            26.6153485,
+            44.0511245
+          ],
+          [
+            26.6154088,
+            44.051047
+          ],
+          [
+            26.6153823,
+            44.0509707
+          ],
+          [
+            26.615401,
+            44.0509405
+          ],
+          [
+            26.615437,
+            44.0509253
+          ],
+          [
+            26.6158015,
+            44.0511021
+          ],
+          [
+            26.6159191,
+            44.0512202
+          ],
+          [
+            26.6157584,
+            44.0511976
+          ],
+          [
+            26.6154463,
+            44.0511693
+          ],
+          [
+            26.6153285,
+            44.0511567
           ]
         ]
       }
