@@ -25,7 +25,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 GEOJSON_PATH = REPO_ROOT / "data" / "tutrakan-streets.geojson"
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
-BBOX_SOUTH, BBOX_WEST, BBOX_NORTH, BBOX_EAST = 43.95, 26.50, 44.15, 26.75
+BBOX_SOUTH, BBOX_WEST, BBOX_NORTH, BBOX_EAST = 44.026, 26.592, 44.058, 26.648
 OVERPASS_QUERY = (
     "[out:json][timeout:90];\n"
     'way["highway"]({south},{west},{north},{east});\n'
