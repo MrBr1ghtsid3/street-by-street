@@ -278,6 +278,59 @@ function renderCaseLink(obs, streetId) {
   `;
 }
 
+function renderResolutionSection(obs) {
+  const resolution = obs.resolution;
+  if (!resolution) {
+    return "";
+  }
+
+  const stats = [];
+  if (typeof resolution.person_hours === "number") {
+    stats.push(`${resolution.person_hours} person-hrs`);
+  }
+  if (typeof resolution.cost_eur === "number") {
+    stats.push(`€${resolution.cost_eur.toFixed(2)}`);
+  }
+  if (resolution.people) {
+    stats.push(resolution.people);
+  }
+
+  const equipmentLine =
+    resolution.equipment && resolution.equipment.length
+      ? `<p class="observation-popup__resolution-equipment">${resolution.equipment.join(", ")}</p>`
+      : "";
+
+  // No image upload/display pipeline exists yet (see ethics.md) - the
+  // filename is shown as a caption placeholder until that feature lands.
+  const photoBlock = resolution.after_photo
+    ? `
+      <div class="observation-popup__photo">
+        <i class="ti ti-camera" aria-hidden="true"></i>
+        <p class="observation-popup__photo-caption">After: ${resolution.after_photo}</p>
+      </div>
+    `
+    : "";
+
+  const caseLink = resolution.case_ref
+    ? `<a class="observation-popup__resolution-case" href="${REPO_ISSUES_URL}/${resolution.case_ref}" target="_blank" rel="noopener noreferrer">Full case &rarr;</a>`
+    : "";
+
+  return `
+    <div class="observation-popup__resolution">
+      <div class="observation-popup__resolution-header">
+        <h4>Resolution</h4>
+        <span class="status-badge status-badge--${resolution.outcome}">${statusLabel(resolution.outcome)}</span>
+      </div>
+      <p class="observation-popup__resolution-date">${resolution.date}</p>
+      <p class="observation-popup__resolution-summary">${resolution.summary}</p>
+      ${stats.length ? `<p class="observation-popup__resolution-stats">${stats.join(" &middot; ")}</p>` : ""}
+      ${equipmentLine}
+      ${photoBlock}
+      ${caseLink}
+    </div>
+  `;
+}
+
 function renderObservationPopup(obs, streetId) {
   const icon = CATEGORY_ICON[obs.category] || CATEGORY_ICON.other;
   return `
@@ -291,6 +344,7 @@ function renderObservationPopup(obs, streetId) {
       <p class="observation-popup__date">${renderObservationDate(obs)}</p>
       ${renderNearbyStreetsLine(obs)}
       <div class="observation-popup__case-row">${renderCaseLink(obs, streetId)}</div>
+      ${renderResolutionSection(obs)}
     </div>
   `;
 }

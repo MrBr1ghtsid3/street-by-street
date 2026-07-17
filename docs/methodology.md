@@ -66,6 +66,27 @@ rationale. In the audit workflow specifically:
   `resolved` (and set `resolved_date`) as a manual step — closing the
   Case does not do this automatically.
 
+### Resolution and status
+
+When an intervention is worth recording publicly beyond a bare status
+change — who did it, how long it took, what it cost — add a `resolution`
+object to the observation (see
+[data-taxonomy.md](data-taxonomy.md#resolution)). It's a hand-authored
+summary, written from what actually happened, not copied automatically
+from the Case.
+
+`resolution.outcome` decides what to do with `status`, as a manual step
+taken in the same edit:
+
+- `outcome: "resolved"` — set `status` to `resolved` (and `resolved_date`,
+  as above).
+- `outcome: "partial"` or `"workaround"` — leave `status` as `open` (or
+  `in_progress`); the resolution summary documents what was tried without
+  claiming the observation is closed.
+
+Nothing enforces this pairing in code — it's the same kind of judgement
+call as setting `status` itself.
+
 ## Attribute capture
 
 Attributes are captured once per street, ideally during or shortly after

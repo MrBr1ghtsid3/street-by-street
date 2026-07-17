@@ -77,6 +77,7 @@ optional fields populated; see the note after the table.
 | `resolved_date` | Required (value nullable) | Date resolved, if applicable; otherwise `null`. |
 | `tracking_issue` | Optional | GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`/absent. |
 | `nearby_streets` | Optional | Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. |
+| `resolution` | Optional | Hand-curated public summary of an intervention (people, time, cost, outcome). Absent until the observation has actually been acted on. See [Resolution](#resolution) below. |
 
 Verified against `data/streets/ana-ventura.json`, the one real record that
 exists today: every observation has the seven required fields plus
@@ -99,6 +100,64 @@ judgement call at data-entry time, the same way category and status are.
 [docs/case-tracking.md](case-tracking.md) for the linking convention. Add
 it only when a Case is actually opened for an observation; do not backfill
 it onto observations that have no Case.
+
+### Resolution
+
+`resolution` is an optional object, absent by default. It appears on an
+observation once the underlying problem (or, for an asset, some notable
+change) has actually been acted on — walked out to, cleared, repaired,
+patched. It is a hand-curated **public summary** of that intervention, not
+an automated sync of the linked Case: the GitHub Case
+(`tracking_issue`/`case_ref`) stays the private source of truth for full
+process detail (who, exact itemised spend, internal discussion), and the
+`resolution` object is a deliberately smaller, published account of the
+same event. Authoring it by hand — rather than generating it from the
+Case — is what keeps the two from drifting apart; see
+[ADR 007](../decisions/007-intervention-data.md) for the reasoning.
+
+```json
+"resolution": {
+  "date": "2026-06-22",
+  "outcome": "resolved",
+  "people": "3 volunteers",
+  "person_hours": 4.5,
+  "equipment": ["litter pickers", "refuse bags", "gloves"],
+  "cost_eur": 12.50,
+  "cost_note": "bags and gloves; pickers borrowed",
+  "after_photo": "ana-ventura__obs-2__after.jpg",
+  "case_ref": 5,
+  "summary": "Corner cleared; recurrence likely without a bin nearby."
+}
+```
+
+| Field | Required? | Description |
+| --- | --- | --- |
+| `date` | Required (when `resolution` present) | Date of the intervention, ISO (`YYYY-MM-DD`). |
+| `outcome` | Required (when `resolution` present) | One of `resolved`, `partial`, `workaround` — see below for how this maps to the observation's `status`. |
+| `summary` | Required (when `resolution` present) | One-line public narrative of what was done. Include an honest patch-vs-fix note where relevant (e.g. "cleared, not a permanent fix") rather than implying more than was done. |
+| `people` | Optional | Free-form string describing who did the work — `"1 — me"`, `"3 volunteers"`, or names if the contributors are comfortable being named. Deliberately a string, not a structured array: effort varies too much in kind (a lone steward vs. an organised group) to force into one shape. |
+| `person_hours` | Optional | Number. People × hours each — the single aggregatable measure of human effort across POIs, kept numeric specifically so it can be summed/averaged later even though `people` itself is free text. |
+| `equipment` | Optional | Array of strings naming what was used. |
+| `cost_eur` | Optional | Number, in euros (the project's cost unit throughout, not BGN/lev). |
+| `cost_note` | Optional | Free text for itemisation or context the bare number doesn't capture (what was bought vs. borrowed, etc). |
+| `after_photo` | Optional | Filename of an after photo, following the same `{street-id}__obs-{id}__after.{ext}` naming convention as other observation photos, stored under `assets/images/streets/{street-id}/`. Absent if no after photo was taken. |
+| `case_ref` | Optional | The GitHub issue number of the Case with full private detail — the same value as the observation's own `tracking_issue`, duplicated here so the resolution record is self-contained even if read apart from the rest of the observation. |
+
+The `resolution` object as a whole is absent on every observation that
+hasn't been acted on yet — do not add an empty or placeholder `resolution`
+object ahead of an actual intervention.
+
+`resolution.outcome` and the observation's `status` are related by a
+manual convention, not enforced by code:
+
+- `outcome: "resolved"` — set the observation's `status` to `resolved` as
+  part of the same edit that adds the `resolution` object.
+- `outcome: "partial"` or `"workaround"` — the observation's `status`
+  stays `open` (or `in_progress`); the `resolution` object annotates that
+  something was tried without fully closing it out.
+
+See [methodology.md](methodology.md#resolution-and-status) for this same
+rule in the data-entry workflow.
 
 `nearby_streets` lists every street within 50m of the observation's
 `coordinates`, closest first, with the closest marked `primary: true` — a
