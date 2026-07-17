@@ -440,6 +440,19 @@ path.street-line:focus {
   color: var(--grey-800);
 }
 
+/* Resolution outcome badges (observation-popup__resolution) - "resolved"
+   reuses the status-badge--resolved rule above; these two cover the
+   remaining outcome values. */
+.status-badge--partial {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-street-active);
+}
+
+.status-badge--workaround {
+  background: var(--grey-300);
+  color: var(--grey-800);
+}
+
 /* Street audit status badge (data-attribute, not a BEM modifier) - kept
    separate from the .status-badge--* modifiers above, which are for
    observation status (issue open/in_progress/resolved, asset
@@ -683,6 +696,59 @@ path.street-line:focus {
 .observation-popup__open-case {
   color: var(--color-issue);
   font-weight: 600;
+}
+
+.observation-popup__resolution {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--grey-200);
+}
+
+.observation-popup__resolution-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+}
+
+.observation-popup__resolution-header h4 {
+  margin: 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--grey-600);
+}
+
+.observation-popup__resolution-date {
+  margin: 0 0 0.3rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.observation-popup__resolution-summary {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  color: var(--grey-900);
+}
+
+.observation-popup__resolution-stats {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  color: var(--grey-800);
+}
+
+.observation-popup__resolution-equipment {
+  margin: 0 0 0.4rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.observation-popup__resolution-case {
+  display: inline-block;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-asset);
 }
 
 /* About modal */
