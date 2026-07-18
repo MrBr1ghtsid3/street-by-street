@@ -97,6 +97,15 @@ free text (kebab-case is conventional but not enforced); it's there so
 several photos of the same observation stay distinguishable
 (`...-before.jpg`, `...-after.jpg`) without colliding.
 
+If `{description}` contains the word `cover` anywhere (case-insensitive —
+`...__cover.jpg`, `...__litter-cover.jpg`), that photo is treated as the
+linked Case's **cover photo**: instead of a plain comment, the pipeline
+embeds it at the top of the Case's issue body, since GitHub Issues have
+no dedicated cover-image field of their own. Naming a second photo
+`cover` for the same Case replaces the first — the embed always reflects
+whichever cover photo was most recently ingested. Every other photo keeps
+the existing comment-only behaviour.
+
 Photos must come straight off the camera/phone, not through a chat app —
 Mapillary is still the primary field-capture tool per the walk procedure
 above, but where a photo is committed directly to this repo for an
@@ -115,13 +124,20 @@ merge:
    `.github/workflows/photo-pipeline.yml`, which runs
    `scripts/photo_pipeline.py` against the newly added files. For each
    photo it: extracts GPS EXIF and, if the observation has no
-   `coordinates` yet, writes them; comments the photo onto the
-   observation's linked Case (`tracking_issue`), if any; strips EXIF from
-   the served copy of the image; and opens a second, **data PR** with the
-   coordinate/image changes for review. See
-   [ADR 006](../decisions/006-photo-pipeline.md) for the full design and
-   its limits (manual coordinates are never overwritten, no observation
-   is ever created by the pipeline).
+   `coordinates` yet, writes them; posts the photo to the observation's
+   linked Case (`tracking_issue`), if any — as the cover embed if the
+   filename marks it `cover`, otherwise as a plain comment; downscales
+   and recompresses the image (longest edge capped at 2000px, JPEG
+   quality 82, never upscaled) and strips EXIF from the served copy; and
+   opens a second, **data PR** with the coordinate/image changes for
+   review. See [ADR 006](../decisions/006-photo-pipeline.md) for the full
+   design and its limits (manual coordinates are never overwritten, no
+   observation is ever created by the pipeline).
+
+   Compression keeps the repository from accumulating full-resolution
+   camera output (an unedited phone photo lands around 5–6 MB; a raw
+   embed that size is slow to load in an issue or a future map popup)
+   without needing a separate image host.
 
 ## Attribute capture
 
