@@ -124,15 +124,19 @@ merge:
    `.github/workflows/photo-pipeline.yml`, which runs
    `scripts/photo_pipeline.py` against the newly added files. For each
    photo it: extracts GPS EXIF and, if the observation has no
-   `coordinates` yet, writes them; posts the photo to the observation's
-   linked Case (`tracking_issue`), if any — as the cover embed if the
-   filename marks it `cover`, otherwise as a plain comment; downscales
-   and recompresses the image (longest edge capped at 2000px, JPEG
-   quality 82, never upscaled) and strips EXIF from the served copy; and
-   opens a second, **data PR** with the coordinate/image changes for
-   review. See [ADR 006](../decisions/006-photo-pipeline.md) for the full
-   design and its limits (manual coordinates are never overwritten, no
-   observation is ever created by the pipeline).
+   `coordinates` yet, writes them; writes the observation's `photo` field
+   to point at the image, unless it's a cover photo (covers are
+   Case-only and never populate `photo` — last non-cover photo ingested
+   for an observation wins, so it stays a single primary map photo);
+   posts the photo to the observation's linked Case (`tracking_issue`),
+   if any — as the cover embed if the filename marks it `cover`,
+   otherwise as a plain comment; downscales and recompresses the image
+   (longest edge capped at 2000px, JPEG quality 82, never upscaled) and
+   strips EXIF from the served copy; and opens a second, **data PR** with
+   the coordinate/image/`photo`-field changes for review. See
+   [ADR 006](../decisions/006-photo-pipeline.md) for the full design and
+   its limits (manual coordinates are never overwritten, no observation
+   is ever created by the pipeline).
 
    Compression keeps the repository from accumulating full-resolution
    camera output (an unedited phone photo lands around 5–6 MB; a raw

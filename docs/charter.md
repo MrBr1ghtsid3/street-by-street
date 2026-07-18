@@ -156,9 +156,11 @@ implied by anything elsewhere in these docs:
   incoming reports would need a human review gate before anything reaches
   the published record — not just as a nice-to-have, but as a hard
   requirement.
-- **Photo capture with automatic privacy blurring at ingestion.** The
-  observation popup on the map already reserves a UI slot for a photo
-  with a caption describing this intent (see
-  [docs/ethics.md](ethics.md)), but no image upload, storage, or
-  face/animal-feature blurring pipeline exists. It's a placeholder, not a
-  working feature.
+- **Automated privacy blurring at photo ingestion.** Observation photos
+  are published on the map (see [docs/ethics.md](ethics.md)), but the
+  privacy safeguard behind that is manual: the steward personally checks
+  each photo for identifiable faces, animals, or plates before
+  committing it, and blurs by hand where needed. No automated
+  face/animal-feature detection or blurring pipeline exists yet — that
+  remains the intended improvement, not something already running behind
+  the scenes.

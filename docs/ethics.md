@@ -25,6 +25,14 @@ A street can be true and complete without a permanent, public, exact coordinate 
 
 The difference is not how brutal the fact is. It is whether publishing it serves the record, or merely exposes someone who never consented to being found.
 
+### Photos: manual vetting, not automated
+
+Observation photos are published on the public map. A photo can catch a face, an animal, or a number plate incidentally — street photography isn't staged — and none of that belongs in the published record even when it arrives attached to a fact that does.
+
+The current safeguard is manual: before a photo is committed, the steward personally checks it for anything that would identify a specific person or animal, and blurs it by hand where needed. That is the honest description of where this stands today — a guarantee of diligence per photo, not an automated one. Automated face/animal-feature blurring at ingestion remains the intended improvement (see [charter.md](charter.md#roadmap--not-yet-implemented)), but it isn't built yet, and this document won't describe it as if it were. Until it exists, treat every photo on the map as vetted by that manual step, not by a pipeline — and don't commit one you haven't personally checked.
+
+This is the same structural-fact/individually-identifying-detail line drawn above, applied to images rather than text: litter piled at a junction is a structural fact, fine to publish; a bystander's face caught in the same frame is individually-identifying detail, and stays out regardless of how the rest of the photo is handled.
+
 ### No lifeform too insignificant
 
 This work does not ration its attention by charisma, usefulness, or economic value. A stray dog, a roadside weed nobody asked about, the insects that keep a riverbank functioning — none of these are beneath documentation. Albert Schweitzer's *Ehrfurcht vor dem Leben*, reverence for life, holds that ethical seriousness extends to every will to live, not only the ones convenient to care about. We try to hold to that here, however small the thing in front of us.

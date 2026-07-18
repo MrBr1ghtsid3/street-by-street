@@ -118,7 +118,18 @@ jobs:
                       post = body.split(COVER_END, 1)[1].lstrip("\n")
                       new_body = f"{pre}{cover_block}\n\n{post}"
                   else:
-                      new_body = f"{cover_block}\n\n{body}"
+                      # Self-healing repair path: a body can have a bare
+                      # "![Cover photo](...)" line with no surrounding
+                      # markers - e.g. if a marker got stripped by a manual
+                      # edit, or predates this marker scheme entirely. Drop
+                      # any such line before re-inserting the properly
+                      # marked block, so the repair doesn't leave a
+                      # duplicate, unmarked image sitting alongside it.
+                      repaired = "\n".join(
+                          line for line in body.splitlines()
+                          if not line.strip().startswith("![Cover photo](")
+                      ).lstrip("\n")
+                      new_body = f"{cover_block}\n\n{repaired}"
 
                   with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False) as f:
                       f.write(new_body)
@@ -127,7 +138,19 @@ jobs:
                   subprocess.run(
                       ["gh", "issue", "edit", str(issue), "--body-file", body_file], check=True
                   )
-                  print(f"COVER_SET: issue #{issue} / {photo_name}")
+
+                  # Verify the round-trip: re-fetch and confirm both
+                  # markers actually landed, rather than assuming gh's
+                  # edit preserved the multiline HTML-comment block.
+                  verify = subprocess.run(
+                      ["gh", "issue", "view", str(issue), "--json", "body"],
+                      capture_output=True, text=True, check=True,
+                  )
+                  verified_body = json.loads(verify.stdout).get("body") or ""
+                  if COVER_START not in verified_body or COVER_END not in verified_body:
+                      print(f"WARNING: cover markers missing after edit on issue #{issue} - investigate manually")
+                  else:
+                      print(f"COVER_SET: issue #{issue} / {photo_name}")
                   continue
 
               # Idempotency guard: don't re-comment a photo that's already

@@ -224,10 +224,19 @@ function renderPhotoPlaceholder() {
     <div class="observation-popup__photo">
       <i class="ti ti-camera" aria-hidden="true"></i>
       <p class="observation-popup__photo-caption">
-        Photo pending. Once published, faces and identifiable animal
-        features will be blurred prior to publication &mdash; see
+        Photo pending. Published photos are checked by hand for
+        identifiable faces, animals, and plates before being committed
+        &mdash; see
         <a href="https://github.com/MrBr1ghtsid3/street-by-street/blob/main/docs/ethics.md" target="_blank" rel="noopener noreferrer">Ethics</a>.
       </p>
+    </div>
+  `;
+}
+
+function renderObservationPhoto(photoPath, altText) {
+  return `
+    <div class="observation-popup__photo observation-popup__photo--image">
+      <img src="${photoPath}" alt="${altText}" loading="lazy" />
     </div>
   `;
 }
@@ -278,7 +287,7 @@ function renderCaseLink(obs, streetId) {
   `;
 }
 
-function renderResolutionSection(obs) {
+function renderResolutionSection(obs, streetId) {
   const resolution = obs.resolution;
   if (!resolution) {
     return "";
@@ -300,15 +309,11 @@ function renderResolutionSection(obs) {
       ? `<p class="observation-popup__resolution-equipment">${resolution.equipment.join(", ")}</p>`
       : "";
 
-  // No image upload/display pipeline exists yet (see ethics.md) - the
-  // filename is shown as a caption placeholder until that feature lands.
   const photoBlock = resolution.after_photo
-    ? `
-      <div class="observation-popup__photo">
-        <i class="ti ti-camera" aria-hidden="true"></i>
-        <p class="observation-popup__photo-caption">After: ${resolution.after_photo}</p>
-      </div>
-    `
+    ? renderObservationPhoto(
+        `assets/images/streets/${streetId}/${resolution.after_photo}`,
+        `After: ${obs.title}`
+      )
     : "";
 
   const caseLink = resolution.case_ref
@@ -340,11 +345,11 @@ function renderObservationPopup(obs, streetId) {
         <span class="observation-popup__category observation-popup__category--${obs.type}"><i class="ti ${icon}" aria-hidden="true"></i> ${categoryLabel(obs.category)}</span>
         <span class="status-badge status-badge--${obs.status}">${statusLabel(obs.status)}</span>
       </div>
-      ${renderPhotoPlaceholder()}
+      ${obs.photo ? renderObservationPhoto(obs.photo, obs.title) : renderPhotoPlaceholder()}
       <p class="observation-popup__date">${renderObservationDate(obs)}</p>
       ${renderNearbyStreetsLine(obs)}
       <div class="observation-popup__case-row">${renderCaseLink(obs, streetId)}</div>
-      ${renderResolutionSection(obs)}
+      ${renderResolutionSection(obs, streetId)}
     </div>
   `;
 }

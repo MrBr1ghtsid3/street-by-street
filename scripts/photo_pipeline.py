@@ -17,12 +17,17 @@ line, via --from-file) and, for each one named
      copy actually served by the site carries no GPS/device metadata,
      and the coordinate, if any, is published deliberately as data, not
      incidentally as an image artifact.
-  4. Queues a Case comment (data/../pending_comments.json) for any photo
+  4. Writes the photo's repo-relative path to the observation's `photo`
+     field - unless it's a cover photo (covers are Case-only, per below,
+     and never populate `photo`). Last non-cover photo ingested for an
+     observation wins; there's one primary map photo per observation.
+  5. Queues a Case comment (data/../pending_comments.json) for any photo
      whose observation has a `tracking_issue`, for a later workflow step
      to post via `gh`. A photo whose description segment contains
      "cover" (case-insensitive) is flagged `is_cover: true` in its
      entry - the workflow embeds that one at the top of the Case's issue
-     body instead of posting it as a plain comment.
+     body instead of posting it as a plain comment, and it's Case-only:
+     it never populates the observation's `photo` field.
 
 Never creates or deletes an observation or a street file - a filename
 that doesn't resolve to an existing street/observation is logged and
@@ -190,13 +195,21 @@ def process_photo(photo_path, counts, pending_comments):
     else:
         lat, lng = gps
         observation["coordinates"] = {"lat": lat, "lng": lng}
+        coords_written = True
+        counts["coords_written"] += 1
+        print(f"COORDS_WRITTEN: {street_id} obs {observation_id} -> {lat}, {lng}")
+
+    photo_field_set = False
+    if not is_cover:
+        observation["photo"] = str(Path(photo_path).as_posix())
+        photo_field_set = True
+        print(f"PHOTO_SET: {street_id} obs {observation_id} -> {name}")
+
+    if coords_written or photo_field_set:
         street_file.write_text(
             json.dumps(record, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )
-        coords_written = True
-        counts["coords_written"] += 1
-        print(f"COORDS_WRITTEN: {street_id} obs {observation_id} -> {lat}, {lng}")
 
     had_exif, original_size, new_size = compress_and_strip_exif(photo_path)
     print(f"COMPRESSED: {name} {original_size}B -> {new_size}B")
