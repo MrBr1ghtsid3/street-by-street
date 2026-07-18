@@ -78,6 +78,7 @@ optional fields populated; see the note after the table.
 | `tracking_issue` | Optional | GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`/absent. |
 | `nearby_streets` | Optional | Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. |
 | `resolution` | Optional | Hand-curated public summary of an intervention (people, time, cost, outcome). Absent until the observation has actually been acted on. See [Resolution](#resolution) below. |
+| `photo` | Optional | Repo-relative path to this observation's primary photo (e.g. `assets/images/streets/ana-ventura/ana-ventura__obs-2__litter.jpg`), rendered on the map popup. Written by `scripts/photo_pipeline.py` for the most recently ingested non-cover photo targeting this observation; absent until one exists. |
 
 Verified against `data/streets/ana-ventura.json`, the one real record that
 exists today: every observation has the seven required fields plus
@@ -100,6 +101,18 @@ judgement call at data-entry time, the same way category and status are.
 [docs/case-tracking.md](case-tracking.md) for the linking convention. Add
 it only when a Case is actually opened for an observation; do not backfill
 it onto observations that have no Case.
+
+`photo` is optional and populated automatically, never hand-edited: the
+photo pipeline sets it when a non-cover photo named for this observation
+is ingested (see [methodology.md](methodology.md#photo-ingestion)). A
+**cover** photo (named with `cover` in its description segment) is
+Case-only — it embeds on the linked Case's issue body and deliberately
+never touches this field, so an observation can have a Case cover photo
+without having a map photo, and vice versa. Publishing a real photo here
+currently relies on the manual pre-commit vetting described in
+[docs/ethics.md](ethics.md), not on any automated redaction — treat that
+as a constraint on what gets committed, not something this field or the
+map renderer enforces.
 
 ### Resolution
 
