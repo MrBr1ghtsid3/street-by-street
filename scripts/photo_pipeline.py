@@ -11,13 +11,18 @@ line, via --from-file) and, for each one named
      observation's `coordinates` field - but only if that field is
      currently null. An observation that already has coordinates keeps
      them; the manual coordinate-picker workflow always wins over EXIF.
-  3. Re-saves the JPEG without EXIF, so the copy actually served by the
-     site carries no GPS/device metadata - the coordinate, if any, is
-     published deliberately as data, not incidentally as an image
-     artifact. Only files that had EXIF are re-saved.
+  3. Re-saves the JPEG for every processed photo: resized (downscale
+     only, longest edge capped at MAX_DIMENSION) and recompressed at
+     JPEG_QUALITY. EXIF is dropped as a side effect of the re-save - the
+     copy actually served by the site carries no GPS/device metadata,
+     and the coordinate, if any, is published deliberately as data, not
+     incidentally as an image artifact.
   4. Queues a Case comment (data/../pending_comments.json) for any photo
      whose observation has a `tracking_issue`, for a later workflow step
-     to post via `gh`.
+     to post via `gh`. A photo whose description segment contains
+     "cover" (case-insensitive) is flagged `is_cover: true` in its
+     entry - the workflow embeds that one at the top of the Case's issue
+     body instead of posting it as a plain comment.
 
 Never creates or deletes an observation or a street file - a filename
 that doesn't resolve to an existing street/observation is logged and
@@ -43,13 +48,23 @@ OBS_FIELD_RE = re.compile(r"^obs-(\d+)$")
 GPS_IFD_TAG = 0x8825
 GPS_LAT_REF, GPS_LAT, GPS_LON_REF, GPS_LON = 1, 2, 3, 4
 
+# Compression policy for every re-saved photo (see docs/methodology.md
+# and ADR 006's amendment): downscale-only, so a photo already under the
+# cap is left at its native resolution rather than upscaled.
+MAX_DIMENSION = 2000
+JPEG_QUALITY = 82
+
+COVER_MARKER = "cover"
+
 
 def parse_filename(photo_path):
-    """Return (street_id, observation_id) or None if the name doesn't match.
+    """Return (street_id, observation_id, is_cover) or None if no match.
 
     Expected shape: {street-id}__obs-{observationId}__{description}.ext
     Split on "__" with no cap on the description field, so a description
-    that itself contains "__" doesn't break parsing.
+    that itself contains "__" doesn't break parsing. `is_cover` is true
+    when the description segment contains "cover" (case-insensitive),
+    e.g. "...__cover.jpg" or "...__litter-cover.jpg".
     """
     stem = Path(photo_path).stem
     parts = stem.split("__")
@@ -61,7 +76,10 @@ def parse_filename(photo_path):
     if not street_id or not match:
         return None
 
-    return street_id, int(match.group(1))
+    description = "__".join(parts[2:])
+    is_cover = COVER_MARKER in description.lower()
+
+    return street_id, int(match.group(1)), is_cover
 
 
 def dms_to_decimal(dms, ref):
@@ -93,13 +111,33 @@ def has_exif(photo_path):
         return bool(img.info.get("exif")) or bool(img.getexif())
 
 
-def strip_exif(photo_path):
-    """Re-save the JPEG without its EXIF block. No-op if it has none."""
-    if not has_exif(photo_path):
-        return False
+def compress_and_strip_exif(photo_path):
+    """Re-save every processed photo: downscale-only resize to
+    MAX_DIMENSION on the longest edge, recompress at JPEG_QUALITY, and
+    drop EXIF as a side effect (Pillow doesn't carry EXIF into a save()
+    unless it's explicitly passed back in).
+
+    Returns (had_exif, original_size, new_size) so the caller can log
+    both the compression and EXIF-strip outcomes per photo.
+    """
+    had_exif = has_exif(photo_path)
+    original_size = Path(photo_path).stat().st_size
+
     with Image.open(photo_path) as img:
-        img.save(photo_path, "JPEG", quality=95)
-    return True
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+        width, height = img.size
+        longest_edge = max(width, height)
+        if longest_edge > MAX_DIMENSION:
+            scale = MAX_DIMENSION / longest_edge
+            img = img.resize(
+                (round(width * scale), round(height * scale)),
+                Image.Resampling.LANCZOS,
+            )
+        img.save(photo_path, "JPEG", quality=JPEG_QUALITY)
+
+    new_size = Path(photo_path).stat().st_size
+    return had_exif, original_size, new_size
 
 
 def load_street(street_id):
@@ -125,7 +163,7 @@ def process_photo(photo_path, counts, pending_comments):
         counts["bad_filename"] += 1
         return
 
-    street_id, observation_id = parsed
+    street_id, observation_id, is_cover = parsed
     street_file, record = load_street(street_id)
     if record is None:
         print(f"ERROR: no street file for '{street_id}' ({name})")
@@ -160,7 +198,9 @@ def process_photo(photo_path, counts, pending_comments):
         counts["coords_written"] += 1
         print(f"COORDS_WRITTEN: {street_id} obs {observation_id} -> {lat}, {lng}")
 
-    if strip_exif(photo_path):
+    had_exif, original_size, new_size = compress_and_strip_exif(photo_path)
+    print(f"COMPRESSED: {name} {original_size}B -> {new_size}B")
+    if had_exif:
         print(f"EXIF_STRIPPED: {name}")
 
     tracking_issue = observation.get("tracking_issue")
@@ -174,6 +214,7 @@ def process_photo(photo_path, counts, pending_comments):
         "observation_id": observation_id,
         "street_id": street_id,
         "coords_written": coords_written,
+        "is_cover": is_cover,
     }
     if gps is not None:
         entry["lat"], entry["lng"] = gps

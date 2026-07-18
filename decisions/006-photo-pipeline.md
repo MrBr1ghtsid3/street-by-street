@@ -105,3 +105,36 @@ new infrastructure.
   `assets/css/style.css` are untouched by this change — the map's photo
   slot stays a placeholder until the automated face/animal-feature
   blurring pipeline `docs/ethics.md` calls for actually exists.
+
+## Amendment: cover photos and compression
+
+GitHub Issues have no dedicated cover-image field. A photo whose
+`{description}` filename segment contains `cover` (case-insensitive) is
+now treated as its linked Case's cover: instead of a plain comment, the
+pipeline embeds it at the top of the issue body, between
+`<!-- sbs-cover-start -->` / `<!-- sbs-cover-end -->` marker comments.
+Idempotency is the marker block itself — a run finding existing markers
+**replaces** everything between them; a run finding none **prepends** the
+block. This means the embed always reflects whichever cover photo was
+most recently ingested for that Case, with no duplicate blocks
+accumulating on repeat runs. Every non-cover photo keeps the existing
+comment-only behaviour, and a cover photo never also gets a comment —
+one record per photo, not two.
+
+Separately, every newly-ingested photo (cover or not) is now downscaled
+(longest edge capped at 2000px, **never upscaled** — a photo already
+under the cap is left alone) and recompressed at JPEG quality 82 during
+the same re-save that strips EXIF. This was added because the first real
+photo through the pipeline landed at ~5.6 MB unedited-camera-output size:
+fine for git to store once, but slow to load as an issue embed and a
+future map popup image, and a needless amount of repo bloat for
+what the record actually needs. EXIF-stripping behaviour is unchanged by
+this — it's the same re-save, just now resizing/recompressing as well as
+dropping EXIF, and it now runs unconditionally rather than only when EXIF
+was present.
+
+The one real photo ingested before this amendment (merged via PR #18)
+predates compression and still sits at its stripped-but-uncompressed
+size. It is not touched retroactively by this change — the pipeline only
+processes newly added files. A one-off manual re-run against it remains
+open as a follow-up, not done here.
