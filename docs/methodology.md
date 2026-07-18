@@ -87,6 +87,42 @@ taken in the same edit:
 Nothing enforces this pairing in code — it's the same kind of judgement
 call as setting `status` itself.
 
+### Photo ingestion
+
+Field photos live under `assets/images/streets/{street-id}/`, one folder
+per street, named following the convention
+`{street-id}__obs-{observationId}__{description}.jpg` — e.g.
+`ana-ventura__obs-2__litter-before.jpg`. The `{description}` segment is
+free text (kebab-case is conventional but not enforced); it's there so
+several photos of the same observation stay distinguishable
+(`...-before.jpg`, `...-after.jpg`) without colliding.
+
+Photos must come straight off the camera/phone, not through a chat app —
+Mapillary is still the primary field-capture tool per the walk procedure
+above, but where a photo is committed directly to this repo for an
+observation or a Case, it needs intact EXIF (in particular GPS) for the
+ingestion pipeline to do anything with it. WhatsApp, Telegram, and most
+chat apps re-encode images and strip EXIF (including GPS) on send —
+transfer photos by cable, AirDrop, or a file-preserving method instead.
+
+Ingestion is a two-PR flow, both requiring the usual review before
+merge:
+
+1. **Photo PR** — the photo file(s) are added under
+   `assets/images/streets/{street-id}/` and merged to `main` like any
+   other change.
+2. **Pipeline run** — merging the photo PR triggers
+   `.github/workflows/photo-pipeline.yml`, which runs
+   `scripts/photo_pipeline.py` against the newly added files. For each
+   photo it: extracts GPS EXIF and, if the observation has no
+   `coordinates` yet, writes them; comments the photo onto the
+   observation's linked Case (`tracking_issue`), if any; strips EXIF from
+   the served copy of the image; and opens a second, **data PR** with the
+   coordinate/image changes for review. See
+   [ADR 006](../decisions/006-photo-pipeline.md) for the full design and
+   its limits (manual coordinates are never overwritten, no observation
+   is ever created by the pipeline).
+
 ## Attribute capture
 
 Attributes are captured once per street, ideally during or shortly after
