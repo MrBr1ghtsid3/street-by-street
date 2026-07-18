@@ -1,0 +1,178 @@
+name: Photo pipeline
+
+# Ingests field photos committed under assets/images/streets/**: extracts
+# GPS EXIF into the matching observation's coordinates (never overwriting
+# a manually-set coordinate, never creating an observation), strips EXIF
+# from the served copy, comments the photo onto any linked Case, and
+# opens a data PR with the resulting changes for review. See
+# docs/methodology.md#photo-ingestion and
+# decisions/006-photo-pipeline.md for the full design.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/images/streets/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      # --diff-filter=A is the idempotency guard: this pipeline's own data
+      # PR (opened below) only ever *modifies* photos it already stripped
+      # (M, not A), so that PR merging back into main doesn't re-trigger
+      # processing and there's no loop. Only genuinely new photo files
+      # reach the script.
+      - name: Identify newly added photos
+        id: new_photos
+        run: |
+          git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'assets/images/streets/**' \
+            | grep -iE '\.(jpe?g)$' > new_photos.txt || true
+
+          if [ -s new_photos.txt ]; then
+            echo "has_photos=true" >> "$GITHUB_OUTPUT"
+            echo "New photos:"
+            cat new_photos.txt
+          else
+            echo "has_photos=false" >> "$GITHUB_OUTPUT"
+            echo "No newly added photos - nothing to do."
+          fi
+
+      - name: Set up Python
+        if: steps.new_photos.outputs.has_photos == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Pillow
+        if: steps.new_photos.outputs.has_photos == 'true'
+        run: pip install Pillow
+
+      - name: Run photo pipeline
+        if: steps.new_photos.outputs.has_photos == 'true'
+        run: python scripts/photo_pipeline.py --from-file new_photos.txt | tee pipeline_log.txt
+
+      - name: Comment on linked Cases
+        if: steps.new_photos.outputs.has_photos == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          entries = json.loads(Path("pending_comments.json").read_text(encoding="utf-8"))
+
+          for entry in entries:
+              issue = entry["issue"]
+              photo_name = Path(entry["photo_path"]).name
+
+              # Idempotency guard: don't re-comment a photo that's already
+              # been posted to this Case on a prior run.
+              existing = subprocess.run(
+                  ["gh", "issue", "view", str(issue), "--json", "comments"],
+                  capture_output=True, text=True, check=True,
+              )
+              comments = json.loads(existing.stdout).get("comments", [])
+              if any(photo_name in c.get("body", "") for c in comments):
+                  print(f"SKIP (already commented): issue #{issue} / {photo_name}")
+                  continue
+
+              if entry.get("coords_written"):
+                  coords_line = f"Coordinates written: `{entry['lat']}, {entry['lng']}`"
+              elif "lat" in entry:
+                  coords_line = (
+                      f"GPS found (`{entry['lat']}, {entry['lng']}`) but the observation "
+                      "already had manually-set coordinates - not overwritten."
+                  )
+              else:
+                  coords_line = "No GPS EXIF found in this photo."
+
+              image_url = (
+                  "https://raw.githubusercontent.com/MrBr1ghtsid3/street-by-street/main/"
+                  f"{entry['photo_path']}"
+              )
+              body = (
+                  "### \U0001F4F7 Field photo added\n\n"
+                  f"![{photo_name}]({image_url})\n\n"
+                  f"Tracks: streets/{entry['street_id']} observation #{entry['observation_id']}\n\n"
+                  f"{coords_line}"
+              )
+              subprocess.run(["gh", "issue", "comment", str(issue), "--body", body], check=True)
+              print(f"COMMENTED: issue #{issue} / {photo_name}")
+          PY
+
+      - name: Build data PR body
+        if: steps.new_photos.outputs.has_photos == 'true'
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          log = Path("pipeline_log.txt").read_text(encoding="utf-8")
+          pending = json.loads(Path("pending_comments.json").read_text(encoding="utf-8"))
+
+          def lines_matching(prefix):
+              return [l[len(prefix):].strip() for l in log.splitlines() if l.startswith(prefix)]
+
+          coords_written = lines_matching("COORDS_WRITTEN:")
+          not_found = lines_matching("OBSERVATION_NOT_FOUND:") + lines_matching("ERROR:")
+          summary_line = next((l for l in log.splitlines() if l.startswith("Summary:")), "")
+          cases_commented = sorted({e["issue"] for e in pending})
+
+          def section(title, items):
+              if not items:
+                  return ""
+              return f"\n**{title}**\n" + "\n".join(f"- {i}" for i in items)
+
+          body_parts = [
+              "Automated photo ingestion: GPS extraction, EXIF strip, and Case "
+              "comments for field photos added under `assets/images/streets/`.",
+              f"\n{summary_line}" if summary_line else "",
+              section("Coordinates written", coords_written),
+              (f"\n**Cases commented:** {', '.join(f'#{n}' for n in cases_commented)}"
+               if cases_commented else "\n**Cases commented:** none"),
+              section("Skipped - bad filename", lines_matching("BAD_FILENAME:")),
+              section("Skipped - observation/street not found", not_found),
+              section("Skipped - no GPS EXIF", lines_matching("NO_GPS:")),
+              section("Skipped - coordinates already set (kept manual value)", lines_matching("ALREADY_SET:")),
+              section("No linked Case (comment not posted)", lines_matching("NO_CASE:")),
+              "\n**Review checklist before merging**\n"
+              "- [ ] Coordinates fall on the correct street\n"
+              "- [ ] No manually-set coordinates were changed\n"
+              "- [ ] Stripped photo files render fine\n",
+              "\n*This PR was opened automatically. Merge only after review.*",
+          ]
+          Path("pr_body.md").write_text("\n".join(p for p in body_parts if p), encoding="utf-8")
+          PY
+
+      - name: Open PR if data changed
+        if: steps.new_photos.outputs.has_photos == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "data: coordinates + EXIF strip from field photos"
+          branch: data/photo-ingest-${{ github.run_number }}
+          delete-branch: true
+          title: "data: coordinates + EXIF strip from field photos"
+          labels: automated,data-refresh
+          body-path: pr_body.md
+          # Scope the PR's diff to actual data changes - pipeline_log.txt,
+          # pending_comments.json, pr_body.md, and new_photos.txt are
+          # run-scratch files, not published data, and must never be
+          # committed.
+          add-paths: |
+            data/streets/**
+            assets/images/streets/**
