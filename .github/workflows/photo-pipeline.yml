@@ -29,15 +29,20 @@ jobs:
         with:
           fetch-depth: 2
 
-      # --diff-filter=A is the idempotency guard: this pipeline's own data
-      # PR (opened below) only ever *modifies* photos it already stripped
-      # (M, not A), so that PR merging back into main doesn't re-trigger
-      # processing and there's no loop. Only genuinely new photo files
-      # reach the script.
+      # ACR (added/copied/renamed), NOT just A - added-only silently skips
+      # photos that are moved or renamed into place (git records those as
+      # R, not A; a real photo got stuck invisible to this pipeline for
+      # exactly that reason - see decisions/006-photo-pipeline.md). M
+      # stays excluded: that's the idempotency guard, since this
+      # pipeline's own data PR only ever *modifies* photos it already
+      # stripped/compressed (M, not A/C/R), so that PR merging back into
+      # main doesn't re-trigger processing and there's no loop. For a
+      # rename/copy, `git diff --name-only` lists the DESTINATION path -
+      # exactly what the script needs to look up the observation by.
       - name: Identify newly added photos
         id: new_photos
         run: |
-          git diff --name-only --diff-filter=A HEAD~1 HEAD -- 'assets/images/streets/**' \
+          git diff --name-only --diff-filter=ACR HEAD~1 HEAD -- 'assets/images/streets/**' \
             | grep -iE '\.(jpe?g)$' > new_photos.txt || true
 
           if [ -s new_photos.txt ]; then

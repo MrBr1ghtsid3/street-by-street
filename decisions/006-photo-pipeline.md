@@ -138,3 +138,38 @@ predates compression and still sits at its stripped-but-uncompressed
 size. It is not touched retroactively by this change — the pipeline only
 processes newly added files. A one-off manual re-run against it remains
 open as a follow-up, not done here.
+
+## Amendment: detecting renamed/moved photos, and why a git-history trick can't fix an already-stuck one
+
+The trigger step originally filtered on `--diff-filter=A` (added files
+only) as its idempotency guard against reprocessing the pipeline's own
+re-saves. That filter was too narrow: a photo moved or renamed into its
+correct folder shows up in git as `R` (renamed), not `A`, so it was
+silently invisible to the pipeline. This actually happened —
+`ana-ventura__obs-2__litter.jpg` was relocated into place across two
+PRs, never triggered ingestion, and its observation's `photo` field
+stayed unset with no error or warning anywhere.
+
+The filter is now `--diff-filter=ACR` (added, copied, renamed). `M`
+(modified) stays excluded — that's still the actual idempotency guard,
+since it's the pipeline's own EXIF-strip/compression re-save that must
+not retrigger itself, and a same-path content change is always `M`,
+never `A`/`C`/`R`. For a rename or copy, `git diff --name-only` reports
+only the destination path, which is exactly what the script needs.
+
+This class of bug can't be fixed retroactively by re-triggering history
+after the fact — specifically, "remove the stuck file, commit, re-add it
+identically, commit again" does **not** work in this repo, verified by
+simulating it in a scratch git repository: this project merges
+exclusively via GitHub's squash-merge, which collapses every PR into one
+commit relative to the prior tip. A file that starts and ends a PR at
+the same path with the same bytes produces **zero diff entries** once
+squashed - not `A`, not `R`, not even `M` - no matter how many
+intermediate commits moved it around within the PR branch; squash-merge
+only ever diffs the two tree states at the endpoints. A photo already
+stuck at its correct path before this fix landed has to be resolved by
+directly writing its `photo` field (and re-running the compress/strip
+step) in the same PR that ships the filter fix, rather than by any
+git-history trick. The filter fix only prevents the *next* rename from
+getting lost the same way — it doesn't and can't reach into history for
+one that's already landed.
