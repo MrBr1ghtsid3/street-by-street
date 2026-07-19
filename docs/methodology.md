@@ -143,6 +143,34 @@ merge:
    embed that size is slow to load in an issue or a future map popup)
    without needing a separate image host.
 
+### Observation intake form
+
+`tools/observation-form.html` is an internal workflow tool, alongside
+`tools/coordinate-picker.html` — not linked from the main site. Open it
+locally, fill in a new observation (street, id, type, category, title,
+description, status) and attach an already-vetted photo. It **prepares** a
+correct commit; it does not submit or upload anything:
+
+- It fetches `data/tutrakan-streets.geojson` to populate the street
+  dropdown, and `data/streets/{street-id}.json` on street selection to
+  suggest the next non-colliding observation id (or flag a brand-new
+  street, which starts at id 1).
+- It renames the attached photo to
+  `{street-id}__obs-{id}__{slugified-title}.jpg`, following the naming
+  convention above.
+- It assembles the observation object in the exact shape documented in
+  [data-taxonomy.md](data-taxonomy.md), with `coordinates`, `resolved_date`,
+  `tracking_issue`, and `photo` left `null` for the photo pipeline and
+  later manual steps to fill in.
+- It prints the `mv`/`git` commands to move the photo into place and open
+  the photo PR.
+
+It sits at the same point in the data-entry workflow as the coordinate
+picker: after a photo has been vetted per [ethics.md](ethics.md) and
+before the photo PR is opened. It does not shortcut the two-PR ingestion
+flow described above — the maintainer still opens the photo PR by hand,
+and the pipeline still opens the follow-up data PR once that's merged.
+
 ## Attribute capture
 
 Attributes are captured once per street, ideally during or shortly after

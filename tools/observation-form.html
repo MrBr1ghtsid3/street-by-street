@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observation Intake Form (internal tool) &middot; Street-By-Street</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+  />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      display: block;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .intake {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .intake h1 {
+      font-size: 1.35rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .intake__subtitle {
+      color: var(--grey-600);
+      font-size: 0.85rem;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .intake-card {
+      background: #fff;
+      border: 1px solid var(--grey-200);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .intake-card h2 {
+      font-size: 1rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--grey-900);
+    }
+
+    .field {
+      margin-bottom: 1.1rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--grey-800);
+      margin-bottom: 0.3rem;
+    }
+
+    .field .hint {
+      font-size: 0.75rem;
+      color: var(--grey-600);
+      margin: 0.3rem 0 0;
+    }
+
+    .field .hint--warn {
+      color: var(--color-issue);
+    }
+
+    .field .hint--ok {
+      color: var(--color-asset);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      font-family: var(--font-base);
+      font-size: 0.88rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--grey-300);
+      border-radius: 5px;
+      color: var(--grey-900);
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 4.5rem;
+      resize: vertical;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .toggle-group button {
+      flex: 1;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--grey-300);
+      background: #fff;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--grey-800);
+    }
+
+    .toggle-group button.is-active[data-type="issue"] {
+      background: var(--color-issue);
+      border-color: var(--color-issue);
+      color: #fff;
+    }
+
+    .toggle-group button.is-active[data-type="asset"] {
+      background: var(--color-asset);
+      border-color: var(--color-asset);
+      color: #fff;
+    }
+
+    /* Icon picker: a <details> dropdown, since a native <select> can't
+       render an icon glyph next to each option. */
+    .icon-picker {
+      position: relative;
+    }
+
+    .icon-picker summary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--grey-300);
+      border-radius: 5px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.88rem;
+    }
+
+    .icon-picker summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .icon-picker[open] summary {
+      border-color: var(--grey-400);
+    }
+
+    .icon-picker__list {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 0.25rem);
+      left: 0;
+      right: 0;
+      max-height: 220px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid var(--grey-300);
+      border-radius: 5px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      padding: 0.25rem;
+    }
+
+    .icon-picker__option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--grey-900);
+    }
+
+    .icon-picker__option:hover {
+      background: var(--grey-100);
+    }
+
+    .icon-picker__option.is-selected {
+      background: var(--grey-100);
+      font-weight: 600;
+    }
+
+    .icon-picker__option .ti {
+      width: 1.1rem;
+      text-align: center;
+    }
+
+    .photo-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .photo-preview img {
+      max-width: 96px;
+      max-height: 96px;
+      border-radius: 5px;
+      border: 1px solid var(--grey-200);
+      object-fit: cover;
+    }
+
+    .photo-note {
+      font-size: 0.75rem;
+      color: var(--grey-600);
+      background: var(--grey-50);
+      border: 1px solid var(--grey-200);
+      border-radius: 5px;
+      padding: 0.5rem 0.65rem;
+      margin-top: 0.5rem;
+    }
+
+    .primary-button {
+      display: block;
+      width: 100%;
+      padding: 0.7rem 1rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--color-asset);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .primary-button:hover {
+      opacity: 0.92;
+    }
+
+    .form-errors {
+      background: #fdf1ec;
+      border: 1px solid var(--color-issue);
+      color: var(--color-issue);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-errors ul {
+      margin: 0.3rem 0 0;
+      padding-left: 1.1rem;
+    }
+
+    .output-block {
+      margin-bottom: 1.1rem;
+    }
+
+    .output-block h3 {
+      font-size: 0.85rem;
+      margin: 0 0 0.4rem;
+      color: var(--grey-800);
+    }
+
+    .output-block pre {
+      background: var(--grey-900);
+      color: #f0f0f0;
+      padding: 0.75rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .copy-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+
+    .copy-row button,
+    .download-row button {
+      background: transparent;
+      border: 1px solid var(--grey-300);
+      color: var(--grey-800);
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .copy-row button:hover,
+    .download-row button:hover {
+      background: var(--grey-100);
+    }
+
+    .copy-row .copied-note {
+      font-size: 0.72rem;
+      color: var(--color-asset);
+      align-self: center;
+    }
+
+    .next-happens {
+      font-size: 0.8rem;
+      color: var(--grey-600);
+      border-left: 3px solid var(--color-asset);
+      padding-left: 0.75rem;
+    }
+
+    #output-section {
+      display: none;
+    }
+
+    .required-mark {
+      color: var(--color-issue);
+    }
+  </style>
+</head>
+<body>
+  <div class="intake">
+    <h1>Observation Intake Form <span style="font-weight:400;">(internal tool)</span></h1>
+    <p class="intake__subtitle">
+      Prepares a correctly-named photo, a schema-matching JSON snippet, and
+      the commit commands for a new observation. It does not upload or
+      commit anything itself &mdash; see
+      <a href="../docs/methodology.md">docs/methodology.md</a> for how this
+      fits into the audit workflow.
+    </p>
+
+    <div class="intake-card">
+      <h2>Street</h2>
+      <div class="field">
+        <label for="street-select">Street <span class="required-mark">*</span></label>
+        <select id="street-select"></select>
+        <input type="text" id="street-text-fallback" placeholder="street-id (e.g. ana-ventura)" hidden />
+        <p class="hint" id="street-hint">Loading streets from data/tutrakan-streets.geojson&hellip;</p>
+      </div>
+
+      <div class="field">
+        <label for="obs-id">Observation id <span class="required-mark">*</span></label>
+        <input type="number" id="obs-id" min="1" step="1" />
+        <p class="hint" id="obs-id-hint">Select a street to check existing observation ids.</p>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <h2>Classification</h2>
+      <div class="field">
+        <label>Type <span class="required-mark">*</span></label>
+        <div class="toggle-group" id="type-toggle">
+          <button type="button" data-type="issue" class="is-active">Issue</button>
+          <button type="button" data-type="asset">Asset</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="category-select">Category <span class="required-mark">*</span></label>
+        <select id="category-select"></select>
+      </div>
+
+      <div class="field">
+        <label for="icon-picker-summary">POI icon</label>
+        <details class="icon-picker" id="icon-picker">
+          <summary id="icon-picker-summary"></summary>
+          <div class="icon-picker__list" id="icon-picker-list"></div>
+        </details>
+        <p class="hint" id="icon-hint">
+          Defaults to the icon the map already uses for this category.
+        </p>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <h2>Details</h2>
+      <div class="field">
+        <label for="title-input">Title <span class="required-mark">*</span></label>
+        <input type="text" id="title-input" maxlength="120" />
+      </div>
+
+      <div class="field">
+        <label for="description-input">Description <span class="required-mark">*</span></label>
+        <textarea id="description-input"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="status-select">Status</label>
+        <select id="status-select"></select>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <h2>Photo</h2>
+      <div class="field">
+        <label for="photo-input">Photo (JPEG) <span class="required-mark">*</span></label>
+        <input type="file" id="photo-input" accept="image/jpeg" />
+        <div class="photo-preview" id="photo-preview" hidden>
+          <img id="photo-preview-img" alt="Selected photo preview" />
+          <span id="photo-preview-name"></span>
+        </div>
+        <p class="photo-note">
+          Attach an already-vetted photo (faces/animals/plates checked per
+          <a href="../docs/ethics.md">ethics.md</a>). Straight from the
+          camera so GPS EXIF is intact &mdash; this page does not read EXIF
+          or upload anything, it only renames the file you already vetted.
+        </p>
+      </div>
+    </div>
+
+    <div id="form-errors" class="form-errors" hidden></div>
+
+    <button type="button" class="primary-button" id="generate-button">
+      Generate photo name, JSON snippet &amp; commands
+    </button>
+
+    <div id="output-section">
+      <div class="intake-card">
+        <div class="output-block">
+          <h3>1. Renamed photo</h3>
+          <div class="photo-preview" id="output-photo-preview">
+            <img id="output-photo-img" alt="Renamed photo preview" />
+            <span id="output-photo-name"></span>
+          </div>
+          <div class="download-row">
+            <button type="button" id="download-photo-button">Download photo</button>
+          </div>
+        </div>
+
+        <div class="output-block">
+          <h3>2. Observation JSON snippet</h3>
+          <pre id="output-json"></pre>
+          <p class="hint">
+            Paste into the <code>observations</code> array of the street's
+            JSON file. <code>nearby_streets</code> is intentionally omitted
+            &mdash; it's written separately by
+            <code>scripts/compute_street_proximity.py</code> once
+            coordinates exist.
+          </p>
+          <div class="copy-row">
+            <span class="copied-note" id="json-copied-note" hidden>Copied.</span>
+            <button type="button" id="copy-json-button">Copy</button>
+          </div>
+        </div>
+
+        <div class="output-block">
+          <h3>3. Next-step commands</h3>
+          <pre id="output-commands"></pre>
+          <div class="copy-row">
+            <span class="copied-note" id="commands-copied-note" hidden>Copied.</span>
+            <button type="button" id="copy-commands-button">Copy</button>
+          </div>
+        </div>
+
+        <div class="output-block">
+          <div class="download-row">
+            <button type="button" id="download-bundle-button">Download bundle (.zip)</button>
+          </div>
+        </div>
+
+        <p class="next-happens">
+          What happens next: this only prepares the <strong>photo PR</strong>.
+          Once that's merged, <code>photo-pipeline.yml</code> runs
+          automatically and opens a second <strong>data PR</strong> that
+          fills in <code>coordinates</code> and <code>photo</code> from the
+          image's EXIF. Merge that second PR too, then the normal deploy
+          takes it live. See
+          <a href="../docs/methodology.md#photo-ingestion">methodology.md#photo-ingestion</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script>
+    (function () {
+      "use strict";
+
+      // Kept in sync with assets/js/map.js's CATEGORY_ICON by hand — this
+      // repo has no build step/module system, so the map's category->icon
+      // source of truth is duplicated here rather than imported. If the
+      // map's mapping changes, update this object to match.
+      var CATEGORY_ICON = {
+        road: "ti-road",
+        litter: "ti-trash",
+        vegetation: "ti-plant-2",
+        hazard: "ti-alert-triangle",
+        structure: "ti-wall",
+        business: "ti-building-store",
+        green_space: "ti-tree",
+        infrastructure: "ti-droplet",
+        service: "ti-users",
+        heritage: "ti-building-monument",
+        other: "ti-dots",
+      };
+
+      // From docs/data-taxonomy.md — kept in sync by hand alongside
+      // CATEGORY_ICON above.
+      var ISSUE_CATEGORIES = ["road", "litter", "vegetation", "hazard", "structure", "other"];
+      var ASSET_CATEGORIES = ["business", "green_space", "infrastructure", "service", "heritage", "other"];
+
+      var ISSUE_STATUSES = ["open", "in_progress", "resolved"];
+      var ASSET_STATUSES = ["active", "inactive"];
+
+      var state = {
+        type: "issue",
+        streetsById: {}, // street-id -> display name, from the GeoJSON
+        streetRecord: null, // fetched data/streets/{id}.json, or null (404/new street)
+        streetFetchFailed: false,
+        photoFile: null,
+      };
+
+      var streetSelect = document.getElementById("street-select");
+      var streetTextFallback = document.getElementById("street-text-fallback");
+      var streetHint = document.getElementById("street-hint");
+      var obsIdInput = document.getElementById("obs-id");
+      var obsIdHint = document.getElementById("obs-id-hint");
+      var typeToggle = document.getElementById("type-toggle");
+      var categorySelect = document.getElementById("category-select");
+      var iconPicker = document.getElementById("icon-picker");
+      var iconPickerSummary = document.getElementById("icon-picker-summary");
+      var iconPickerList = document.getElementById("icon-picker-list");
+      var iconHint = document.getElementById("icon-hint");
+      var titleInput = document.getElementById("title-input");
+      var descriptionInput = document.getElementById("description-input");
+      var statusSelect = document.getElementById("status-select");
+      var photoInput = document.getElementById("photo-input");
+      var photoPreview = document.getElementById("photo-preview");
+      var photoPreviewImg = document.getElementById("photo-preview-img");
+      var photoPreviewName = document.getElementById("photo-preview-name");
+      var formErrors = document.getElementById("form-errors");
+      var generateButton = document.getElementById("generate-button");
+      var outputSection = document.getElementById("output-section");
+
+      function currentStreetId() {
+        return streetTextFallback.hidden ? streetSelect.value : streetTextFallback.value.trim();
+      }
+
+      // ---- Street dropdown ----
+
+      function populateStreetDropdown() {
+        fetch("../data/tutrakan-streets.geojson")
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("HTTP " + response.status);
+            }
+            return response.json();
+          })
+          .then(function (geojson) {
+            geojson.features.forEach(function (feature) {
+              var props = feature.properties;
+              state.streetsById[props.id] = props.name;
+            });
+
+            var ids = Object.keys(state.streetsById).sort(function (a, b) {
+              return state.streetsById[a].localeCompare(state.streetsById[b]);
+            });
+
+            streetSelect.innerHTML = '<option value="">Select a street&hellip;</option>';
+            ids.forEach(function (id) {
+              var option = document.createElement("option");
+              option.value = id;
+              option.textContent = state.streetsById[id] + " (" + id + ")";
+              streetSelect.appendChild(option);
+            });
+
+            streetHint.textContent = ids.length + " streets loaded.";
+          })
+          .catch(function (err) {
+            // Fetch blocked (e.g. opened via file://, or offline) — fall
+            // back to free-text street-id entry so the tool still works.
+            streetSelect.hidden = true;
+            streetTextFallback.hidden = false;
+            streetHint.textContent =
+              "Could not load data/tutrakan-streets.geojson (" + err.message + ") — enter the street id by hand.";
+            streetHint.className = "hint hint--warn";
+          });
+      }
+
+      function checkObservationId() {
+        var streetId = currentStreetId();
+        if (!streetId) {
+          obsIdHint.textContent = "Select a street to check existing observation ids.";
+          obsIdHint.className = "hint";
+          return;
+        }
+
+        obsIdHint.textContent = "Checking data/streets/" + streetId + ".json…";
+        obsIdHint.className = "hint";
+
+        fetch("../data/streets/" + streetId + ".json")
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("not found");
+            }
+            return response.json();
+          })
+          .then(function (record) {
+            state.streetRecord = record;
+            var observations = record.observations || [];
+            var maxId = observations.reduce(function (max, obs) {
+              return Math.max(max, obs.id);
+            }, 0);
+            var suggested = maxId + 1;
+
+            if (!obsIdInput.value) {
+              obsIdInput.value = suggested;
+            }
+
+            obsIdHint.textContent =
+              "Highest existing id is " + maxId + " — suggested next id: " + suggested + ".";
+            obsIdHint.className = "hint hint--ok";
+          })
+          .catch(function () {
+            state.streetRecord = null;
+            if (!obsIdInput.value) {
+              obsIdInput.value = 1;
+            }
+            obsIdHint.textContent = "New street — no existing record yet, start at id 1.";
+            obsIdHint.className = "hint hint--ok";
+          });
+      }
+
+      streetSelect.addEventListener("change", checkObservationId);
+      streetTextFallback.addEventListener("change", checkObservationId);
+
+      // ---- Type / category / status ----
+
+      function categoriesForType(type) {
+        return type === "asset" ? ASSET_CATEGORIES : ISSUE_CATEGORIES;
+      }
+
+      function statusesForType(type) {
+        return type === "asset" ? ASSET_STATUSES : ISSUE_STATUSES;
+      }
+
+      function defaultStatusForType(type) {
+        return type === "asset" ? "active" : "open";
+      }
+
+      function populateCategorySelect() {
+        var categories = categoriesForType(state.type);
+        categorySelect.innerHTML = "";
+        categories.forEach(function (cat) {
+          var option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat.replace(/_/g, " ");
+          categorySelect.appendChild(option);
+        });
+        renderIconPicker();
+      }
+
+      function populateStatusSelect() {
+        var statuses = statusesForType(state.type);
+        var defaultStatus = defaultStatusForType(state.type);
+        statusSelect.innerHTML = "";
+        statuses.forEach(function (status) {
+          var option = document.createElement("option");
+          option.value = status;
+          option.textContent = status.replace(/_/g, " ");
+          if (status === defaultStatus) {
+            option.selected = true;
+          }
+          statusSelect.appendChild(option);
+        });
+      }
+
+      typeToggle.querySelectorAll("button").forEach(function (button) {
+        button.addEventListener("click", function () {
+          state.type = button.dataset.type;
+          typeToggle.querySelectorAll("button").forEach(function (b) {
+            b.classList.toggle("is-active", b === button);
+          });
+          populateCategorySelect();
+          populateStatusSelect();
+        });
+      });
+
+      // ---- Icon picker (defaults from category, overridable) ----
+
+      function defaultIconForCategory(category) {
+        return CATEGORY_ICON[category] || CATEGORY_ICON.other;
+      }
+
+      function renderIconPicker() {
+        var defaultIcon = defaultIconForCategory(categorySelect.value);
+        if (!iconPicker.dataset.selected) {
+          iconPicker.dataset.selected = defaultIcon;
+        } else if (iconPicker.dataset.autoTrack !== "false") {
+          // Category changed and the maintainer hasn't manually overridden
+          // yet this session — keep tracking the category's default.
+          iconPicker.dataset.selected = defaultIcon;
+        }
+
+        iconPickerList.innerHTML = "";
+        Object.keys(CATEGORY_ICON).forEach(function (cat) {
+          var icon = CATEGORY_ICON[cat];
+          var option = document.createElement("button");
+          option.type = "button";
+          option.className = "icon-picker__option";
+          if (icon === iconPicker.dataset.selected) {
+            option.classList.add("is-selected");
+          }
+          option.innerHTML = '<i class="ti ' + icon + '" aria-hidden="true"></i><span>' + icon + "</span>";
+          option.addEventListener("click", function () {
+            iconPicker.dataset.selected = icon;
+            iconPicker.dataset.autoTrack = icon === defaultIconForCategory(categorySelect.value) ? "true" : "false";
+            iconPicker.open = false;
+            updateIconSummary();
+          });
+          iconPickerList.appendChild(option);
+        });
+
+        updateIconSummary();
+      }
+
+      function updateIconSummary() {
+        var selected = iconPicker.dataset.selected;
+        var defaultIcon = defaultIconForCategory(categorySelect.value);
+        iconPickerSummary.innerHTML = '<i class="ti ' + selected + '" aria-hidden="true"></i><span>' + selected + "</span>";
+
+        if (selected !== defaultIcon) {
+          iconHint.textContent =
+            "Overridden from the category default (" + defaultIcon + "). Note: the map derives icons strictly " +
+            "from category — there is no per-observation icon field in the schema yet, so this override is for " +
+            "your own reference only and will not appear in the JSON snippet or change the live map.";
+          iconHint.className = "hint hint--warn";
+        } else {
+          iconHint.textContent = "Defaults to the icon the map already uses for this category (" + defaultIcon + ").";
+          iconHint.className = "hint";
+        }
+      }
+
+      categorySelect.addEventListener("change", renderIconPicker);
+
+      // ---- Photo ----
+
+      photoInput.addEventListener("change", function () {
+        var file = photoInput.files[0] || null;
+        state.photoFile = file;
+        if (!file) {
+          photoPreview.hidden = true;
+          return;
+        }
+        photoPreviewName.textContent = file.name;
+        photoPreviewImg.src = URL.createObjectURL(file);
+        photoPreview.hidden = false;
+      });
+
+      // ---- Slug / filename helpers ----
+
+      function slugify(text) {
+        return text
+          .toLowerCase()
+          .trim()
+          .replace(/['"]/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "");
+      }
+
+      function todayISO() {
+        var now = new Date();
+        var month = String(now.getMonth() + 1).padStart(2, "0");
+        var day = String(now.getDate()).padStart(2, "0");
+        return now.getFullYear() + "-" + month + "-" + day;
+      }
+
+      // ---- Payload builder ------------------------------------------------
+      // This is the single seam between "what the maintainer filled in" and
+      // "what gets produced." It currently feeds the on-page copy/download
+      // UI only (renderOutput below); a future backend could call this same
+      // function and POST payload.observation + payload.photoFile instead,
+      // with no change to the validation or assembly logic here.
+      function buildObservationPayload() {
+        var errors = [];
+
+        var streetId = currentStreetId();
+        if (!streetId) {
+          errors.push("Street is required.");
+        }
+
+        var obsId = parseInt(obsIdInput.value, 10);
+        if (!obsIdInput.value || isNaN(obsId) || obsId < 1) {
+          errors.push("Observation id must be a positive number.");
+        } else if (state.streetRecord) {
+          var collision = (state.streetRecord.observations || []).some(function (obs) {
+            return obs.id === obsId;
+          });
+          if (collision) {
+            errors.push("Observation id " + obsId + " already exists on " + streetId + " — pick a different id.");
+          }
+        }
+
+        var title = titleInput.value.trim();
+        if (!title) {
+          errors.push("Title is required.");
+        }
+
+        var description = descriptionInput.value.trim();
+        if (!description) {
+          errors.push("Description is required.");
+        }
+
+        if (!state.photoFile) {
+          errors.push("A photo is required.");
+        }
+
+        if (errors.length) {
+          return { valid: false, errors: errors };
+        }
+
+        var category = categorySelect.value;
+        var status = statusSelect.value;
+        var slug = slugify(title);
+        var filename = streetId + "__obs-" + obsId + "__" + slug + ".jpg";
+
+        var observation = {
+          id: obsId,
+          type: state.type,
+          category: category,
+          title: title,
+          description: description,
+          coordinates: null,
+          status: status,
+          reported_date: todayISO(),
+          resolved_date: null,
+          tracking_issue: null,
+          photo: null,
+        };
+
+        var commands =
+          "# 1. Move the downloaded photo into place:\n" +
+          "mv ~/Downloads/" + filename + " assets/images/streets/" + streetId + "/\n" +
+          "# 2. Paste the JSON snippet above into data/streets/" + streetId + ".json observations array\n" +
+          "# 3. Commit on a branch and open a PR:\n" +
+          "git checkout -b obs/" + streetId + "-" + obsId + "\n" +
+          "git add assets/images/streets/" + streetId + "/" + filename + " data/streets/" + streetId + ".json\n" +
+          'git commit -m "obs: add ' + title.replace(/"/g, '\\"') + " on " + streetId + '"\n' +
+          "git push origin obs/" + streetId + "-" + obsId + "\n" +
+          "# then open the PR (gh pr create, or the compare URL GitHub prints)";
+
+        return {
+          valid: true,
+          streetId: streetId,
+          obsId: obsId,
+          filename: filename,
+          photoFile: state.photoFile,
+          observation: observation,
+          commands: commands,
+        };
+      }
+
+      // ---- Output rendering ----
+
+      var currentPayload = null;
+
+      function renderOutput(payload) {
+        currentPayload = payload;
+
+        document.getElementById("output-photo-img").src = URL.createObjectURL(payload.photoFile);
+        document.getElementById("output-photo-name").textContent = payload.filename;
+        document.getElementById("output-json").textContent = JSON.stringify(payload.observation, null, 2);
+        document.getElementById("output-commands").textContent = payload.commands;
+
+        outputSection.style.display = "block";
+        outputSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function copyToClipboard(text, onDone) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(onDone);
+          return;
+        }
+        var textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        onDone();
+      }
+
+      function triggerDownload(blobOrFile, filename) {
+        var url = URL.createObjectURL(blobOrFile);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(function () {
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }
+
+      document.getElementById("copy-json-button").addEventListener("click", function () {
+        if (!currentPayload) return;
+        copyToClipboard(JSON.stringify(currentPayload.observation, null, 2), function () {
+          var note = document.getElementById("json-copied-note");
+          note.hidden = false;
+          setTimeout(function () {
+            note.hidden = true;
+          }, 1500);
+        });
+      });
+
+      document.getElementById("copy-commands-button").addEventListener("click", function () {
+        if (!currentPayload) return;
+        copyToClipboard(currentPayload.commands, function () {
+          var note = document.getElementById("commands-copied-note");
+          note.hidden = false;
+          setTimeout(function () {
+            note.hidden = true;
+          }, 1500);
+        });
+      });
+
+      document.getElementById("download-photo-button").addEventListener("click", function () {
+        if (!currentPayload) return;
+        triggerDownload(currentPayload.photoFile, currentPayload.filename);
+      });
+
+      document.getElementById("download-bundle-button").addEventListener("click", function () {
+        if (!currentPayload) return;
+        var payload = currentPayload;
+
+        function fallbackToIndividualDownloads() {
+          triggerDownload(payload.photoFile, payload.filename);
+          triggerDownload(
+            new Blob([JSON.stringify(payload.observation, null, 2)], { type: "application/json" }),
+            payload.streetId + "__obs-" + payload.obsId + ".json"
+          );
+          triggerDownload(new Blob([payload.commands], { type: "text/plain" }), "next-steps.txt");
+        }
+
+        if (typeof JSZip === "undefined") {
+          // JSZip CDN script didn't load (offline/blocked) — fall back to
+          // separate downloads rather than failing silently.
+          fallbackToIndividualDownloads();
+          return;
+        }
+
+        try {
+          var zip = new JSZip();
+          zip.file(payload.filename, payload.photoFile);
+          zip.file(payload.streetId + "__obs-" + payload.obsId + ".json", JSON.stringify(payload.observation, null, 2));
+          zip.file("next-steps.txt", payload.commands);
+          zip.generateAsync({ type: "blob" }).then(function (blob) {
+            triggerDownload(blob, payload.streetId + "__obs-" + payload.obsId + "__bundle.zip");
+          });
+        } catch (err) {
+          fallbackToIndividualDownloads();
+        }
+      });
+
+      generateButton.addEventListener("click", function () {
+        var payload = buildObservationPayload();
+        if (!payload.valid) {
+          formErrors.innerHTML = "<strong>Fix the following before generating:</strong><ul>" +
+            payload.errors.map(function (e) { return "<li>" + e + "</li>"; }).join("") +
+            "</ul>";
+          formErrors.hidden = false;
+          outputSection.style.display = "none";
+          return;
+        }
+        formErrors.hidden = true;
+        renderOutput(payload);
+      });
+
+      // ---- Init ----
+      populateStreetDropdown();
+      populateCategorySelect();
+      populateStatusSelect();
+    })();
+  </script>
+</body>
+</html>
