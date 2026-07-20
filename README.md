@@ -1,6 +1,6 @@
-# Street-By-Street
+# Project Plainsight
 
-**Street-By-Street (SBS)** is a street-level civic audit methodology, piloted
+**Project Plainsight** is a street-level civic audit methodology, piloted
 in Tutrakan, Bulgaria. It is a repeatable way to document a town one street
 at a time, capturing both *issues* (potholes, litter, overgrown vegetation,
 hazards) and *assets* (shops, green space, infrastructure, heritage) at the
@@ -8,8 +8,17 @@ exact location they occur. This repository is also a learning-in-public
 project: the documentation, decisions, and data model are kept open so the
 process itself can be inspected, questioned, and replicated.
 
-**Status:** active pilot, one street (Ana Ventura), work in progress. See
-[Current status](#current-status) below.
+## Status: ideation
+
+Plainsight is at an ideation and tinkering stage. No formal market
+research, needs assessment, or community validation has been carried out.
+It's an exploratory attempt to see whether good intentions can be made to
+match the reality of one specific place — Tutrakan — rather than a
+finished or validated civic platform. Treat everything below as a working
+sketch, not a launched service.
+
+**Pilot status:** active pilot, one street (Ana Ventura), work in progress.
+See [Current status](#current-status) below.
 
 **Live site:** <https://mrbr1ghtsid3.github.io/street-by-street/>
 
@@ -19,15 +28,15 @@ a model to copy uncritically.
 
 ## Why this model
 
-SBS borrows its core idea from [iNaturalist](https://www.inaturalist.org/):
+Plainsight borrows its core idea from [iNaturalist](https://www.inaturalist.org/):
 an individual **observation** is the atomic, citable record. Observations
 accumulate into a richer picture of a place without anyone having to design
 that picture up front. Where iNaturalist rolls observations up into species
-and locations, SBS rolls them up into streets, and streets up into a town.
+and locations, Plainsight rolls them up into streets, and streets up into a town.
 
 ## Two models: state and process
 
-SBS keeps two systems deliberately separate — see
+Plainsight keeps two systems deliberately separate — see
 [docs/architecture.md](docs/architecture.md#two-models-state-and-process)
 for the full reasoning:
 

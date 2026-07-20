@@ -4,7 +4,7 @@
 
 ## Context
 
-SBS observations record state (ADR 003) and, when needed, link to a
+Plainsight observations record state (ADR 003) and, when needed, link to a
 GitHub Case that tracks the process of getting a problem resolved
 (ADR 005). Neither currently captures the act of the resolution itself:
 who showed up, how long it took, what it cost, what was actually done.

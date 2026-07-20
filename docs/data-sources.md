@@ -1,6 +1,6 @@
 # Data Sources
 
-This catalogues the official sources SBS draws on for town-level context,
+This catalogues the official sources Plainsight draws on for town-level context,
 the constraint they all share, and the citation rule that keeps observed
 data and official data from being confused with each other.
 

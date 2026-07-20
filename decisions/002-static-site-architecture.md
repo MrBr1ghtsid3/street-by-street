@@ -4,7 +4,7 @@
 
 ## Context
 
-SBS needs a publicly viewable map and per-street reports. At pilot scale —
+Plainsight needs a publicly viewable map and per-street reports. At pilot scale —
 one steward, one audited street, six observations — almost any
 architecture would technically work, but the choice made now sets the
 shape of everything built on top of it.

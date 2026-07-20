@@ -4,7 +4,7 @@
 
 ## Context
 
-SBS's street base layer is static GeoJSON ([ADR 002](002-static-site-architecture.md)),
+Plainsight's street base layer is static GeoJSON ([ADR 002](002-static-site-architecture.md)),
 sourced from OpenStreetMap via the Overpass API. OSM geometry and tags
 change over time — new ways get added, surface tags get corrected, street
 names get fixed — and a one-time pull goes stale the same way any cached
