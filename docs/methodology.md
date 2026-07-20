@@ -1,8 +1,8 @@
-# Street-by-Street Methodology
+# Plainsight Methodology
 
 ## Overview
 
-SBS audits a town one street at a time. Each audit produces a street record
+Plainsight audits a town one street at a time. Each audit produces a street record
 made of two parts: a small set of slow-changing **attributes** about the
 street, and a growing list of dated **observations** — issues and assets —
 found on it. See [data-taxonomy.md](data-taxonomy.md) for the full field
