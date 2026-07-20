@@ -171,6 +171,50 @@ before the photo PR is opened. It does not shortcut the two-PR ingestion
 flow described above — the maintainer still opens the photo PR by hand,
 and the pipeline still opens the follow-up data PR once that's merged.
 
+### Opening the photo PR: CLI or button UI
+
+`scripts/new_observation.py` picks up where the intake form's output
+leaves off: given an observation and its vetted photo, it places the
+photo, inserts the observation into the street JSON, and creates a
+branch, commit, push, and PR — the git/gh side of the workflow the
+maintainer would otherwise do by hand from the intake form's printed
+commands. Like the intake form, it **prepares** the photo PR; it never
+merges, and it never touches `coordinates` (still pipeline/coordinate-picker
+territory) or creates a street file.
+
+Two ways to run it, both stopping at "PR opened":
+
+- **CLI:**
+
+  ```bash
+  python scripts/new_observation.py --sidecar observation.sbs.json --photo observation.jpg
+  ```
+
+  (or the equivalent `--street --id --type --category --title --description`
+  flags instead of a sidecar file — see the script's `--help`). Add
+  `--dry-run` to print the planned actions and the JSON that would be
+  inserted without touching git or the filesystem.
+
+- **Button UI:** `tools/serve.py` is a local Flask wrapper around the same
+  script — it imports and calls `create_observation_pr` directly rather
+  than duplicating any of its logic:
+
+  ```bash
+  pip install flask
+  python tools/serve.py
+  # open http://127.0.0.1:8765, fill in the form, tick "Dry run" to preview
+  # first, then untick it and press Submit to actually branch/commit/push/PR
+  ```
+
+  It binds to `127.0.0.1` only, deliberately — the server runs `git`/`gh`
+  with repo write access on every submit, with no authentication in front
+  of it, so it must never be reachable from anything but this machine.
+
+Either path stops at PR-opened. Review and merge are still the manual
+gate they always were, and merging still only triggers the photo
+pipeline's *second*, data PR (coordinates/photo from EXIF) — that one
+needs its own separate merge too, per the two-PR flow above.
+
 ## Attribute capture
 
 Attributes are captured once per street, ideally during or shortly after
