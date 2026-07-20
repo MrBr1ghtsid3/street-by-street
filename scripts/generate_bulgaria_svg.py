@@ -28,7 +28,7 @@ OVERPASS_QUERY = (
     '(relation["admin_level"="4"]["boundary"="administrative"](41.2,22.3,44.2,28.6););\n'
     "out geom;"
 )
-USER_AGENT = "street-by-street-project/1.0"
+USER_AGENT = "plainsight-project/1.0"
 RETRY_DELAY_SECONDS = 10
 
 # Bulgaria's bbox, per the task spec.
@@ -251,7 +251,7 @@ def render_svg(oblast_paths, tutrakan_xy):
   <g>
     <rect x="14" y="{VIEWBOX_HEIGHT - 60}" width="190" height="46" fill="white" fill-opacity="0.85" stroke="#9CA3AF" stroke-width="0.5" rx="4" />
     <rect x="24" y="{VIEWBOX_HEIGHT - 50}" width="14" height="10" fill="{SILISTRA_FILL}" stroke="{SILISTRA_STROKE}" stroke-width="1" />
-    <text x="44" y="{VIEWBOX_HEIGHT - 42}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#374151">Силистра (SBS пилот)</text>
+    <text x="44" y="{VIEWBOX_HEIGHT - 42}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#374151">Силистра (Plainsight пилот)</text>
     <circle cx="31" cy="{VIEWBOX_HEIGHT - 26}" r="4" fill="{TUTRAKAN_FILL}" stroke="white" stroke-width="1" />
     <text x="44" y="{VIEWBOX_HEIGHT - 23}" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="9" fill="#374151">Тутракан</text>
   </g>

@@ -4,7 +4,7 @@
 
 ## Context
 
-Before any data was collected at scale, SBS needed a settled shape for
+Before any data was collected at scale, Plainsight needed a settled shape for
 what it records, so that the first street audited (Ana Ventura) produces a
 record compatible with the second, the tenth, and the hundredth, without
 a migration. Two design questions had to be answered up front: what's the
@@ -28,7 +28,7 @@ data:
 This mirrors iNaturalist's model, where the individual observation is the
 atomic unit and everything else (species pages, location pages) is a
 rollup view over observations rather than a separately maintained record.
-SBS applies the same idea: a street's profile is built from its
+Plainsight applies the same idea: a street's profile is built from its
 observations and attributes, not maintained as an independent narrative
 that could drift out of sync with them.
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutrakan, Street-By-Street</title>
+  <title>Tutrakan, Project Plainsight</title>
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -19,13 +19,19 @@
 <body>
   <div id="welcome-overlay" class="welcome-overlay">
     <div class="welcome-overlay__card">
-      <h1 class="welcome-overlay__title">Street-By-Street</h1>
+      <h1 class="welcome-overlay__title">Project Plainsight</h1>
       <p class="welcome-overlay__subtitle">A street-level civic audit, one street at a time</p>
       <p class="welcome-overlay__description">
         This particular iteration documents the streets of Tutrakan, Bulgaria &mdash;
         recording what's there, what's missing, and what the official
         record says versus what you can see on the ground. It is a
         personal project, openly published.
+      </p>
+      <p class="welcome-overlay__description">
+        This is an ideation-stage experiment, not a finished or validated
+        civic platform &mdash; no formal market research or community
+        consultation has been done. It's a personal attempt to see whether
+        good intentions can be made to match reality in one specific place.
       </p>
       <label class="welcome-overlay__checkbox">
         <input type="checkbox" id="welcome-dont-show" />
@@ -37,7 +43,7 @@
   <script>
     (function () {
       try {
-        if (localStorage.getItem("sbs_welcome_seen") === "true") {
+        if (localStorage.getItem("plainsight_welcome_seen") === "true") {
           document.getElementById("welcome-overlay").hidden = true;
         }
       } catch (err) {
@@ -49,7 +55,7 @@
   <header class="app-header">
     <div class="app-header__top">
       <div>
-        <h1>Tutrakan, Street-By-Street</h1>
+        <h1>Tutrakan, Project Plainsight</h1>
         <p class="app-header__subtitle">A street-level civic audit, one street at a time.</p>
       </div>
       <div class="app-header__actions">
@@ -71,7 +77,7 @@
       var dismiss = document.getElementById("wip-banner-dismiss");
 
       try {
-        if (localStorage.getItem("sbs_wip_banner_dismissed") === "true") {
+        if (localStorage.getItem("plainsight_wip_banner_dismissed") === "true") {
           banner.hidden = true;
         }
       } catch (err) {
@@ -81,7 +87,7 @@
       dismiss.addEventListener("click", function () {
         banner.hidden = true;
         try {
-          localStorage.setItem("sbs_wip_banner_dismissed", "true");
+          localStorage.setItem("plainsight_wip_banner_dismissed", "true");
         } catch (err) {
           // localStorage unavailable - dismissal won't persist
         }
@@ -100,19 +106,19 @@
   </main>
 
   <footer class="app-footer">
-    <p class="app-footer__text">Street-By-Street &middot; an open source (personal) project / 2026</p>
+    <p class="app-footer__text">Project Plainsight &middot; an open source (personal) project / 2026</p>
     <button id="about-button" class="app-footer__link" type="button">about</button>
   </footer>
 
   <div id="about-modal" class="modal-overlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
       <button id="about-modal-close" class="modal__close" type="button" aria-label="Close">&times;</button>
-      <h2 id="about-modal-title">About Street-By-Street</h2>
+      <h2 id="about-modal-title">About Project Plainsight</h2>
 
       <section>
         <h3>What this is</h3>
         <p>
-          Street-By-Street (SBS) is a street-level civic audit of my hometown of Tutrakan,
+          Project Plainsight is a street-level civic audit of my hometown of Tutrakan,
           Bulgaria. Each audited street is documented with its physical attributes, open issues, notable
           assets, and a piece of local history or trivia.
         </p>
@@ -140,7 +146,9 @@
       <section>
         <h3>Status</h3>
         <p>
-          This is a personal project and a work in progress. Data is
+          This is a personal project at an ideation and tinkering stage, not
+          a finished or validated civic platform. No formal market research,
+          needs assessment, or community consultation has been done. Data is
           incomplete. Unaudited streets show available OpenStreetMap data
           only.
         </p>

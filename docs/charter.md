@@ -1,5 +1,16 @@
 # Initiative Charter
 
+## Status
+
+This charter documents an ideation and tinkering effort, not a researched
+or validated initiative. No formal market research, needs assessment, or
+community consultation has been carried out with Tutrakan residents or
+local government about whether this is wanted or how it should work.
+Everything below is a working hypothesis to be tested by actually doing
+the work on one street, not a claim that the model is already correct —
+see [ethics.md](ethics.md) for the same honesty-about-limitations
+principle applied to what gets published.
+
 ## Problem Statement
 
 Tutrakan, like many small Bulgarian towns, is documented at the municipal
@@ -42,7 +53,7 @@ about the place itself.
 - Official street-level data of any kind. Bulgarian open data
   (`data.egov.bg`, NSI, census releases) stops at municipality or
   settlement granularity — there is no authoritative street-level dataset to
-  reconcile against. SBS observations are the only street-level record;
+  reconcile against. Plainsight observations are the only street-level record;
   they are not being checked against a government equivalent because none
   exists.
 - A database or backend. Phase 1 is static files only (see

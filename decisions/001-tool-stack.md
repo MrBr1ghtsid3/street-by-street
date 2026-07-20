@@ -4,7 +4,7 @@
 
 ## Context
 
-SBS needs a working set of tools for field data collection, internal
+Plainsight needs a working set of tools for field data collection, internal
 mapping, public-facing mapping, and community communication — all under a
 €0 budget, run by a single person. The tools need to be usable without
 custom development, since Phase 1 explicitly has no backend (see
@@ -66,7 +66,7 @@ self-hosting equivalents.
   voting, budgeting) rather than an observation-logging audit, would
   require self-hosting or a paid instance, and is significant operational
   overhead for a single-person project with six observations to manage.
-  Worth reconsidering if SBS later needs structured resident participation
+  Worth reconsidering if Plainsight later needs structured resident participation
   features that a spreadsheet and a map genuinely can't support.
 - **Self-hosted mapping (e.g. a custom Leaflet admin tool) instead of
   Google My Maps** — rejected for the internal working map specifically

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Observation Intake (local server) &middot; Project Plainsight</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+  />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      display: block;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .intake {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .intake h1 {
+      font-size: 1.35rem;
+      margin-bottom: 0.1rem;
+    }
+
+    .intake__subtitle {
+      color: var(--grey-600);
+      font-size: 0.85rem;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .intake-card {
+      background: #fff;
+      border: 1px solid var(--grey-200);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
+    .intake-card h2 {
+      font-size: 1rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--grey-900);
+    }
+
+    .field {
+      margin-bottom: 1.1rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--grey-800);
+      margin-bottom: 0.3rem;
+    }
+
+    .field .hint {
+      font-size: 0.75rem;
+      color: var(--grey-600);
+      margin: 0.3rem 0 0;
+    }
+
+    .field .hint--warn {
+      color: var(--color-issue);
+    }
+
+    .field .hint--ok {
+      color: var(--color-asset);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      font-family: var(--font-base);
+      font-size: 0.88rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--grey-300);
+      border-radius: 5px;
+      color: var(--grey-900);
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 4.5rem;
+      resize: vertical;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .toggle-group button {
+      flex: 1;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--grey-300);
+      background: #fff;
+      border-radius: 5px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--grey-800);
+    }
+
+    .toggle-group button.is-active[data-type="issue"] {
+      background: var(--color-issue);
+      border-color: var(--color-issue);
+      color: #fff;
+    }
+
+    .toggle-group button.is-active[data-type="asset"] {
+      background: var(--color-asset);
+      border-color: var(--color-asset);
+      color: #fff;
+    }
+
+    .icon-picker {
+      position: relative;
+    }
+
+    .icon-picker summary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid var(--grey-300);
+      border-radius: 5px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.88rem;
+    }
+
+    .icon-picker summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .icon-picker[open] summary {
+      border-color: var(--grey-400);
+    }
+
+    .icon-picker__list {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 0.25rem);
+      left: 0;
+      right: 0;
+      max-height: 220px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid var(--grey-300);
+      border-radius: 5px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      padding: 0.25rem;
+    }
+
+    .icon-picker__option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.4rem 0.5rem;
+      border: none;
+      background: none;
+      text-align: left;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--grey-900);
+    }
+
+    .icon-picker__option:hover {
+      background: var(--grey-100);
+    }
+
+    .icon-picker__option.is-selected {
+      background: var(--grey-100);
+      font-weight: 600;
+    }
+
+    .icon-picker__option .ti {
+      width: 1.1rem;
+      text-align: center;
+    }
+
+    .photo-preview {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .photo-preview img {
+      max-width: 96px;
+      max-height: 96px;
+      border-radius: 5px;
+      border: 1px solid var(--grey-200);
+      object-fit: cover;
+    }
+
+    .photo-note {
+      font-size: 0.75rem;
+      color: var(--grey-600);
+      background: var(--grey-50);
+      border: 1px solid var(--grey-200);
+      border-radius: 5px;
+      padding: 0.5rem 0.65rem;
+      margin-top: 0.5rem;
+    }
+
+    .dry-run-field {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dry-run-field label {
+      margin: 0;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .primary-button {
+      display: block;
+      width: 100%;
+      padding: 0.7rem 1rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--color-asset);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .primary-button:hover {
+      opacity: 0.92;
+    }
+
+    .primary-button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .form-errors {
+      background: #fdf1ec;
+      border: 1px solid var(--color-issue);
+      color: var(--color-issue);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-errors ul {
+      margin: 0.3rem 0 0;
+      padding-left: 1.1rem;
+    }
+
+    #result-section {
+      display: none;
+    }
+
+    .result-panel {
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .result-panel--success {
+      background: #eafaf3;
+      border: 1px solid var(--color-asset);
+      color: var(--grey-900);
+    }
+
+    .result-panel--dry-run {
+      background: var(--grey-50);
+      border: 1px solid var(--grey-300);
+      color: var(--grey-900);
+    }
+
+    .result-panel--error {
+      background: #fdf1ec;
+      border: 1px solid var(--color-issue);
+      color: var(--color-issue);
+    }
+
+    .result-panel pre {
+      background: var(--grey-900);
+      color: #f0f0f0;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .result-panel ul {
+      margin: 0.3rem 0;
+      padding-left: 1.1rem;
+    }
+
+    .result-panel a {
+      color: var(--color-asset);
+      font-weight: 600;
+    }
+
+    .required-mark {
+      color: var(--color-issue);
+    }
+  </style>
+</head>
+<body>
+  <div class="intake">
+    <h1>Observation Intake <span style="font-weight:400;">(local server)</span></h1>
+    <p class="intake__subtitle">
+      Fills in an observation and calls
+      <code>scripts/new_observation.py</code> directly — real git branch,
+      commit, push, and PR (or a dry-run preview with nothing touched).
+      Stops at "PR opened"; review and merge stay manual. See
+      <code>docs/methodology.md</code> for the full workflow.
+    </p>
+
+    <div class="intake-card">
+      <h2>Street</h2>
+      <div class="field">
+        <label for="street-select">Street <span class="required-mark">*</span></label>
+        <select id="street-select"></select>
+        <input type="text" id="street-text-fallback" placeholder="street-id (e.g. ana-ventura)" hidden />
+        <p class="hint" id="street-hint">Loading streets&hellip;</p>
+      </div>
+
+      <div class="field">
+        <label for="obs-id">Observation id <span class="required-mark">*</span></label>
+        <input type="number" id="obs-id" min="1" step="1" />
+        <p class="hint" id="obs-id-hint">Select a street to check existing observation ids.</p>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <h2>Classification</h2>
+      <div class="field">
+        <label>Type <span class="required-mark">*</span></label>
+        <div class="toggle-group" id="type-toggle">
+          <button type="button" data-type="issue" class="is-active">Issue</button>
+          <button type="button" data-type="asset">Asset</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="category-select">Category <span class="required-mark">*</span></label>
+        <select id="category-select"></select>
+      </div>
+
+      <div class="field">
+        <label for="icon-picker-summary">POI icon</label>
+        <details class="icon-picker" id="icon-picker">
+          <summary id="icon-picker-summary"></summary>
+          <div class="icon-picker__list" id="icon-picker-list"></div>
+        </details>
+        <p class="hint" id="icon-hint">Defaults to the icon the map already uses for this category.</p>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <h2>Details</h2>
+      <div class="field">
+        <label for="title-input">Title <span class="required-mark">*</span></label>
+        <input type="text" id="title-input" maxlength="120" />
+      </div>
+
+      <div class="field">
+        <label for="description-input">Description <span class="required-mark">*</span></label>
+        <textarea id="description-input"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="status-select">Status</label>
+        <select id="status-select"></select>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <h2>Photo</h2>
+      <div class="field">
+        <label for="photo-input">Photo (JPEG) <span class="required-mark">*</span></label>
+        <input type="file" id="photo-input" accept="image/jpeg" />
+        <div class="photo-preview" id="photo-preview" hidden>
+          <img id="photo-preview-img" alt="Selected photo preview" />
+          <span id="photo-preview-name"></span>
+        </div>
+        <p class="photo-note">
+          Attach an already-vetted photo (faces/animals/plates checked per
+          ethics.md). Straight from the camera so GPS EXIF is intact — the
+          server does not read EXIF itself, the photo pipeline does that
+          after the PR merges.
+        </p>
+      </div>
+    </div>
+
+    <div class="intake-card">
+      <div class="field dry-run-field">
+        <input type="checkbox" id="dry-run-checkbox" checked />
+        <label for="dry-run-checkbox">Dry run (preview the plan — touches nothing)</label>
+      </div>
+    </div>
+
+    <div id="form-errors" class="form-errors" hidden></div>
+
+    <button type="button" class="primary-button" id="submit-button">Submit</button>
+
+    <div id="result-section">
+      <div class="intake-card">
+        <div id="result-panel" class="result-panel"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var ISSUE_CATEGORIES = [];
+      var ASSET_CATEGORIES = [];
+      var ISSUE_STATUSES = [];
+      var ASSET_STATUSES = [];
+      var CATEGORY_ICON = {};
+
+      var state = {
+        type: "issue",
+        streetsById: {},
+        streetRecord: null,
+        photoFile: null,
+      };
+
+      var streetSelect = document.getElementById("street-select");
+      var streetTextFallback = document.getElementById("street-text-fallback");
+      var streetHint = document.getElementById("street-hint");
+      var obsIdInput = document.getElementById("obs-id");
+      var obsIdHint = document.getElementById("obs-id-hint");
+      var typeToggle = document.getElementById("type-toggle");
+      var categorySelect = document.getElementById("category-select");
+      var iconPicker = document.getElementById("icon-picker");
+      var iconPickerSummary = document.getElementById("icon-picker-summary");
+      var iconPickerList = document.getElementById("icon-picker-list");
+      var iconHint = document.getElementById("icon-hint");
+      var titleInput = document.getElementById("title-input");
+      var descriptionInput = document.getElementById("description-input");
+      var statusSelect = document.getElementById("status-select");
+      var photoInput = document.getElementById("photo-input");
+      var photoPreview = document.getElementById("photo-preview");
+      var photoPreviewImg = document.getElementById("photo-preview-img");
+      var photoPreviewName = document.getElementById("photo-preview-name");
+      var dryRunCheckbox = document.getElementById("dry-run-checkbox");
+      var formErrors = document.getElementById("form-errors");
+      var submitButton = document.getElementById("submit-button");
+      var resultSection = document.getElementById("result-section");
+      var resultPanel = document.getElementById("result-panel");
+
+      function currentStreetId() {
+        return streetTextFallback.hidden ? streetSelect.value : streetTextFallback.value.trim();
+      }
+
+      // ---- Taxonomy (served by /taxonomy — single Python source of truth) ----
+
+      function loadTaxonomy() {
+        return fetch("/taxonomy")
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            ISSUE_CATEGORIES = data.issue_categories;
+            ASSET_CATEGORIES = data.asset_categories;
+            ISSUE_STATUSES = data.issue_statuses;
+            ASSET_STATUSES = data.asset_statuses;
+            CATEGORY_ICON = data.category_icon;
+          });
+      }
+
+      // ---- Street dropdown ----
+
+      function populateStreetDropdown() {
+        fetch("/data/tutrakan-streets.geojson")
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (geojson) {
+            geojson.features.forEach(function (feature) {
+              state.streetsById[feature.properties.id] = feature.properties.name;
+            });
+            var ids = Object.keys(state.streetsById).sort(function (a, b) {
+              return state.streetsById[a].localeCompare(state.streetsById[b]);
+            });
+            streetSelect.innerHTML = '<option value="">Select a street&hellip;</option>';
+            ids.forEach(function (id) {
+              var option = document.createElement("option");
+              option.value = id;
+              option.textContent = state.streetsById[id] + " (" + id + ")";
+              streetSelect.appendChild(option);
+            });
+            streetHint.textContent = ids.length + " streets loaded.";
+          })
+          .catch(function (err) {
+            streetSelect.hidden = true;
+            streetTextFallback.hidden = false;
+            streetHint.textContent = "Could not load streets (" + err.message + ") — enter the street id by hand.";
+            streetHint.className = "hint hint--warn";
+          });
+      }
+
+      function checkObservationId() {
+        var streetId = currentStreetId();
+        if (!streetId) {
+          obsIdHint.textContent = "Select a street to check existing observation ids.";
+          obsIdHint.className = "hint";
+          return;
+        }
+        obsIdHint.textContent = "Checking data/streets/" + streetId + ".json…";
+        fetch("/data/streets/" + streetId + ".json")
+          .then(function (r) {
+            if (!r.ok) throw new Error("not found");
+            return r.json();
+          })
+          .then(function (record) {
+            state.streetRecord = record;
+            var maxId = (record.observations || []).reduce(function (m, o) { return Math.max(m, o.id); }, 0);
+            var suggested = maxId + 1;
+            if (!obsIdInput.value) obsIdInput.value = suggested;
+            obsIdHint.textContent = "Highest existing id is " + maxId + " — suggested next id: " + suggested + ".";
+            obsIdHint.className = "hint hint--ok";
+          })
+          .catch(function () {
+            state.streetRecord = null;
+            if (!obsIdInput.value) obsIdInput.value = 1;
+            obsIdHint.textContent = "New street — no existing record yet, start at id 1.";
+            obsIdHint.className = "hint hint--ok";
+          });
+      }
+
+      streetSelect.addEventListener("change", checkObservationId);
+      streetTextFallback.addEventListener("change", checkObservationId);
+
+      // ---- Type / category / status ----
+
+      function categoriesForType(type) { return type === "asset" ? ASSET_CATEGORIES : ISSUE_CATEGORIES; }
+      function statusesForType(type) { return type === "asset" ? ASSET_STATUSES : ISSUE_STATUSES; }
+      function defaultStatusForType(type) { return type === "asset" ? "active" : "open"; }
+
+      function populateCategorySelect() {
+        categorySelect.innerHTML = "";
+        categoriesForType(state.type).forEach(function (cat) {
+          var option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat.replace(/_/g, " ");
+          categorySelect.appendChild(option);
+        });
+        renderIconPicker();
+      }
+
+      function populateStatusSelect() {
+        var defaultStatus = defaultStatusForType(state.type);
+        statusSelect.innerHTML = "";
+        statusesForType(state.type).forEach(function (status) {
+          var option = document.createElement("option");
+          option.value = status;
+          option.textContent = status.replace(/_/g, " ");
+          if (status === defaultStatus) option.selected = true;
+          statusSelect.appendChild(option);
+        });
+      }
+
+      typeToggle.querySelectorAll("button").forEach(function (button) {
+        button.addEventListener("click", function () {
+          state.type = button.dataset.type;
+          typeToggle.querySelectorAll("button").forEach(function (b) { b.classList.toggle("is-active", b === button); });
+          populateCategorySelect();
+          populateStatusSelect();
+        });
+      });
+
+      // ---- Icon picker (preview only — see icon-hint warning; not sent to the server) ----
+
+      function defaultIconForCategory(category) {
+        return CATEGORY_ICON[category] || CATEGORY_ICON.other;
+      }
+
+      function renderIconPicker() {
+        var defaultIcon = defaultIconForCategory(categorySelect.value);
+        if (!iconPicker.dataset.selected || iconPicker.dataset.autoTrack !== "false") {
+          iconPicker.dataset.selected = defaultIcon;
+        }
+
+        iconPickerList.innerHTML = "";
+        Object.keys(CATEGORY_ICON).forEach(function (cat) {
+          var icon = CATEGORY_ICON[cat];
+          var option = document.createElement("button");
+          option.type = "button";
+          option.className = "icon-picker__option";
+          if (icon === iconPicker.dataset.selected) option.classList.add("is-selected");
+          option.innerHTML = '<i class="ti ' + icon + '" aria-hidden="true"></i><span>' + icon + "</span>";
+          option.addEventListener("click", function () {
+            iconPicker.dataset.selected = icon;
+            iconPicker.dataset.autoTrack = icon === defaultIconForCategory(categorySelect.value) ? "true" : "false";
+            iconPicker.open = false;
+            updateIconSummary();
+          });
+          iconPickerList.appendChild(option);
+        });
+        updateIconSummary();
+      }
+
+      function updateIconSummary() {
+        var selected = iconPicker.dataset.selected;
+        var defaultIcon = defaultIconForCategory(categorySelect.value);
+        iconPickerSummary.innerHTML = '<i class="ti ' + selected + '" aria-hidden="true"></i><span>' + selected + "</span>";
+        if (selected !== defaultIcon) {
+          iconHint.textContent =
+            "Overridden from the category default (" + defaultIcon + "). The map derives icons strictly from " +
+            "category — there's no per-observation icon field in the schema, so this is for your own reference " +
+            "only and is not sent to the server.";
+          iconHint.className = "hint hint--warn";
+        } else {
+          iconHint.textContent = "Defaults to the icon the map already uses for this category (" + defaultIcon + ").";
+          iconHint.className = "hint";
+        }
+      }
+
+      categorySelect.addEventListener("change", renderIconPicker);
+
+      // ---- Photo ----
+
+      photoInput.addEventListener("change", function () {
+        var file = photoInput.files[0] || null;
+        state.photoFile = file;
+        if (!file) {
+          photoPreview.hidden = true;
+          return;
+        }
+        photoPreviewName.textContent = file.name;
+        photoPreviewImg.src = URL.createObjectURL(file);
+        photoPreview.hidden = false;
+      });
+
+      // ---- Validation (client-side convenience only — new_observation.py
+      // is the real, authoritative validation the server calls) ----
+
+      function validate() {
+        var errors = [];
+        if (!currentStreetId()) errors.push("Street is required.");
+        if (!obsIdInput.value) errors.push("Observation id is required.");
+        if (!titleInput.value.trim()) errors.push("Title is required.");
+        if (!descriptionInput.value.trim()) errors.push("Description is required.");
+        if (!state.photoFile) errors.push("A photo is required.");
+        return errors;
+      }
+
+      // ---- Submit ----
+
+      function escapeHtml(text) {
+        var div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function renderResult(result, httpOk) {
+        resultSection.style.display = "block";
+
+        if (!httpOk || !result.ok) {
+          resultPanel.className = "result-panel result-panel--error";
+          resultPanel.innerHTML = "<strong>Error:</strong><pre>" + escapeHtml(result.error || "Unknown error") + "</pre>";
+          resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        if (result.dry_run) {
+          resultPanel.className = "result-panel result-panel--dry-run";
+          resultPanel.innerHTML =
+            "<strong>Dry run — nothing was touched.</strong>" +
+            "<p>Planned branch: <code>" + escapeHtml(result.branch) + "</code></p>" +
+            "<p>Photo destination: <code>" + escapeHtml(result.photo_destination) + "</code></p>" +
+            "<p>Planned actions:</p><ul>" +
+            result.actions.map(function (a) { return "<li>" + escapeHtml(a) + "</li>"; }).join("") +
+            "</ul>" +
+            "<p>Observation that would be inserted:</p>" +
+            "<pre>" + escapeHtml(JSON.stringify(result.observation, null, 2)) + "</pre>";
+          resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+
+        resultPanel.className = "result-panel result-panel--success";
+        var html = "<strong>PR prepared.</strong>" +
+          "<p>Branch: <code>" + escapeHtml(result.branch) + "</code></p>";
+        if (result.pr_url) {
+          html += '<p>PR opened: <a href="' + result.pr_url + '" target="_blank" rel="noopener noreferrer">' +
+            escapeHtml(result.pr_url) + "</a></p>";
+        } else {
+          html += "<p>Branch pushed, but the PR wasn't opened automatically (gh unavailable/unauthenticated). " +
+            "Open it manually with:</p><pre>" + escapeHtml(result.manual_pr_command || "") + "</pre>";
+          if (result.compare_url) {
+            html += '<p>Or via the compare URL: <a href="' + result.compare_url + '" target="_blank" rel="noopener noreferrer">' +
+              escapeHtml(result.compare_url) + "</a></p>";
+          }
+        }
+        html += "<p>Stopped at PR-opened — review and merge are still manual, same as any other PR.</p>";
+        resultPanel.innerHTML = html;
+        resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      submitButton.addEventListener("click", function () {
+        var errors = validate();
+        if (errors.length) {
+          formErrors.innerHTML = "<strong>Fix the following:</strong><ul>" +
+            errors.map(function (e) { return "<li>" + escapeHtml(e) + "</li>"; }).join("") + "</ul>";
+          formErrors.hidden = false;
+          resultSection.style.display = "none";
+          return;
+        }
+        formErrors.hidden = true;
+
+        var formData = new FormData();
+        formData.append("street_id", currentStreetId());
+        formData.append("id", obsIdInput.value);
+        formData.append("type", state.type);
+        formData.append("category", categorySelect.value);
+        formData.append("title", titleInput.value.trim());
+        formData.append("description", descriptionInput.value.trim());
+        formData.append("status", statusSelect.value);
+        formData.append("dry_run", dryRunCheckbox.checked ? "true" : "false");
+        formData.append("photo", state.photoFile, state.photoFile.name);
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Working…";
+
+        fetch("/submit", { method: "POST", body: formData })
+          .then(function (response) {
+            return response.json().then(function (data) {
+              renderResult(data, response.ok);
+            });
+          })
+          .catch(function (err) {
+            renderResult({ ok: false, error: "Request failed: " + err.message }, false);
+          })
+          .finally(function () {
+            submitButton.disabled = false;
+            submitButton.textContent = "Submit";
+          });
+      });
+
+      // ---- Init ----
+      loadTaxonomy().then(function () {
+        populateCategorySelect();
+        populateStatusSelect();
+      });
+      populateStreetDropdown();
+    })();
+  </script>
+</body>
+</html>
