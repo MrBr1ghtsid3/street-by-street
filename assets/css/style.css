@@ -1149,6 +1149,170 @@ path.street-line:focus {
   color: var(--grey-600);
 }
 
+/* Status page */
+.status-main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+.status-ideation-note {
+  margin-bottom: 1.75rem;
+}
+
+.status-section {
+  margin-bottom: 2rem;
+}
+
+.status-section__title {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--grey-900);
+}
+
+.status-section__subtitle {
+  margin: 0 0 0.9rem;
+  font-size: 0.8rem;
+  color: var(--grey-600);
+}
+
+.status-loading,
+.status-empty {
+  font-size: 0.85rem;
+  color: var(--grey-600);
+  font-style: italic;
+}
+
+.status-error {
+  font-size: 0.85rem;
+  color: var(--color-issue);
+}
+
+.status-error a {
+  color: inherit;
+  font-weight: 600;
+}
+
+/* Summary stat cards - same bordered-card language as .info-card */
+.status-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.status-stat-card {
+  border: 1px solid var(--grey-200);
+  border-radius: 6px;
+  padding: 0.9rem 1rem;
+  background: #fff;
+  text-align: center;
+}
+
+.status-stat-card__value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--grey-900);
+}
+
+.status-stat-card__label {
+  margin: 0.25rem 0 0;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--grey-600);
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Case cards - same bordered-card language as .observation-card */
+.status-case-card {
+  border: 1px solid var(--grey-200);
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+}
+
+.status-case-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.status-case-card__title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-asset);
+}
+
+.status-case-card__number {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--grey-600);
+}
+
+.status-case-card__meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.72rem;
+  color: var(--grey-600);
+}
+
+/* Resolution cards - same header/badge/stats pattern as
+   .observation-popup__resolution, laid out for a full-width list rather
+   than a map popup. */
+.status-resolution-card {
+  border: 1px solid var(--grey-200);
+  border-radius: 6px;
+  padding: 0.75rem 0.9rem;
+}
+
+.status-resolution-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.status-resolution-card__street {
+  margin: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--grey-600);
+}
+
+.status-resolution-card__title {
+  margin: 0.1rem 0 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status-resolution-card__date {
+  margin: 0 0 0.3rem;
+  font-size: 0.7rem;
+  color: var(--grey-600);
+}
+
+.status-resolution-card__summary {
+  margin: 0 0 0.4rem;
+  font-size: 0.85rem;
+  color: var(--grey-800);
+}
+
+.status-resolution-card__stats {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--grey-800);
+}
+
 /* Responsive */
 @media (max-width: 720px) {
   .app-main {
@@ -1170,5 +1334,13 @@ path.street-line:focus {
 
   .card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .status-main {
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .status-stats {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

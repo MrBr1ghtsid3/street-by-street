@@ -281,3 +281,33 @@ To onboard a new street:
    `observations_count` and `issues_open` to match.
 5. Confirm the street renders correctly on the map and that its detail
    panel loads before considering the audit published.
+
+## Status page
+
+`status.html` (`assets/js/status.js`) is a second, standalone page — no
+map, no build step — that gives a public, at-a-glance view of the
+project's live state:
+
+- **Summary** — total observations, open issues, resolved issues, streets
+  audited, and total intervention cost/person-hours, computed client-side
+  by fetching `data/tutrakan-streets.geojson` and every audited street's
+  JSON record. No server-side aggregation exists; every number is derived
+  in the browser on each page load.
+- **Open cases** — currently open GitHub Issues labelled `case`, fetched
+  live and unauthenticated from the public GitHub REST API
+  (`api.github.com/repos/.../issues`). Where an Issue's body contains the
+  usual `Tracks: streets/{street-id} observation #{id}` line (see
+  [case-tracking.md](case-tracking.md#linking-convention)), the linked
+  street's name is shown alongside it.
+- **Recent resolutions** — every observation carrying a `resolution`
+  object (see [data-taxonomy.md](data-taxonomy.md#resolution)), newest
+  first.
+
+There is no backend and no stored credential anywhere in this page: the
+GitHub API call is a plain, public, read-only request that works
+identically for any visitor, subject to GitHub's unauthenticated rate
+limit. If that limit is hit or the API is otherwise unreachable, the Open
+cases section shows a plain "unavailable" message rather than failing
+silently or breaking the rest of the page — the Summary and Recent
+resolutions sections don't depend on the GitHub API at all and keep
+working independently of it.
