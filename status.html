@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status &middot; Project Plainsight</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+  />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header__top">
+      <div>
+        <h1>Project Plainsight &middot; Status</h1>
+        <p class="app-header__subtitle">Live state of civic cases and observations, generated from repo data and the GitHub API</p>
+      </div>
+      <div class="app-header__actions">
+        <a class="about-button" href="index.html">&larr; Map</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="status-main">
+    <p class="trivia-block status-ideation-note">
+      This status page is part of an ideation-stage experiment, not a
+      finished or validated civic platform &mdash; no formal market research
+      or community consultation has been done. The numbers below are real,
+      generated live from this repository's data and the public GitHub API,
+      but the project itself is still a personal work in progress.
+    </p>
+
+    <section class="status-section">
+      <h2 class="status-section__title">Summary</h2>
+      <div class="status-stats" id="summary-stats">
+        <p class="status-loading">Loading summary&hellip;</p>
+      </div>
+    </section>
+
+    <section class="status-section">
+      <h2 class="status-section__title">Open cases</h2>
+      <p class="status-section__subtitle">
+        Open GitHub Issues labelled <code>case</code>, fetched live and
+        unauthenticated from the public GitHub API.
+      </p>
+      <div class="status-list" id="cases-list">
+        <p class="status-loading">Loading open cases&hellip;</p>
+      </div>
+    </section>
+
+    <section class="status-section">
+      <h2 class="status-section__title">Recent resolutions</h2>
+      <p class="status-section__subtitle">
+        Every observation with a recorded intervention, newest first.
+      </p>
+      <div class="status-list" id="resolutions-list">
+        <p class="status-loading">Loading resolutions&hellip;</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p class="app-footer__text">Project Plainsight &middot; an open source (personal) project / 2026</p>
+    <a class="app-footer__link" href="index.html">&larr; back to map</a>
+  </footer>
+
+  <script src="assets/js/status.js"></script>
+</body>
+</html>
