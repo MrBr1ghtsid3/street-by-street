@@ -1,0 +1,12 @@
+{
+  "_note": "Single source of truth for the observation taxonomy, read by scripts/new_observation.py (at import time), tools/serve.py (served as-is at /taxonomy), assets/js/map.js, and tools/observation-form.html (both fetched, same as data/tutrakan-streets.geojson). docs/data-taxonomy.md is the hand-written, human-readable companion to this file - update both together whenever the taxonomy changes.",
+  "categories": ["accessibility", "animal_welfare", "cleanliness"],
+  "category_icon": {
+    "accessibility": "ti-accessible",
+    "animal_welfare": "ti-paw",
+    "cleanliness": "ti-trash"
+  },
+  "fallback_icon": "ti-dots",
+  "issue_statuses": ["open", "in_progress", "resolved"],
+  "asset_statuses": ["active", "inactive"]
+}

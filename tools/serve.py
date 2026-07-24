@@ -47,11 +47,6 @@ except ImportError:
     sys.exit(1)
 
 from new_observation import (
-    ASSET_STATUSES,
-    CATEGORIES,
-    CATEGORY_ICON,
-    FALLBACK_ICON,
-    ISSUE_STATUSES,
     GitOperationError,
     ValidationError,
     create_observation_pr,
@@ -70,19 +65,10 @@ def index():
 
 @app.route("/taxonomy")
 def taxonomy():
-    # Single source of truth is scripts/new_observation.py's constants —
-    # served as JSON so the template's JS doesn't need its own third
-    # hand-copied taxonomy/icon table alongside map.js's and
-    # observation-form.html's.
-    return jsonify(
-        {
-            "categories": CATEGORIES,
-            "issue_statuses": ISSUE_STATUSES,
-            "asset_statuses": ASSET_STATUSES,
-            "category_icon": CATEGORY_ICON,
-            "fallback_icon": FALLBACK_ICON,
-        }
-    )
+    # data/taxonomy.json is the single source of truth - served as-is so
+    # the template's JS reads the exact same file scripts/new_observation.py
+    # loads, with no reconstruction step that could drift from it.
+    return send_from_directory(DATA_DIR, "taxonomy.json")
 
 
 @app.route("/data/<path:subpath>")

@@ -1,6 +1,6 @@
-// Loads data/*.geojson and data/streets/*.json via fetch(), which browsers
-// block under file://. Serve this directory over HTTP (see README) to test
-// locally.
+// Loads data/*.geojson, data/streets/*.json, and data/taxonomy.json via
+// fetch(), which browsers block under file://. Serve this directory over
+// HTTP (see README) to test locally.
 
 const TUTRAKAN_CENTER = [44.0386, 26.6195];
 
@@ -70,21 +70,14 @@ const OBSERVATION_MARKER_COLOR = {
   asset: "#1D9E75",
 };
 
-// Single source of truth for category -> Tabler icon, shared by the
-// observation cards in the side panel and the map pin markers. Kept in
-// sync by hand with scripts/new_observation.py's CATEGORY_ICON (this repo
-// has no build step/module system across Python/JS).
-const CATEGORY_ICON = {
-  accessibility: "ti-accessible",
-  animal_welfare: "ti-paw",
-  cleanliness: "ti-trash",
-};
-
-// Neutral fallback for a category with no icon mapping (e.g. old data
-// still carrying a retired category). Never a real category's icon -
-// falling back to one of those would silently mislabel the observation
-// as something it isn't.
-const FALLBACK_ICON = "ti-dots";
+// Category -> Tabler icon, and the neutral fallback for an unmapped
+// category. Populated from data/taxonomy.json by init() below, before
+// anything that renders an observation can run - see the fetch there.
+// data/taxonomy.json is the single source of truth shared with
+// scripts/new_observation.py, tools/serve.py's /taxonomy endpoint, and
+// tools/observation-form.html.
+let CATEGORY_ICON = {};
+let FALLBACK_ICON = null;
 
 const REPO_ISSUES_URL = "https://github.com/MrBr1ghtsid3/street-by-street/issues";
 
@@ -554,11 +547,23 @@ async function loadStreetDetail(streetId) {
 
 async function init() {
   try {
-    const response = await fetch("data/tutrakan-streets.geojson");
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    const geojson = await response.json();
+    const [geojson, taxonomy] = await Promise.all([
+      fetch("data/tutrakan-streets.geojson").then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} loading tutrakan-streets.geojson`);
+        }
+        return response.json();
+      }),
+      fetch("data/taxonomy.json").then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} loading taxonomy.json`);
+        }
+        return response.json();
+      }),
+    ]);
+
+    CATEGORY_ICON = taxonomy.category_icon;
+    FALLBACK_ICON = taxonomy.fallback_icon;
 
     function selectStreet(layer, props) {
       selectStreetLayer(layer, props.status);
