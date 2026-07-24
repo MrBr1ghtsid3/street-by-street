@@ -4,7 +4,7 @@
 
 ## Context
 
-Plainsight observations ([ADR 003](003-data-model.md)) record state — what's
+street-by-street observations ([ADR 003](003-data-model.md)) record state — what's
 currently true about a street, as of the last audit. They don't, and
 shouldn't, record process: who's looking at a problem, what's been tried,
 what's blocking it, or when it's expected to be fixed. As the project
@@ -13,7 +13,7 @@ that process needs somewhere to live — triage, ownership, an interim
 workaround if one exists, and an eventual resolution — separate from the
 observation state model so the two don't get conflated. The work item
 itself is referred to as a "Case" specifically to avoid colliding with
-Plainsight's existing taxonomy term "issue" (a `road`/`litter`/etc. category on
+street-by-street's existing taxonomy term "issue" (a `road`/`litter`/etc. category on
 an observation) when both are discussed together.
 
 ## Decision
@@ -23,7 +23,7 @@ Track Cases as **GitHub Issues**, using a dedicated Issue Form
 Projects (v2)** as the board/workflow layer on top of them, rather than
 adopting a third-party case-tracking platform.
 
-A Case links to a Plainsight observation, when relevant, via a **documented
+A Case links to a street-by-street observation, when relevant, via a **documented
 text convention**, not a hard foreign key:
 
 - `Tracks: streets/{street-id} observation #{id}` in the Case's
@@ -49,7 +49,7 @@ cross-system sync overhead the rest of the data model already avoids
 - **FixMyStreet / Open311** — a purpose-built civic-issue-tracking
   platform with resident-facing reporting. Deferred: it carries real
   hosting and integration overhead (its own server, its own data store,
-  a sync path back into Plainsight) that's only justified once reports are
+  a sync path back into street-by-street) that's only justified once reports are
   coming from the public at scale, not from a single steward's own
   audits. Documented as the natural next step if that changes, not ruled
   out permanently.
@@ -88,6 +88,6 @@ cross-system sync overhead the rest of the data model already avoids
   original change that produced the template and this ADR — they were
   done separately, once the workflow they'd support was already
   documented.
-- If Plainsight later needs resident-facing reporting, FixMyStreet/Open311
+- If street-by-street later needs resident-facing reporting, FixMyStreet/Open311
   becomes the natural migration target; this ADR doesn't block that, it
   just declines to build it before there's demand for it.

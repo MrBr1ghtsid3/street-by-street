@@ -2,7 +2,7 @@
 
 ## Two models: state and process
 
-Plainsight is built from two separate systems, not one hierarchy with an extra
+street-by-street is built from two separate systems, not one hierarchy with an extra
 level bolted on:
 
 - **The state model** — City → Street → Observation, described below.
@@ -25,7 +25,7 @@ one record that tries to do both jobs.
 
 ## The three-level hierarchy
 
-Plainsight organises everything into three levels:
+street-by-street organises everything into three levels:
 
 - **City** — Tutrakan. The map's entry point, and the only level at which
   official Bulgarian statistics exist.
@@ -203,11 +203,8 @@ its contents — tracked here as a checklist, not changed by this pass:
   off.
 - [ ] **The `case` label exists** (required by the Case issue form's
   `labels:` and by the link workflow's `if:` condition).
-- [ ] **The "Plainsight Cases" Project (v2) board exists** with its six columns
+- [ ] **The "SBS Cases" Project (v2) board exists** with its six columns
   (To Triage, Backlog, Ready, In Progress, In Review, Done), per ADR 005.
-  It was originally created as "SBS Cases" — renaming it to "Plainsight
-  Cases" is a manual step in the GitHub UI (Projects → board settings),
-  not something this repo can do.
 - [ ] **The `main` branch-protection ruleset** behaves as the comment in
   `refresh-data.yml` assumes — i.e. the `data/*` branch prefix is excluded
   from any "review required" gate, so quarterly refresh PRs don't block on
@@ -218,7 +215,7 @@ its contents — tracked here as a checklist, not changed by this pass:
 
 ## Official-vs-observed juxtaposition
 
-A core part of Plainsight is putting official statistics next to what's actually
+A core part of street-by-street is putting official statistics next to what's actually
 observed on the ground, so the gap between the two becomes visible — for
 example, registered businesses at the municipality level next to which
 shops on a given street are actually open.
@@ -236,7 +233,7 @@ official dataset broken down by street. This means:
   meaningfully different (and weaker) claim than *"the municipality
   reports X for this street; we observed Y,"* and the documentation and UI
   should never blur the two.
-- Street-level reality, in this model, only ever comes from Plainsight's own
+- Street-level reality, in this model, only ever comes from street-by-street's own
   observations. There's nothing official to check it against, which is
   also exactly why recording it has value.
 

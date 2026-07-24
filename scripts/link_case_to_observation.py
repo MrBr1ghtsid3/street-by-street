@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Link a Case (GitHub Issue) to the Plainsight observation it references.
+"""Link a Case (GitHub Issue) to the street-by-street observation it references.
 
 Triggered by .github/workflows/link-case-to-observation.yml whenever a
 `case`-labelled Issue is opened or edited. Parses the Issue Form body for

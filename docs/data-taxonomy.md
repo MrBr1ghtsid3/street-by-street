@@ -1,6 +1,6 @@
 # Data Taxonomy
 
-Every record in Plainsight is either a **street attribute** (a property of the
+Every record in street-by-street is either a **street attribute** (a property of the
 street itself) or an **observation** (a point-in-time record of something
 on the street). Mixing the two in a single flat schema is the single
 easiest way to make this data hard to use later, so the split is treated as

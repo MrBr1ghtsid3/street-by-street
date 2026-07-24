@@ -53,7 +53,7 @@ about the place itself.
 - Official street-level data of any kind. Bulgarian open data
   (`data.egov.bg`, NSI, census releases) stops at municipality or
   settlement granularity — there is no authoritative street-level dataset to
-  reconcile against. Plainsight observations are the only street-level record;
+  reconcile against. street-by-street observations are the only street-level record;
   they are not being checked against a government equivalent because none
   exists.
 - A database or backend. Phase 1 is static files only (see

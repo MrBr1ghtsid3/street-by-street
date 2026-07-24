@@ -1,6 +1,6 @@
-# Project Plainsight
+# street-by-street
 
-**Project Plainsight** is a street-level civic audit methodology, piloted
+**street-by-street** is a street-level civic audit methodology, piloted
 in Tutrakan, Bulgaria. It is a repeatable way to document a town one street
 at a time, capturing both *issues* (potholes, litter, overgrown vegetation,
 hazards) and *assets* (shops, green space, infrastructure, heritage) at the
@@ -10,7 +10,7 @@ process itself can be inspected, questioned, and replicated.
 
 ## Status: ideation
 
-Plainsight is at an ideation and tinkering stage. No formal market
+street-by-street is at an ideation and tinkering stage. No formal market
 research, needs assessment, or community validation has been carried out.
 It's an exploratory attempt to see whether good intentions can be made to
 match the reality of one specific place — Tutrakan — rather than a
@@ -28,15 +28,15 @@ a model to copy uncritically.
 
 ## Why this model
 
-Plainsight borrows its core idea from [iNaturalist](https://www.inaturalist.org/):
+street-by-street borrows its core idea from [iNaturalist](https://www.inaturalist.org/):
 an individual **observation** is the atomic, citable record. Observations
 accumulate into a richer picture of a place without anyone having to design
 that picture up front. Where iNaturalist rolls observations up into species
-and locations, Plainsight rolls them up into streets, and streets up into a town.
+and locations, street-by-street rolls them up into streets, and streets up into a town.
 
 ## Two models: state and process
 
-Plainsight keeps two systems deliberately separate — see
+street-by-street keeps two systems deliberately separate — see
 [docs/architecture.md](docs/architecture.md#two-models-state-and-process)
 for the full reasoning:
 

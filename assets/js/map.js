@@ -669,6 +669,10 @@ const welcomeDontShowCheckbox = document.getElementById("welcome-dont-show");
 welcomeEnterButton.addEventListener("click", () => {
   if (welcomeDontShowCheckbox.checked) {
     try {
+      // Write side of "sbs_welcome_seen" - the read side lives in
+      // index.html's inline script. Change both together; a mismatch here
+      // is exactly what left "Don't show this again" silently doing
+      // nothing for a while.
       localStorage.setItem("sbs_welcome_seen", "true");
     } catch (err) {
       // localStorage unavailable - overlay will simply show again next visit
