@@ -89,7 +89,7 @@ def fetch_overpass_elements():
         data=body,
         method="POST",
         # Overpass rejects the default Python-urllib user agent with 406.
-        headers={"User-Agent": "plainsight-refresh-script/1.0"},
+        headers={"User-Agent": "street-by-street-refresh-script/1.0"},
     )
     with urllib.request.urlopen(request, timeout=120) as response:
         return json.load(response)["elements"]

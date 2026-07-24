@@ -35,7 +35,7 @@ ASSETS_DIR = REPO_ROOT / "assets"
 # operate on (or fail against) the wrong tree.
 if not (DATA_DIR / "streets").is_dir():
     print(f"ERROR: {DATA_DIR / 'streets'} not found.")
-    print(f"tools/serve.py must be run from within a Project Plainsight checkout (resolved repo root: {REPO_ROOT}).")
+    print(f"tools/serve.py must be run from within a street-by-street checkout (resolved repo root: {REPO_ROOT}).")
     sys.exit(1)
 
 sys.path.insert(0, str(SCRIPTS_DIR))
@@ -135,7 +135,7 @@ def submit():
 
 
 def main():
-    print("Project Plainsight observation intake server")
+    print("street-by-street observation intake server")
     print(f"Repo root: {REPO_ROOT}")
     print(
         f"Binding to http://{HOST}:{PORT} (localhost only — this process runs git/gh "

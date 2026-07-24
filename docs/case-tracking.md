@@ -1,11 +1,11 @@
 # Case Tracking
 
-Plainsight records two different kinds of thing, and they are tracked in two
+street-by-street records two different kinds of thing, and they are tracked in two
 different systems on purpose. This page covers the second one.
 
 ## State vs. process
 
-**Plainsight observations** (`data/streets/*.json`, see
+**street-by-street observations** (`data/streets/*.json`, see
 [data-taxonomy.md](data-taxonomy.md)) record *state* — what's currently
 true about a street. A pothole observation says "this exists, here, as of
 this date, status `open`." It doesn't track who's looking at it, what was
@@ -17,7 +17,7 @@ lifecycle of getting something resolved. A Case has ownership, a
 workaround, a target date, and a resolution summary. It exists from
 triage through to close.
 
-The name "Case" is deliberate, not decorative: Plainsight already uses "issue" as
+The name "Case" is deliberate, not decorative: street-by-street already uses "issue" as
 a taxonomy term (`type: "issue"`, covering categories like
 `cleanliness` and `accessibility`). Calling the process-tracking layer "Cases" instead of "Issues"
 avoids a collision between "an issue on a street" and "an Issue in GitHub"
@@ -45,7 +45,7 @@ in [ADR 005](../decisions/005-case-tracking.md):
   history in one place instead of splitting it across git and an external
   tracker.
 
-FixMyStreet and Open311 remain a reasonable future option if Plainsight becomes
+FixMyStreet and Open311 remain a reasonable future option if street-by-street becomes
 resident-facing at scale — i.e. if reports start coming from the public
 rather than from the steward's own audits. That's not the case today, so
 standing up either is deferred rather than ruled out.
@@ -95,11 +95,9 @@ convention-based rather than scripted.
 
 ## Board
 
-Cases are tracked on a GitHub Project (v2) board named **"Plainsight
-Cases"** (originally created as "SBS Cases" — renaming it is a manual
-step in the GitHub UI, not something this repo can do), created from
-GitHub's built-in "Bug tracker" template. Its actual columns, in order,
-are:
+Cases are tracked on a GitHub Project (v2) board named **"SBS Cases"**,
+created from GitHub's built-in "Bug tracker" template. Its actual columns,
+in order, are:
 
 1. **To Triage** — newly opened, not yet read closely enough to confirm
    it's real, in-scope, and not a duplicate.

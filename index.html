@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutrakan, Project Plainsight</title>
+  <title>Tutrakan, street-by-street</title>
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -19,14 +19,8 @@
 <body>
   <div id="welcome-overlay" class="welcome-overlay">
     <div class="welcome-overlay__card">
-      <h1 class="welcome-overlay__title">Project Plainsight</h1>
-      <p class="welcome-overlay__subtitle">A street-level civic audit, one street at a time</p>
-      <p class="welcome-overlay__description">
-        This particular iteration documents the streets of Tutrakan, Bulgaria &mdash;
-        recording what's there, what's missing, and what the official
-        record says versus what you can see on the ground. It is a
-        personal project, openly published.
-      </p>
+      <h1 class="welcome-overlay__title">street-by-street</h1>
+      <p class="welcome-overlay__subtitle">A personal civic audit effort, one street at a time</p>
       <p class="welcome-overlay__description">
         This is an ideation-stage experiment, not a finished or validated
         civic platform &mdash; no formal market research or community
@@ -43,7 +37,12 @@
   <script>
     (function () {
       try {
-        if (localStorage.getItem("plainsight_welcome_seen") === "true") {
+        // Read side of "sbs_welcome_seen" - the write side lives in
+        // assets/js/map.js's welcome-enter click handler. Change both
+        // together; a PR that renamed only one side left this silently
+        // broken before ("Don't show this again" persisted a key nothing
+        // read back).
+        if (localStorage.getItem("sbs_welcome_seen") === "true") {
           document.getElementById("welcome-overlay").hidden = true;
         }
       } catch (err) {
@@ -55,8 +54,8 @@
   <header class="app-header">
     <div class="app-header__top">
       <div>
-        <h1>Tutrakan, Project Plainsight</h1>
-        <p class="app-header__subtitle">A street-level civic audit, one street at a time.</p>
+        <h1>Tutrakan, street-by-street</h1>
+        <p class="app-header__subtitle">A personal civic audit effort, one street at a time.</p>
       </div>
       <div class="app-header__actions">
         <a class="about-button" href="status.html">Status</a>
@@ -77,8 +76,12 @@
       var banner = document.getElementById("wip-banner");
       var dismiss = document.getElementById("wip-banner-dismiss");
 
+      // Read and write of "sbs_wip_banner_dismissed" both live here, in
+      // this same inline script - unlike sbs_welcome_seen above, there's
+      // no cross-file split to keep in step, but keep it that way if this
+      // ever moves.
       try {
-        if (localStorage.getItem("plainsight_wip_banner_dismissed") === "true") {
+        if (localStorage.getItem("sbs_wip_banner_dismissed") === "true") {
           banner.hidden = true;
         }
       } catch (err) {
@@ -88,7 +91,7 @@
       dismiss.addEventListener("click", function () {
         banner.hidden = true;
         try {
-          localStorage.setItem("plainsight_wip_banner_dismissed", "true");
+          localStorage.setItem("sbs_wip_banner_dismissed", "true");
         } catch (err) {
           // localStorage unavailable - dismissal won't persist
         }
@@ -107,19 +110,19 @@
   </main>
 
   <footer class="app-footer">
-    <p class="app-footer__text">Project Plainsight &middot; an open source (personal) project / 2026</p>
+    <p class="app-footer__text">street-by-street &middot; an open source (personal) project / 2026</p>
     <button id="about-button" class="app-footer__link" type="button">about</button>
   </footer>
 
   <div id="about-modal" class="modal-overlay" hidden>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
       <button id="about-modal-close" class="modal__close" type="button" aria-label="Close">&times;</button>
-      <h2 id="about-modal-title">About Project Plainsight</h2>
+      <h2 id="about-modal-title">About street-by-street</h2>
 
       <section>
         <h3>What this is</h3>
         <p>
-          Project Plainsight is a street-level civic audit of my hometown of Tutrakan,
+          street-by-street is a street-level civic audit of my hometown of Tutrakan,
           Bulgaria. Each audited street is documented with its physical attributes, open issues, notable
           assets, and a piece of local history or trivia.
         </p>
