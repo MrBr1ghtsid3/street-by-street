@@ -607,7 +607,7 @@ async function init() {
 
     loadAllObservationMarkers(geojson);
   } catch (err) {
-    showError(`Could not load the street network. (${err.message})`);
+    showError(`Could not load the map data. (${err.message})`);
   }
 }
 

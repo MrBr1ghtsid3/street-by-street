@@ -113,3 +113,17 @@ further will ever be found there.
   so** — rejected because the type/category redundancy was the actual
   problem, not the category count; a single shared list removes a whole
   axis of duplication rather than just shrinking it.
+
+## Implementation note
+
+This ADR predates `data/taxonomy.json`. The machine-readable source of
+truth for the category list, the category→icon mapping, the fallback
+icon, and the issue/asset status lists now lives there, read by
+`scripts/new_observation.py`, `tools/serve.py`, `assets/js/map.js`, and
+`tools/observation-form.html` — not declared inline in each of those
+files as the "Consequences" section above originally described.
+`docs/data-taxonomy.md` remains the hand-written, human-readable
+companion to that file. The two are kept in agreement by
+`scripts/check_taxonomy_sync.py`, run in CI on every pull request and
+push to `main` via `.github/workflows/check-taxonomy.yml`, rather than
+resting on a person remembering to update both.
