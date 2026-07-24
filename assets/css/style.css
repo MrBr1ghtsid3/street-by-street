@@ -685,10 +685,10 @@ path.street-line:focus {
   color: var(--grey-600);
 }
 
-.observation-popup__nearby {
+.observation-popup__description {
   margin: 0 0 0.5rem;
-  font-size: 0.7rem;
-  color: var(--grey-600);
+  font-size: 0.78rem;
+  color: var(--grey-800);
 }
 
 .observation-popup__case-row {
