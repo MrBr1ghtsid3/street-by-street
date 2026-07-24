@@ -1,0 +1,29 @@
+name: Check taxonomy sync
+
+# Guards the one remaining hand-synced duplicate of the observation
+# taxonomy: docs/data-taxonomy.md's Categories table against
+# data/taxonomy.json's "categories" list (see ADR 008 and
+# scripts/check_taxonomy_sync.py). Check only - never edits either file.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check taxonomy sync
+        run: python scripts/check_taxonomy_sync.py

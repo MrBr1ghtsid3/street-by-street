@@ -1,5 +1,5 @@
 {
-  "_note": "Single source of truth for the observation taxonomy, read by scripts/new_observation.py (at import time), tools/serve.py (served as-is at /taxonomy), assets/js/map.js, and tools/observation-form.html (both fetched, same as data/tutrakan-streets.geojson). docs/data-taxonomy.md is the hand-written, human-readable companion to this file - update both together whenever the taxonomy changes.",
+  "_note": "Single source of truth for the observation taxonomy, read by scripts/new_observation.py (at import time), tools/serve.py (served as-is at /taxonomy), assets/js/map.js, and tools/observation-form.html (both fetched, same as data/tutrakan-streets.geojson). docs/data-taxonomy.md is the hand-written, human-readable companion to this file - the two are kept in agreement by scripts/check_taxonomy_sync.py, run in CI via .github/workflows/check-taxonomy.yml on every change, not by remembering to update both.",
   "categories": ["accessibility", "animal_welfare", "cleanliness"],
   "category_icon": {
     "accessibility": "ti-accessible",
