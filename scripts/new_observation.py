@@ -60,33 +60,21 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STREETS_DIR = REPO_ROOT / "data" / "streets"
 IMAGES_DIR = REPO_ROOT / "assets" / "images" / "streets"
+TAXONOMY_PATH = REPO_ROOT / "data" / "taxonomy.json"
 
-# From docs/data-taxonomy.md — kept in sync by hand (same duplication
-# tradeoff as tools/observation-form.html; this repo has no shared-constants
-# module across Python/JS). One shared list for both issues and assets —
-# category describes the observation's domain, not whether it's a problem
-# or something of value (that's `type`). No "other" catch-all.
-CATEGORIES = ["accessibility", "animal_welfare", "cleanliness"]
-ISSUE_STATUSES = ["open", "in_progress", "resolved"]
-ASSET_STATUSES = ["active", "inactive"]
-
-# Kept in sync with assets/js/map.js's CATEGORY_ICON, so tools/serve.py can
-# serve the exact same category->icon mapping the map uses, rather than a
-# third hand-copied version alongside map.js's and observation-form.html's.
-CATEGORY_ICON = {
-    "accessibility": "ti-accessible",
-    "animal_welfare": "ti-paw",
-    "cleanliness": "ti-trash",
-}
-
-# Neutral fallback for a category with no icon mapping (e.g. old data still
-# carrying a retired category). Never a real category's icon - falling back
-# to one of those would silently mislabel the observation as something it
-# isn't. Kept in sync by hand across all four CATEGORY_ICON copies (this
-# one, assets/js/map.js, tools/observation-form.html, and
-# tools/templates/observation_form_server.html via tools/serve.py's
-# /taxonomy endpoint).
-FALLBACK_ICON = "ti-dots"
+# data/taxonomy.json is the single source of truth for the category list,
+# the category->icon mapping, the fallback icon, and the issue/asset status
+# lists - read once at import time rather than declared inline, so this
+# module, tools/serve.py's /taxonomy endpoint, assets/js/map.js, and
+# tools/observation-form.html all read the exact same file instead of four
+# hand-copied versions. docs/data-taxonomy.md is the human-readable
+# companion to that file, not a fifth copy of the data.
+_TAXONOMY = json.loads(TAXONOMY_PATH.read_text(encoding="utf-8"))
+CATEGORIES = _TAXONOMY["categories"]
+CATEGORY_ICON = _TAXONOMY["category_icon"]
+FALLBACK_ICON = _TAXONOMY["fallback_icon"]
+ISSUE_STATUSES = _TAXONOMY["issue_statuses"]
+ASSET_STATUSES = _TAXONOMY["asset_statuses"]
 
 OBS_FIELD_RE = re.compile(r"^obs-(\d+)$")
 COVER_MARKER = "cover"

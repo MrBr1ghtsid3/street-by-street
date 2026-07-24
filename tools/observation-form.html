@@ -483,29 +483,16 @@
     (function () {
       "use strict";
 
-      // Kept in sync with assets/js/map.js's CATEGORY_ICON by hand — this
-      // repo has no build step/module system, so the map's category->icon
-      // source of truth is duplicated here rather than imported. If the
-      // map's mapping changes, update this object to match.
-      var CATEGORY_ICON = {
-        accessibility: "ti-accessible",
-        animal_welfare: "ti-paw",
-        cleanliness: "ti-trash",
-      };
-
-      // Neutral fallback for a category with no icon mapping (e.g. old
-      // data still carrying a retired category). Never a real category's
-      // icon — falling back to one of those would silently mislabel the
-      // observation as something it isn't.
-      var FALLBACK_ICON = "ti-dots";
-
-      // From docs/data-taxonomy.md — kept in sync by hand alongside
-      // CATEGORY_ICON above. One shared list for both issues and assets;
-      // no "other" catch-all.
-      var CATEGORIES = ["accessibility", "animal_welfare", "cleanliness"];
-
-      var ISSUE_STATUSES = ["open", "in_progress", "resolved"];
-      var ASSET_STATUSES = ["active", "inactive"];
+      // Populated from data/taxonomy.json by loadTaxonomy() below - the
+      // single source of truth shared with scripts/new_observation.py,
+      // tools/serve.py's /taxonomy endpoint, and assets/js/map.js. Empty
+      // until that fetch resolves; see loadTaxonomy's failure path for
+      // what happens if it can't (e.g. this file opened via file://).
+      var CATEGORY_ICON = {};
+      var FALLBACK_ICON = null;
+      var CATEGORIES = [];
+      var ISSUE_STATUSES = [];
+      var ASSET_STATUSES = [];
 
       var state = {
         type: "issue",
@@ -539,6 +526,53 @@
 
       function currentStreetId() {
         return streetTextFallback.hidden ? streetSelect.value : streetTextFallback.value.trim();
+      }
+
+      // ---- Taxonomy (data/taxonomy.json — single source of truth) ----
+
+      // This file is sometimes opened directly from the filesystem
+      // (file://), where fetch() is blocked the same way it is for the
+      // street dropdown below — but unlike the street id, there's no
+      // sensible manual fallback for "what are the valid categories," so
+      // a failure here blocks the form with a clear, visible error
+      // instead of leaving the category dropdown silently empty.
+      function loadTaxonomy() {
+        return fetch("../data/taxonomy.json")
+          .then(function (response) {
+            if (!response.ok) {
+              throw new Error("HTTP " + response.status);
+            }
+            return response.json();
+          })
+          .then(function (data) {
+            CATEGORIES = data.categories;
+            CATEGORY_ICON = data.category_icon;
+            FALLBACK_ICON = data.fallback_icon;
+            ISSUE_STATUSES = data.issue_statuses;
+            ASSET_STATUSES = data.asset_statuses;
+          })
+          .catch(function (err) {
+            categorySelect.innerHTML = "";
+            var option = document.createElement("option");
+            option.textContent = "Unavailable — see error above";
+            categorySelect.appendChild(option);
+            categorySelect.disabled = true;
+
+            generateButton.disabled = true;
+            formErrors.innerHTML =
+              "<strong>Could not load the category taxonomy</strong> (data/taxonomy.json: " +
+              err.message +
+              "). This form needs it to know the valid categories, so it can't be used " +
+              "until this loads — serve this directory over HTTP (see README) rather than " +
+              "opening this file directly, then reload.";
+            formErrors.hidden = false;
+
+            // Re-throw so callers (Init, below) know this failed and don't
+            // proceed to populate the category/status selects with the
+            // empty CATEGORIES/ISSUE_STATUSES/ASSET_STATUSES this leaves
+            // behind — that would silently overwrite the error state above.
+            throw err;
+          });
       }
 
       // ---- Street dropdown ----
@@ -971,8 +1005,16 @@
 
       // ---- Init ----
       populateStreetDropdown();
-      populateCategorySelect();
-      populateStatusSelect();
+      loadTaxonomy()
+        .then(function () {
+          populateCategorySelect();
+          populateStatusSelect();
+        })
+        .catch(function (err) {
+          // Already shown to the user by loadTaxonomy's own .catch — this
+          // one just stops it from surfacing as an unhandled rejection.
+          console.error("Could not load taxonomy:", err);
+        });
     })();
   </script>
 </body>

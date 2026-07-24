@@ -194,7 +194,12 @@ One shared list of categories applies to both issues and assets — a
 category describes the *domain* of an observation, not whether it's a
 problem or something of value (that's what `type` is for). See
 [ADR 008](../decisions/008-observation-taxonomy.md) for why this replaced
-the original eleven-category, two-list model:
+the original eleven-category, two-list model. This page is the
+hand-written, human-readable version of the taxonomy — the tooling
+(`scripts/new_observation.py`, `tools/serve.py`, `assets/js/map.js`,
+`tools/observation-form.html`) all read the same data from
+[data/taxonomy.json](../data/taxonomy.json) instead; update both together
+when the taxonomy changes:
 
 | Category | Covers |
 | --- | --- |
