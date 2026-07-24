@@ -52,7 +52,7 @@ page load is:
    renders every street as a line on the map. Streets are styled by
    `properties.status` — unaudited streets render as thin, muted grey
    lines; audited streets render in the brand accent colour at a heavier
-   weight, so the one or two completed streets visually stand out against
+   weight, so the one or two audited streets visually stand out against
    the rest of the town.
 3. **On click of an audited street**, the JS does
    `fetch('data/streets/{id}.json')` and renders the result into a side
@@ -141,7 +141,7 @@ blocks described in [data-taxonomy.md](data-taxonomy.md):
   "trivia": { "text": "...", "sources": [], "verified": false, "note": "..." },
   "official_context": [ { "metric": "...", "value": "...", "source": "...",
                             "source_date": "...", "level": "municipality" } ],
-  "observations": [ { "id": 1, "type": "issue", "category": "road", "title": "...",
+  "observations": [ { "id": 1, "type": "issue", "category": "cleanliness", "title": "...",
                         "description": "...", "coordinates": null, "status": "open",
                         "reported_date": "...", "resolved_date": null } ]
 }

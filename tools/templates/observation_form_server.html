@@ -439,8 +439,7 @@
     (function () {
       "use strict";
 
-      var ISSUE_CATEGORIES = [];
-      var ASSET_CATEGORIES = [];
+      var CATEGORIES = [];
       var ISSUE_STATUSES = [];
       var ASSET_STATUSES = [];
       var CATEGORY_ICON = {};
@@ -486,8 +485,7 @@
         return fetch("/taxonomy")
           .then(function (r) { return r.json(); })
           .then(function (data) {
-            ISSUE_CATEGORIES = data.issue_categories;
-            ASSET_CATEGORIES = data.asset_categories;
+            CATEGORIES = data.categories;
             ISSUE_STATUSES = data.issue_statuses;
             ASSET_STATUSES = data.asset_statuses;
             CATEGORY_ICON = data.category_icon;
@@ -560,13 +558,12 @@
 
       // ---- Type / category / status ----
 
-      function categoriesForType(type) { return type === "asset" ? ASSET_CATEGORIES : ISSUE_CATEGORIES; }
       function statusesForType(type) { return type === "asset" ? ASSET_STATUSES : ISSUE_STATUSES; }
       function defaultStatusForType(type) { return type === "asset" ? "active" : "open"; }
 
       function populateCategorySelect() {
         categorySelect.innerHTML = "";
-        categoriesForType(state.type).forEach(function (cat) {
+        CATEGORIES.forEach(function (cat) {
           var option = document.createElement("option");
           option.value = cat;
           option.textContent = cat.replace(/_/g, " ");
@@ -599,7 +596,7 @@
       // ---- Icon picker (preview only — see icon-hint warning; not sent to the server) ----
 
       function defaultIconForCategory(category) {
-        return CATEGORY_ICON[category] || CATEGORY_ICON.other;
+        return CATEGORY_ICON[category] || CATEGORY_ICON.cleanliness;
       }
 
       function renderIconPicker() {

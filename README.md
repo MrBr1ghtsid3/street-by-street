@@ -74,7 +74,10 @@ constraint this implies.
 ## What's actually built
 
 - **Interactive map of Tutrakan** (Leaflet + OpenStreetMap), with streets
-  styled by a three-tier status: not started, active, complete.
+  styled by status: not-yet-audited streets render invisibly (still
+  clickable), while audited streets are highlighted amber ("active", the
+  audit is under way) or green ("normal", the record is established and
+  current — not a claim that the street is ever "finished").
 - **POI-style observation markers** — geotagged observations render as
   coloured pin markers directly on the map (coral for issues, teal for
   assets, with a category icon), independent of the side-panel cards for

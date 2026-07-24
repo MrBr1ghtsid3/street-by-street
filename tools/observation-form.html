@@ -488,23 +488,15 @@
       // source of truth is duplicated here rather than imported. If the
       // map's mapping changes, update this object to match.
       var CATEGORY_ICON = {
-        road: "ti-road",
-        litter: "ti-trash",
-        vegetation: "ti-plant-2",
-        hazard: "ti-alert-triangle",
-        structure: "ti-wall",
-        business: "ti-building-store",
-        green_space: "ti-tree",
-        infrastructure: "ti-droplet",
-        service: "ti-users",
-        heritage: "ti-building-monument",
-        other: "ti-dots",
+        accessibility: "ti-accessible",
+        animal_welfare: "ti-paw",
+        cleanliness: "ti-trash",
       };
 
       // From docs/data-taxonomy.md — kept in sync by hand alongside
-      // CATEGORY_ICON above.
-      var ISSUE_CATEGORIES = ["road", "litter", "vegetation", "hazard", "structure", "other"];
-      var ASSET_CATEGORIES = ["business", "green_space", "infrastructure", "service", "heritage", "other"];
+      // CATEGORY_ICON above. One shared list for both issues and assets;
+      // no "other" catch-all.
+      var CATEGORIES = ["accessibility", "animal_welfare", "cleanliness"];
 
       var ISSUE_STATUSES = ["open", "in_progress", "resolved"];
       var ASSET_STATUSES = ["active", "inactive"];
@@ -633,10 +625,6 @@
 
       // ---- Type / category / status ----
 
-      function categoriesForType(type) {
-        return type === "asset" ? ASSET_CATEGORIES : ISSUE_CATEGORIES;
-      }
-
       function statusesForType(type) {
         return type === "asset" ? ASSET_STATUSES : ISSUE_STATUSES;
       }
@@ -646,9 +634,8 @@
       }
 
       function populateCategorySelect() {
-        var categories = categoriesForType(state.type);
         categorySelect.innerHTML = "";
-        categories.forEach(function (cat) {
+        CATEGORIES.forEach(function (cat) {
           var option = document.createElement("option");
           option.value = cat;
           option.textContent = cat.replace(/_/g, " ");
@@ -686,7 +673,7 @@
       // ---- Icon picker (defaults from category, overridable) ----
 
       function defaultIconForCategory(category) {
-        return CATEGORY_ICON[category] || CATEGORY_ICON.other;
+        return CATEGORY_ICON[category] || CATEGORY_ICON.cleanliness;
       }
 
       function renderIconPicker() {

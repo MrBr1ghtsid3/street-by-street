@@ -28,7 +28,7 @@ const STREET_STATUS_STYLES = {
   // "painted" just transparent, so it stays hit-testable.
   not_started: { color: "#9CA3AF", weight: 6, opacity: 0, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
   active: { color: "#F59E0B", weight: 10, opacity: 0.9, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
-  complete: { color: "#1D9E75", weight: 14, opacity: 0.9, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
+  normal: { color: "#1D9E75", weight: 14, opacity: 0.9, lineCap: "round", lineJoin: "round", fill: false, fillColor: "transparent", className: "street-line" },
 };
 
 const legend = L.control({ position: "bottomleft" });
@@ -37,8 +37,8 @@ legend.onAdd = function () {
   div.innerHTML = `
     <div class="map-legend__section">
       <h4>Streets</h4>
-      <div class="map-legend__item"><span class="map-legend__line map-legend__line--active"></span>Active</div>
-      <div class="map-legend__item"><span class="map-legend__line map-legend__line--complete"></span>Complete</div>
+      <div class="map-legend__item"><span class="map-legend__line map-legend__line--active"></span>Active (in progress)</div>
+      <div class="map-legend__item"><span class="map-legend__line map-legend__line--normal"></span>Normal</div>
     </div>
     <div class="map-legend__section">
       <h4>Observations</h4>
@@ -71,19 +71,13 @@ const OBSERVATION_MARKER_COLOR = {
 };
 
 // Single source of truth for category -> Tabler icon, shared by the
-// observation cards in the side panel and the map pin markers.
+// observation cards in the side panel and the map pin markers. Kept in
+// sync by hand with scripts/new_observation.py's CATEGORY_ICON (this repo
+// has no build step/module system across Python/JS).
 const CATEGORY_ICON = {
-  road: "ti-road",
-  litter: "ti-trash",
-  vegetation: "ti-plant-2",
-  hazard: "ti-alert-triangle",
-  structure: "ti-wall",
-  business: "ti-building-store",
-  green_space: "ti-tree",
-  infrastructure: "ti-droplet",
-  service: "ti-users",
-  heritage: "ti-building-monument",
-  other: "ti-dots",
+  accessibility: "ti-accessible",
+  animal_welfare: "ti-paw",
+  cleanliness: "ti-trash",
 };
 
 const REPO_ISSUES_URL = "https://github.com/MrBr1ghtsid3/street-by-street/issues";
@@ -94,7 +88,7 @@ const REPO_ISSUES_URL = "https://github.com/MrBr1ghtsid3/street-by-street/issues
 const STATUS_LABEL = {
   not_started: "Not yet audited",
   active: "Audit in progress",
-  complete: "Fully documented",
+  normal: "Documented",
 };
 
 function formatLength(metres) {

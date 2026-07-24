@@ -38,7 +38,7 @@ and mark it `TODO` if it isn't known yet — don't guess.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | | | | | | | | |
 
-Category: `road`, `litter`, `vegetation`, `hazard`, `structure`, `other`.
+Category: `accessibility`, `animal_welfare`, `cleanliness`.
 Status: `open`, `in_progress`, `resolved`. Coordinates are optional —
 leave blank at audit time unless you've already used
 `tools/coordinate-picker.html`; see the note below.
@@ -49,8 +49,8 @@ leave blank at audit time unless you've already used
 | --- | --- | --- | --- | --- | --- | --- |
 | | | | | | | |
 
-Category: `business`, `green_space`, `infrastructure`, `service`,
-`heritage`, `other`. Status: `active`, `inactive`.
+Category: `accessibility`, `animal_welfare`, `cleanliness`.
+Status: `active`, `inactive`.
 
 **Coordinates** (optional, both tables): only fill in if you've already
 captured it with `tools/coordinate-picker.html` (see

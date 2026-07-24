@@ -47,7 +47,7 @@ optional fields populated; see the note after the table.
 {
   "id": 2,
   "type": "issue",
-  "category": "litter",
+  "category": "cleanliness",
   "title": "Litter build-up at the corner",
   "description": "Junction with the lane to the river",
   "coordinates": { "lat": 44.042045, "lng": 26.614071 },
@@ -188,27 +188,19 @@ changes when the street itself physically changes, it's an attribute.
 - `issue` — a problem.
 - `asset` — something of value.
 
-## Issue categories
+## Categories
+
+One shared list of categories applies to both issues and assets — a
+category describes the *domain* of an observation, not whether it's a
+problem or something of value (that's what `type` is for):
 
 | Category | Covers |
 | --- | --- |
-| `road` | Surface damage, potholes, drainage, kerbing. |
-| `litter` | Dumping, accumulated rubbish, fly-tipping. |
-| `vegetation` | Overgrowth obstructing pavements, sightlines, or signage. |
-| `hazard` | Anything posing immediate risk to safety (exposed wiring, unstable structures, open holes). |
-| `structure` | Damage to buildings, walls, fences, or other built structures. |
-| `other` | Anything that doesn't fit the above; use sparingly and consider whether a new category is warranted. |
+| `accessibility` | Walkability; day vs. night lighting conditions; seasonal impacts; public transport availability; navigation for people with disabilities. |
+| `animal_welfare` | Monitoring dogs and cats; distinguishing owned from unowned animals; mapping clusters. |
+| `cleanliness` | Recurring littering; access to bins and collection points; collection intervals; air quality. |
 
-## Asset categories
-
-| Category | Covers |
-| --- | --- |
-| `business` | Shops, services, anything trading. |
-| `green_space` | Trees, gardens, verges, parks. |
-| `infrastructure` | Wells, bus stops, benches, lighting — built features of public value. |
-| `service` | Public or community services not captured under `business` (e.g. a community hall). |
-| `heritage` | Anything of historical or cultural significance. |
-| `other` | As above — use sparingly. |
+There is no `other` catch-all — only these three pillars, for now.
 
 ## Status values
 
@@ -229,5 +221,9 @@ progress, not the street's physical condition):
 - `not_started` — not yet audited.
 - `active` — audit under way; the street record is being actively built
   (rendered amber, labelled "Audit in progress").
-- `complete` — audit finished; the record is complete and maintained
-  (rendered green, labelled "Fully documented").
+- `normal` — the steady, default state once a street has an established
+  record (rendered green, labelled "Documented"). This is not a claim
+  that the street is "finished" — recurring conditions (litter, wear)
+  mean no street audit is ever truly complete, so `normal` just means
+  the record exists and is being kept current, not that there's nothing
+  left to find.

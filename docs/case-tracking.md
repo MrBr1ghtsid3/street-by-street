@@ -18,8 +18,8 @@ workaround, a target date, and a resolution summary. It exists from
 triage through to close.
 
 The name "Case" is deliberate, not decorative: Plainsight already uses "issue" as
-a taxonomy term (`type: "issue"`, covering categories like `road` and
-`litter`). Calling the process-tracking layer "Cases" instead of "Issues"
+a taxonomy term (`type: "issue"`, covering categories like
+`cleanliness` and `accessibility`). Calling the process-tracking layer "Cases" instead of "Issues"
 avoids a collision between "an issue on a street" and "an Issue in GitHub"
 when both are being discussed in the same sentence.
 
