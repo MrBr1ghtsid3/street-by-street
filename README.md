@@ -121,8 +121,8 @@ street-by-street/
 
 The methodology is being piloted on a single street, **Ana Ventura**
 (ul. "Ana Ventura", 7601 Tutrakan), as proof of concept — 1 of roughly 100
-named streets in the town. Six seed observations (three issues, three
-assets) have been logged. The street base layer underneath the map is real
+named streets in the town. One observation (one open issue) has been
+logged so far. The street base layer underneath the map is real
 OpenStreetMap geometry pulled via the Overpass API; everything other than
 Ana Ventura is shown as not-yet-audited.
 

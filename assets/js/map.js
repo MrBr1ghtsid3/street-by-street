@@ -80,6 +80,12 @@ const CATEGORY_ICON = {
   cleanliness: "ti-trash",
 };
 
+// Neutral fallback for a category with no icon mapping (e.g. old data
+// still carrying a retired category). Never a real category's icon -
+// falling back to one of those would silently mislabel the observation
+// as something it isn't.
+const FALLBACK_ICON = "ti-dots";
+
 const REPO_ISSUES_URL = "https://github.com/MrBr1ghtsid3/street-by-street/issues";
 
 // Street audit status -> display label, for the badge shown in the side
@@ -169,7 +175,7 @@ function statusLabel(status) {
 }
 
 function renderObservationCard(obs) {
-  const icon = CATEGORY_ICON[obs.category] || CATEGORY_ICON.other;
+  const icon = CATEGORY_ICON[obs.category] || FALLBACK_ICON;
   const hasCoords = !!obs.coordinates;
   return `
     <div
@@ -193,7 +199,7 @@ function renderObservationCard(obs) {
 
 function buildPinIcon(obs) {
   const color = OBSERVATION_MARKER_COLOR[obs.type] || OBSERVATION_MARKER_COLOR.issue;
-  const icon = CATEGORY_ICON[obs.category] || CATEGORY_ICON.other;
+  const icon = CATEGORY_ICON[obs.category] || FALLBACK_ICON;
   return L.divIcon({
     className: "observation-pin",
     html: `
@@ -331,7 +337,7 @@ function renderResolutionSection(obs, streetId) {
 }
 
 function renderObservationPopup(obs, streetId) {
-  const icon = CATEGORY_ICON[obs.category] || CATEGORY_ICON.other;
+  const icon = CATEGORY_ICON[obs.category] || FALLBACK_ICON;
   return `
     <div class="observation-popup">
       <div class="observation-popup__title">${obs.title}</div>

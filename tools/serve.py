@@ -50,6 +50,7 @@ from new_observation import (
     ASSET_STATUSES,
     CATEGORIES,
     CATEGORY_ICON,
+    FALLBACK_ICON,
     ISSUE_STATUSES,
     GitOperationError,
     ValidationError,
@@ -79,6 +80,7 @@ def taxonomy():
             "issue_statuses": ISSUE_STATUSES,
             "asset_statuses": ASSET_STATUSES,
             "category_icon": CATEGORY_ICON,
+            "fallback_icon": FALLBACK_ICON,
         }
     )
 

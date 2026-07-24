@@ -81,12 +81,12 @@ optional fields populated; see the note after the table.
 | `photo` | Optional | Repo-relative path to this observation's primary photo (e.g. `assets/images/streets/ana-ventura/ana-ventura__obs-2__litter.jpg`), rendered on the map popup. Written by `scripts/photo_pipeline.py` for the most recently ingested non-cover photo targeting this observation; absent until one exists. |
 
 Verified against `data/streets/ana-ventura.json`, the one real record that
-exists today: every observation has the seven required fields plus
-`coordinates`, which is `null` on five of six and a real value on one
-(observation #2). That same geotagged observation also carries a
-`tracking_issue` (linking it to a Case) and a `nearby_streets` array
-(written by `scripts/compute_street_proximity.py`). No observation
-currently uses `reported_time` — it stays documented ahead of use.
+exists today: its one real observation (#2) has the seven required fields
+plus a real (non-`null`) value for `coordinates`. That same geotagged
+observation also carries a `tracking_issue` (linking it to a Case) and a
+`nearby_streets` array (written by `scripts/compute_street_proximity.py`).
+It does not use `reported_time` — that field stays documented ahead of
+use.
 
 `coordinates` carries an additional constraint beyond its shape: per
 [docs/ethics.md](ethics.md), do not record a precise, persistent
@@ -96,8 +96,8 @@ at this junction," which is a structural fact about the place). Nothing in
 the coordinate-picker tool or the renderer enforces this — it's a
 judgement call at data-entry time, the same way category and status are.
 
-`tracking_issue` is optional. It is present on observation #2 of
-`ana-ventura.json` (tracked by a Case) and absent from the rest — see
+`tracking_issue` is optional. It is present on the one observation
+currently logged (`ana-ventura.json`'s #2, tracked by a Case) — see
 [docs/case-tracking.md](case-tracking.md) for the linking convention. Add
 it only when a Case is actually opened for an observation; do not backfill
 it onto observations that have no Case.
@@ -192,7 +192,9 @@ changes when the street itself physically changes, it's an attribute.
 
 One shared list of categories applies to both issues and assets — a
 category describes the *domain* of an observation, not whether it's a
-problem or something of value (that's what `type` is for):
+problem or something of value (that's what `type` is for). See
+[ADR 008](../decisions/008-observation-taxonomy.md) for why this replaced
+the original eleven-category, two-list model:
 
 | Category | Covers |
 | --- | --- |
@@ -200,7 +202,11 @@ problem or something of value (that's what `type` is for):
 | `animal_welfare` | Monitoring dogs and cats; distinguishing owned from unowned animals; mapping clusters. |
 | `cleanliness` | Recurring littering; access to bins and collection points; collection intervals; air quality. |
 
-There is no `other` catch-all — only these three pillars, for now.
+There is no `other` catch-all — only these three pillars, for now. An
+observation that fits none of them isn't logged; see
+[docs/methodology.md](methodology.md) step 3 and
+[ADR 008](../decisions/008-observation-taxonomy.md) for where it goes
+instead.
 
 ## Status values
 

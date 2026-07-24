@@ -79,6 +79,15 @@ CATEGORY_ICON = {
     "cleanliness": "ti-trash",
 }
 
+# Neutral fallback for a category with no icon mapping (e.g. old data still
+# carrying a retired category). Never a real category's icon - falling back
+# to one of those would silently mislabel the observation as something it
+# isn't. Kept in sync by hand across all four CATEGORY_ICON copies (this
+# one, assets/js/map.js, tools/observation-form.html, and
+# tools/templates/observation_form_server.html via tools/serve.py's
+# /taxonomy endpoint).
+FALLBACK_ICON = "ti-dots"
+
 OBS_FIELD_RE = re.compile(r"^obs-(\d+)$")
 COVER_MARKER = "cover"
 

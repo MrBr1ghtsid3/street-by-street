@@ -86,3 +86,15 @@ needs a source and a date; see [docs/data-sources.md](../docs/data-sources.md).
 | Metric | Value | Source | Date | Level |
 | --- | --- | --- | --- | --- |
 | | | | | |
+
+## Taxonomy gaps
+
+Leave this section empty if everything you found fits `accessibility`,
+`animal_welfare`, or `cleanliness` — most audits will. If something
+genuinely doesn't fit any of the three, don't force it into an
+observation; record it here instead. See
+[docs/methodology.md](../docs/methodology.md) step 3.
+
+| What was seen | Where | Date | Why it fits none of the three categories |
+| --- | --- | --- | --- |
+| | | | |

@@ -493,6 +493,12 @@
         cleanliness: "ti-trash",
       };
 
+      // Neutral fallback for a category with no icon mapping (e.g. old
+      // data still carrying a retired category). Never a real category's
+      // icon — falling back to one of those would silently mislabel the
+      // observation as something it isn't.
+      var FALLBACK_ICON = "ti-dots";
+
       // From docs/data-taxonomy.md — kept in sync by hand alongside
       // CATEGORY_ICON above. One shared list for both issues and assets;
       // no "other" catch-all.
@@ -673,7 +679,7 @@
       // ---- Icon picker (defaults from category, overridable) ----
 
       function defaultIconForCategory(category) {
-        return CATEGORY_ICON[category] || CATEGORY_ICON.cleanliness;
+        return CATEGORY_ICON[category] || FALLBACK_ICON;
       }
 
       function renderIconPicker() {

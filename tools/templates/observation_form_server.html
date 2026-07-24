@@ -443,6 +443,10 @@
       var ISSUE_STATUSES = [];
       var ASSET_STATUSES = [];
       var CATEGORY_ICON = {};
+      // Neutral fallback for a category with no icon mapping; overwritten
+      // by loadTaxonomy() below, this default only covers the (normally
+      // unreachable) window before that fetch resolves.
+      var FALLBACK_ICON = "ti-dots";
 
       var state = {
         type: "issue",
@@ -489,6 +493,7 @@
             ISSUE_STATUSES = data.issue_statuses;
             ASSET_STATUSES = data.asset_statuses;
             CATEGORY_ICON = data.category_icon;
+            FALLBACK_ICON = data.fallback_icon;
           });
       }
 
@@ -596,7 +601,7 @@
       // ---- Icon picker (preview only — see icon-hint warning; not sent to the server) ----
 
       function defaultIconForCategory(category) {
-        return CATEGORY_ICON[category] || CATEGORY_ICON.cleanliness;
+        return CATEGORY_ICON[category] || FALLBACK_ICON;
       }
 
       function renderIconPicker() {
