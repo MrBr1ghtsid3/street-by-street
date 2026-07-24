@@ -61,10 +61,6 @@ const observationMarkersLayer = L.layerGroup().addTo(map);
 // click on a side-panel card find and open the matching map marker's popup.
 const markersByKey = {};
 
-// street id -> display name, populated from the GeoJSON on load. Used to
-// label nearby streets in the observation popup.
-const streetNamesById = {};
-
 const OBSERVATION_MARKER_COLOR = {
   issue: "#D85A30",
   asset: "#1D9E75",
@@ -234,35 +230,6 @@ function renderObservationPhoto(photoPath, altText) {
   `;
 }
 
-function streetNameFor(streetId) {
-  return streetNamesById[streetId] || streetId;
-}
-
-function renderNearbyStreetsLine(obs) {
-  const nearby = obs.nearby_streets;
-  if (!nearby || !nearby.length) {
-    return "";
-  }
-
-  const primary = nearby.find((entry) => entry.primary) || nearby[0];
-  const others = nearby.filter((entry) => entry !== primary);
-
-  if (!others.length) {
-    return `<p class="observation-popup__nearby">Street: ${streetNameFor(primary.street_id)}</p>`;
-  }
-
-  const othersText = others
-    .map((entry) => `${streetNameFor(entry.street_id)} (${entry.distance_m}m)`)
-    .join(", ");
-
-  return `
-    <p class="observation-popup__nearby">
-      Primary: ${streetNameFor(primary.street_id)} (${primary.distance_m}m)
-      &middot; Also near: ${othersText}
-    </p>
-  `;
-}
-
 function renderCaseLink(obs, streetId) {
   if (obs.tracking_issue) {
     return `<a class="observation-popup__case" href="${REPO_ISSUES_URL}/${obs.tracking_issue}" target="_blank" rel="noopener noreferrer">Case #${obs.tracking_issue}</a>`;
@@ -340,7 +307,7 @@ function renderObservationPopup(obs, streetId) {
       </div>
       ${obs.photo ? renderObservationPhoto(obs.photo, obs.title) : renderPhotoPlaceholder()}
       <p class="observation-popup__date">${renderObservationDate(obs)}</p>
-      ${renderNearbyStreetsLine(obs)}
+      ${obs.description ? `<p class="observation-popup__description">${obs.description}</p>` : ""}
       <div class="observation-popup__case-row">${renderCaseLink(obs, streetId)}</div>
       ${renderResolutionSection(obs, streetId)}
     </div>
@@ -578,7 +545,6 @@ async function init() {
       style: (feature) => styleForStreet(feature.properties),
       onEachFeature: (feature, layer) => {
         const props = feature.properties;
-        streetNamesById[props.id] = props.name;
         layer.bindTooltip(props.name);
         layer.on("click", () => selectStreet(layer, props));
 

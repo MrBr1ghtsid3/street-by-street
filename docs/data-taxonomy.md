@@ -76,7 +76,7 @@ optional fields populated; see the note after the table.
 | `reported_time` | Optional | Time first logged, `HH:MM`, alongside `reported_date`. Rendered if present; its absence is handled gracefully, it is never required at audit time. |
 | `resolved_date` | Required (value nullable) | Date resolved, if applicable; otherwise `null`. |
 | `tracking_issue` | Optional | GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`/absent. |
-| `nearby_streets` | Optional | Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. |
+| `nearby_streets` | Optional | Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. Recorded in the data but not displayed on the public map. |
 | `resolution` | Optional | Hand-curated public summary of an intervention (people, time, cost, outcome). Absent until the observation has actually been acted on. See [Resolution](#resolution) below. |
 | `photo` | Optional | Repo-relative path to this observation's primary photo (e.g. `assets/images/streets/ana-ventura/ana-ventura__obs-2__litter.jpg`), rendered on the map popup. Written by `scripts/photo_pipeline.py` for the most recently ingested non-cover photo targeting this observation; absent until one exists. |
 
@@ -178,6 +178,14 @@ signal that more than one street might be involved, not an assertion of
 responsibility. It's computed, not hand-entered; see
 [methodology.md](methodology.md) for when and how to run the script that
 fills it in.
+
+`nearby_streets` is recorded but no longer displayed in the map popup —
+the popup shows the observation's `description` in that spot instead,
+which is more useful to a visitor than a list of distances to streets
+they likely haven't heard of. The field still serves the record itself:
+it's a signal, kept in the data, that more than one street may be
+involved in a given observation, for whoever is reviewing the JSON or
+triaging a Case directly.
 
 The practical test for which bucket a field belongs in: if it can change
 every time someone walks the street, it's an observation; if it only
