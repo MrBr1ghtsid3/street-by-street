@@ -18,9 +18,16 @@ these records flow into the map.
    everything afterwards. Each one needs: type (issue/asset), category,
    a short title, a description with a location note (nearest house
    number, junction, or landmark), and today's date as `reported_date`.
-3. **Note anything you can't classify confidently.** Use category `other`
-   rather than forcing a fit, and flag it for review — recurring `other`
-   entries are a sign the taxonomy needs a new category.
+3. **Don't force a fit.** If something genuinely doesn't belong in
+   `accessibility`, `animal_welfare`, or `cleanliness`, don't log it as an
+   observation — there is no `other` catch-all to fall back on. Record it
+   instead in the "Taxonomy gaps" section of
+   [templates/street-audit.md](../templates/street-audit.md#taxonomy-gaps).
+   Accumulating entries there are the signal that the taxonomy needs a
+   fourth category — that's a deliberate decision to be made and recorded
+   in a new ADR (see [ADR 008](../decisions/008-observation-taxonomy.md)),
+   not something to solve in the field by forcing an observation into the
+   nearest pillar.
 4. **Don't try to be exhaustive on the first pass.** A street record that
    captures the obvious issues and assets is more useful published than a
    perfect record that never ships. Revisits add to it over time.

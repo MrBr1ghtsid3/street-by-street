@@ -6,7 +6,7 @@
   /* Street audit status */
   --color-street-not-started: #9ca3af;
   --color-street-active: #f59e0b;
-  --color-street-complete: #1d9e75;
+  --color-street-normal: #1d9e75;
 
   /* Neutral scale for base/unaudited elements */
   --grey-50: #fafafa;
@@ -473,9 +473,9 @@ path.street-line:focus {
   color: var(--color-street-active);
 }
 
-.status-badge[data-status="complete"] {
+.status-badge[data-status="normal"] {
   background: rgba(29, 158, 117, 0.15);
-  color: var(--color-street-complete);
+  color: var(--color-street-normal);
 }
 
 .panel-source-footer {
@@ -544,9 +544,9 @@ path.street-line:focus {
   border-top-color: var(--color-street-active);
 }
 
-.map-legend__line--complete {
+.map-legend__line--normal {
   border-top-width: 4px;
-  border-top-color: var(--color-street-complete);
+  border-top-color: var(--color-street-normal);
 }
 
 .map-legend__line--not-started {

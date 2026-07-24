@@ -439,11 +439,14 @@
     (function () {
       "use strict";
 
-      var ISSUE_CATEGORIES = [];
-      var ASSET_CATEGORIES = [];
+      var CATEGORIES = [];
       var ISSUE_STATUSES = [];
       var ASSET_STATUSES = [];
       var CATEGORY_ICON = {};
+      // Neutral fallback for a category with no icon mapping; overwritten
+      // by loadTaxonomy() below, this default only covers the (normally
+      // unreachable) window before that fetch resolves.
+      var FALLBACK_ICON = "ti-dots";
 
       var state = {
         type: "issue",
@@ -486,11 +489,11 @@
         return fetch("/taxonomy")
           .then(function (r) { return r.json(); })
           .then(function (data) {
-            ISSUE_CATEGORIES = data.issue_categories;
-            ASSET_CATEGORIES = data.asset_categories;
+            CATEGORIES = data.categories;
             ISSUE_STATUSES = data.issue_statuses;
             ASSET_STATUSES = data.asset_statuses;
             CATEGORY_ICON = data.category_icon;
+            FALLBACK_ICON = data.fallback_icon;
           });
       }
 
@@ -560,13 +563,12 @@
 
       // ---- Type / category / status ----
 
-      function categoriesForType(type) { return type === "asset" ? ASSET_CATEGORIES : ISSUE_CATEGORIES; }
       function statusesForType(type) { return type === "asset" ? ASSET_STATUSES : ISSUE_STATUSES; }
       function defaultStatusForType(type) { return type === "asset" ? "active" : "open"; }
 
       function populateCategorySelect() {
         categorySelect.innerHTML = "";
-        categoriesForType(state.type).forEach(function (cat) {
+        CATEGORIES.forEach(function (cat) {
           var option = document.createElement("option");
           option.value = cat;
           option.textContent = cat.replace(/_/g, " ");
@@ -599,7 +601,7 @@
       // ---- Icon picker (preview only — see icon-hint warning; not sent to the server) ----
 
       function defaultIconForCategory(category) {
-        return CATEGORY_ICON[category] || CATEGORY_ICON.other;
+        return CATEGORY_ICON[category] || FALLBACK_ICON;
       }
 
       function renderIconPicker() {

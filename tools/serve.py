@@ -47,10 +47,10 @@ except ImportError:
     sys.exit(1)
 
 from new_observation import (
-    ASSET_CATEGORIES,
     ASSET_STATUSES,
+    CATEGORIES,
     CATEGORY_ICON,
-    ISSUE_CATEGORIES,
+    FALLBACK_ICON,
     ISSUE_STATUSES,
     GitOperationError,
     ValidationError,
@@ -76,11 +76,11 @@ def taxonomy():
     # observation-form.html's.
     return jsonify(
         {
-            "issue_categories": ISSUE_CATEGORIES,
-            "asset_categories": ASSET_CATEGORIES,
+            "categories": CATEGORIES,
             "issue_statuses": ISSUE_STATUSES,
             "asset_statuses": ASSET_STATUSES,
             "category_icon": CATEGORY_ICON,
+            "fallback_icon": FALLBACK_ICON,
         }
     )
 

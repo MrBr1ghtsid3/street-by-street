@@ -150,6 +150,15 @@ be answered as the pilot continues.
 - At least one of the open questions above has a concrete answer recorded
   in this charter or in a follow-up decision record.
 
+**Note (2026-07-24):** the "six observations" figure above records what
+this criterion was aiming at before the work started, not the current
+state — it is left as written for that reason. Five of the six were
+seed/placeholder entries, retired on this date once it became clear they
+weren't real audit findings; only the one real observation (litter,
+tracked by Case #5) remains. This criterion should now be read as
+historical rather than current; see [ADR 008](../decisions/008-observation-taxonomy.md)
+for the change that prompted the retirement.
+
 ## Roadmap / Not yet implemented
 
 In keeping with [docs/ethics.md](ethics.md)'s own commitment to not

@@ -38,7 +38,7 @@ and mark it `TODO` if it isn't known yet — don't guess.
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | | | | | | | | |
 
-Category: `road`, `litter`, `vegetation`, `hazard`, `structure`, `other`.
+Category: `accessibility`, `animal_welfare`, `cleanliness`.
 Status: `open`, `in_progress`, `resolved`. Coordinates are optional —
 leave blank at audit time unless you've already used
 `tools/coordinate-picker.html`; see the note below.
@@ -49,8 +49,8 @@ leave blank at audit time unless you've already used
 | --- | --- | --- | --- | --- | --- | --- |
 | | | | | | | |
 
-Category: `business`, `green_space`, `infrastructure`, `service`,
-`heritage`, `other`. Status: `active`, `inactive`.
+Category: `accessibility`, `animal_welfare`, `cleanliness`.
+Status: `active`, `inactive`.
 
 **Coordinates** (optional, both tables): only fill in if you've already
 captured it with `tools/coordinate-picker.html` (see
@@ -86,3 +86,15 @@ needs a source and a date; see [docs/data-sources.md](../docs/data-sources.md).
 | Metric | Value | Source | Date | Level |
 | --- | --- | --- | --- | --- |
 | | | | | |
+
+## Taxonomy gaps
+
+Leave this section empty if everything you found fits `accessibility`,
+`animal_welfare`, or `cleanliness` — most audits will. If something
+genuinely doesn't fit any of the three, don't force it into an
+observation; record it here instead. See
+[docs/methodology.md](../docs/methodology.md) step 3.
+
+| What was seen | Where | Date | Why it fits none of the three categories |
+| --- | --- | --- | --- |
+| | | | |

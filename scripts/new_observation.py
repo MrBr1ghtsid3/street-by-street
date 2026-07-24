@@ -42,8 +42,8 @@ CLI-specific except argument parsing.
 Usage:
     python scripts/new_observation.py --sidecar obs.sbs.json --photo obs.jpg
     python scripts/new_observation.py --dry-run --street ana-ventura --id 7 \\
-        --photo ana-ventura__obs-7__new-bench.jpg --type asset \\
-        --category infrastructure --title "New bench" \\
+        --photo ana-ventura__obs-7__new-bin.jpg --type asset \\
+        --category cleanliness --title "New litter bin" \\
         --description "Outside no. 30"
 """
 
@@ -63,9 +63,10 @@ IMAGES_DIR = REPO_ROOT / "assets" / "images" / "streets"
 
 # From docs/data-taxonomy.md — kept in sync by hand (same duplication
 # tradeoff as tools/observation-form.html; this repo has no shared-constants
-# module across Python/JS).
-ISSUE_CATEGORIES = ["road", "litter", "vegetation", "hazard", "structure", "other"]
-ASSET_CATEGORIES = ["business", "green_space", "infrastructure", "service", "heritage", "other"]
+# module across Python/JS). One shared list for both issues and assets —
+# category describes the observation's domain, not whether it's a problem
+# or something of value (that's `type`). No "other" catch-all.
+CATEGORIES = ["accessibility", "animal_welfare", "cleanliness"]
 ISSUE_STATUSES = ["open", "in_progress", "resolved"]
 ASSET_STATUSES = ["active", "inactive"]
 
@@ -73,18 +74,19 @@ ASSET_STATUSES = ["active", "inactive"]
 # serve the exact same category->icon mapping the map uses, rather than a
 # third hand-copied version alongside map.js's and observation-form.html's.
 CATEGORY_ICON = {
-    "road": "ti-road",
-    "litter": "ti-trash",
-    "vegetation": "ti-plant-2",
-    "hazard": "ti-alert-triangle",
-    "structure": "ti-wall",
-    "business": "ti-building-store",
-    "green_space": "ti-tree",
-    "infrastructure": "ti-droplet",
-    "service": "ti-users",
-    "heritage": "ti-building-monument",
-    "other": "ti-dots",
+    "accessibility": "ti-accessible",
+    "animal_welfare": "ti-paw",
+    "cleanliness": "ti-trash",
 }
+
+# Neutral fallback for a category with no icon mapping (e.g. old data still
+# carrying a retired category). Never a real category's icon - falling back
+# to one of those would silently mislabel the observation as something it
+# isn't. Kept in sync by hand across all four CATEGORY_ICON copies (this
+# one, assets/js/map.js, tools/observation-form.html, and
+# tools/templates/observation_form_server.html via tools/serve.py's
+# /taxonomy endpoint).
+FALLBACK_ICON = "ti-dots"
 
 OBS_FIELD_RE = re.compile(r"^obs-(\d+)$")
 COVER_MARKER = "cover"
@@ -296,11 +298,10 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
     if obs_type not in ("issue", "asset"):
         raise ValidationError(f"type must be 'issue' or 'asset', got {obs_type!r}.")
 
-    valid_categories = ISSUE_CATEGORIES if obs_type == "issue" else ASSET_CATEGORIES
     category = observation.get("category")
-    if category not in valid_categories:
+    if category not in CATEGORIES:
         raise ValidationError(
-            f"'{category}' is not a valid {obs_type} category — expected one of {', '.join(valid_categories)}."
+            f"'{category}' is not a valid category — expected one of {', '.join(CATEGORIES)}."
         )
 
     title = (observation.get("title") or "").strip()

@@ -74,7 +74,10 @@ constraint this implies.
 ## What's actually built
 
 - **Interactive map of Tutrakan** (Leaflet + OpenStreetMap), with streets
-  styled by a three-tier status: not started, active, complete.
+  styled by status: not-yet-audited streets render invisibly (still
+  clickable), while audited streets are highlighted amber ("active", the
+  audit is under way) or green ("normal", the record is established and
+  current — not a claim that the street is ever "finished").
 - **POI-style observation markers** — geotagged observations render as
   coloured pin markers directly on the map (coral for issues, teal for
   assets, with a category icon), independent of the side-panel cards for
@@ -118,8 +121,8 @@ street-by-street/
 
 The methodology is being piloted on a single street, **Ana Ventura**
 (ul. "Ana Ventura", 7601 Tutrakan), as proof of concept — 1 of roughly 100
-named streets in the town. Six seed observations (three issues, three
-assets) have been logged. The street base layer underneath the map is real
+named streets in the town. One observation (one open issue) has been
+logged so far. The street base layer underneath the map is real
 OpenStreetMap geometry pulled via the Overpass API; everything other than
 Ana Ventura is shown as not-yet-audited.
 
