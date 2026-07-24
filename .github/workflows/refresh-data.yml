@@ -48,7 +48,11 @@ jobs:
 
             **What changed**
             - Street geometries re-queried from Overpass API
-            - OSM attributes updated (length, surface type, road class)
+            - OSM attributes updated (length, surface type, road class, bus stop counts)
+            - The same OSM-derived attributes are also synced into
+              `data/streets/*.json` for streets that already have a record -
+              only those fields and `attributes_note`, nothing else in those
+              files
             - Existing audit data (status, observations, trivia) preserved
 
             **Freshness report**
@@ -60,6 +64,13 @@ jobs:
             - [ ] No audited streets have been unexpectedly removed
             - [ ] Length/attribute changes look reasonable
             - [ ] Check any `osm_status: not_found` warnings in the Action log
+            - [ ] If `bus_stops` changed to/from `null` on any street, check the
+              Action log for the "zero bus stop nodes in bbox" warning - a
+              `null` result should mean OSM has no bus stop data for the area,
+              not that a working query found none
+            - [ ] `data/streets/*.json` diffs are limited to `attributes` and
+              `attributes_note` - nothing else in those files should have
+              changed
             - [ ] Review freshness-report.json for stale official metrics
 
             *This PR was opened automatically. Merge only after review.*
