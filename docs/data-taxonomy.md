@@ -20,7 +20,7 @@ block of a street's JSON record.
 | `length_m` | Street length in metres. |
 | `dwellings` | Number of dwellings fronting the street. |
 | `parking_spaces` | Count of formal/informal parking spaces. |
-| `bus_stops` | Number of bus stops on the street. |
+| `bus_stops` | Number of bus stops on the street, OSM-derived via `scripts/refresh_osm.py` (see [ADR 004](../decisions/004-data-update-strategy.md)). `null` means OSM has no bus stop data for the area at all — not that the street has none. A literal `0` is only ever written once bus stop data is known to exist somewhere in Tutrakan but none of it falls within 50m of this particular street. |
 | `lighting_count` | Number of street lighting fixtures. |
 | `surface_type` | e.g. asphalt, cobble, unpaved. |
 | `road_class` | Functional classification (e.g. residential, tertiary). |

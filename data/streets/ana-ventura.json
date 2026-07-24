@@ -18,9 +18,9 @@
     "bus_stops": null,
     "lighting_count": null,
     "surface_type": "asphalt",
-    "road_class": "tertiary / residential (mixed along its length)"
+    "road_class": "tertiary"
   },
-  "attributes_note": "length_m and surface_type are derived from OpenStreetMap geometry/tags via the Overpass API (pulled 2026-06-17), not a ground survey. Remaining null fields require a manual street walk to populate.",
+  "attributes_note": "length_m, surface_type, and bus_stops are derived from OpenStreetMap geometry/tags via the Overpass API (pulled 2026-07-24), not a ground survey. Remaining null fields require a manual street walk to populate.",
   "trivia": {
     "text": "Named after Ana Ventura, a young resistance fighter from a Sephardic Jewish family, killed in 1944 at the age of 18. Her surname derives from a Spanish word meaning fortune or fate.",
     "sources": [],

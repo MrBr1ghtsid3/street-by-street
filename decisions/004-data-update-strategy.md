@@ -30,9 +30,10 @@ about this ADR changes how they're authored.
 
 ### Data tiers
 
-1. **OSM-derived** (street geometry, length, surface type, road class) —
-   refreshed automatically every quarter by `scripts/refresh_osm.py`,
-   landing as a PR for review, never a direct commit.
+1. **OSM-derived** (street geometry, length, surface type, road class, bus
+   stop counts) — refreshed automatically every quarter by
+   `scripts/refresh_osm.py`, landing as a PR for review, never a direct
+   commit.
 2. **Official statistics** (population, administration, distances) —
    `scripts/check_data_freshness.py` flags entries whose `source_date` is
    more than a year old; the value itself is updated manually once a
@@ -89,6 +90,17 @@ re-diffing 100+ streets by hand).
   flagged. Closing this gap (e.g. moving city stats into a scanned data
   file the freshness check covers) is deferred; for now those figures are
   maintained and verified by hand.
+- `scripts/refresh_osm.py` now writes tier-1 OSM-derived fields
+  (`length_m`, `surface_type`, `road_class`, `bus_stops`) into
+  `data/streets/*.json`'s `attributes` block for any street that already
+  has a record, not just into the geojson — closing a hand-copy gap
+  between the two files that nothing previously verified stayed in
+  agreement. It only ever touches those OSM-derived attribute fields plus
+  `attributes_note`; every other field (`meta`, `trivia`, `observations`,
+  `steward`, `official_context`, and any non-OSM attribute like
+  `dwellings`) is left untouched. This still lands inside the same
+  quarterly refresh PR described above — it does not change the review
+  gate.
 
 ## Alternatives Considered
 

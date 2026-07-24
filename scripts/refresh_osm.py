@@ -1,11 +1,32 @@
 #!/usr/bin/env python3
-"""Re-query Overpass for Tutrakan highways and refresh data/tutrakan-streets.geojson.
+"""Re-query Overpass for Tutrakan highways and bus stops; refresh
+data/tutrakan-streets.geojson and the OSM-derived attributes inside
+data/streets/*.json.
 
 Existing audit fields (status, audited, observations_count, issues_open,
 last_updated) are preserved for streets already in the file; only geometry
 and OSM-derived attributes are replaced. Streets missing from the new
 Overpass result are kept (never deleted) and flagged with
 osm_status: "not_found" instead.
+
+For every street that already has a data/streets/{id}.json record AND
+fresh OSM data this run, this also writes that record's `attributes`
+block (length_m, surface_type, road_class, bus_stops) and
+`attributes_note` - the same fields previously only hand-copied between
+this file and the geojson, with nothing verifying they agreed (see
+ADR 004). Every other field - meta, trivia, observations, steward,
+official_context, and any non-OSM attribute - is left untouched.
+
+bus_stops counts OSM bus stop nodes (highway=bus_stop or
+public_transport=platform, Bulgarian OSM tagging uses both
+inconsistently) assigned to their nearest street within
+compute_street_proximity.SECONDARY_THRESHOLD_M (50m). If the Overpass
+query returns zero bus stop nodes anywhere in the bbox, that means OSM
+has no bus stop data for Tutrakan at all - not that no street has a bus
+stop - so bus_stops is left null everywhere that run rather than writing
+a false 0. A literal 0 is only ever written for a street once bus stop
+data is known to exist somewhere in the bbox but none of it falls near
+that particular street.
 
 Usage: python scripts/refresh_osm.py
 Exit code: 0 on success, 1 if the Overpass query fails or returns nothing.
@@ -18,17 +39,29 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections import defaultdict
 from datetime import date
 from pathlib import Path
 
+from compute_street_proximity import (
+    SECONDARY_THRESHOLD_M,
+    distance_to_street,
+    equirectangular_xy,
+)
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 GEOJSON_PATH = REPO_ROOT / "data" / "tutrakan-streets.geojson"
+STREETS_DIR = REPO_ROOT / "data" / "streets"
 
 OVERPASS_URL = "https://overpass-api.de/api/interpreter"
 BBOX_SOUTH, BBOX_WEST, BBOX_NORTH, BBOX_EAST = 44.026, 26.592, 44.058, 26.648
 OVERPASS_QUERY = (
     "[out:json][timeout:90];\n"
-    'way["highway"]({south},{west},{north},{east});\n'
+    "(\n"
+    '  way["highway"]({south},{west},{north},{east});\n'
+    '  node["highway"="bus_stop"]({south},{west},{north},{east});\n'
+    '  node["public_transport"="platform"]({south},{west},{north},{east});\n'
+    ");\n"
     "out geom tags;"
 ).format(south=BBOX_SOUTH, west=BBOX_WEST, north=BBOX_NORTH, east=BBOX_EAST)
 
@@ -80,6 +113,56 @@ def line_length_m(coords):
         haversine_m(coords[i][0], coords[i][1], coords[i + 1][0], coords[i + 1][1])
         for i in range(len(coords) - 1)
     )
+
+
+def extract_bus_stops(elements):
+    """Return a deduplicated list of {"id", "lat", "lon"} for bus stop nodes.
+
+    Matches either highway=bus_stop or public_transport=platform - OSM
+    tagging for bus stops in Bulgaria uses both conventions inconsistently,
+    sometimes on the same node. Deduplicated by node id defensively, even
+    though Overpass's own set union (see OVERPASS_QUERY) already collapses
+    a node appearing in both query branches into one result.
+    """
+    seen = {}
+    for element in elements:
+        if element.get("type") != "node":
+            continue
+        tags = element.get("tags", {})
+        if tags.get("highway") != "bus_stop" and tags.get("public_transport") != "platform":
+            continue
+        node_id = element.get("id")
+        if node_id is None or node_id in seen:
+            continue
+        seen[node_id] = {"id": node_id, "lat": element["lat"], "lon": element["lon"]}
+    return list(seen.values())
+
+
+def assign_stop_to_street(lat, lon, streets):
+    """Return the id of the street nearest (lat, lon), or None if every
+    street is farther than SECONDARY_THRESHOLD_M away.
+
+    Reuses compute_street_proximity's projection/distance primitives
+    (equirectangular_xy, distance_to_street - which itself wraps
+    point_segment_distance) rather than reimplementing the geometry maths.
+    `streets` is a list of {"id", "lines"} - see group_streets' "segments"
+    key, which is already in the same [[lon, lat], ...] per-line shape
+    compute_street_proximity.load_streets() produces from the geojson.
+    """
+    ref_lat_rad = math.radians(lat)
+    point_x, point_y = equirectangular_xy(lon, lat, ref_lat_rad)
+
+    best_id, best_dist = None, math.inf
+    for street in streets:
+        if not street["lines"]:
+            continue
+        dist = distance_to_street(point_x, point_y, street, ref_lat_rad)
+        if dist < best_dist:
+            best_dist, best_id = dist, street["id"]
+
+    if best_id is not None and best_dist <= SECONDARY_THRESHOLD_M:
+        return best_id
+    return None
 
 
 def fetch_overpass_elements():
@@ -173,6 +256,42 @@ def build_feature(slug, street, existing_properties=None):
     }
 
 
+def update_street_json(slug, computed_attrs, pull_date):
+    """Update data/streets/{slug}.json's OSM-derived attributes in place.
+
+    Only `attributes.length_m`, `attributes.surface_type`,
+    `attributes.road_class`, `attributes.bus_stops`, and
+    `attributes_note` are touched - meta, trivia, observations, steward,
+    official_context, and any non-OSM attribute (dwellings,
+    parking_spaces, lighting_count) are left exactly as they were.
+
+    Returns False without writing anything if no street JSON record
+    exists for this slug yet (most streets don't - see docs/methodology.md
+    for onboarding a new one).
+    """
+    street_file = STREETS_DIR / f"{slug}.json"
+    if not street_file.exists():
+        return False
+
+    record = json.loads(street_file.read_text(encoding="utf-8"))
+    attributes = record.setdefault("attributes", {})
+    attributes["length_m"] = computed_attrs["length_m"]
+    attributes["surface_type"] = computed_attrs["surface_type"]
+    attributes["road_class"] = computed_attrs["road_class"]
+    attributes["bus_stops"] = computed_attrs["bus_stops"]
+
+    record["attributes_note"] = (
+        "length_m, surface_type, and bus_stops are derived from OpenStreetMap "
+        f"geometry/tags via the Overpass API (pulled {pull_date}), not a ground "
+        "survey. Remaining null fields require a manual street walk to populate."
+    )
+
+    street_file.write_text(
+        json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    return True
+
+
 def main():
     try:
         elements = fetch_overpass_elements()
@@ -185,6 +304,36 @@ def main():
         return 1
 
     overpass_streets = group_streets(elements)
+    if not overpass_streets:
+        print("ERROR: Overpass query returned no street ways", file=sys.stderr)
+        return 1
+
+    # Bus stops, assigned to their nearest street using this run's freshest
+    # geometry (overpass_streets' own segments), not a possibly-stale
+    # on-disk geojson.
+    bus_stops = extract_bus_stops(elements)
+    proximity_streets = [
+        {"id": slug, "lines": street["segments"]} for slug, street in overpass_streets.items()
+    ]
+
+    bus_stop_counts = None  # None sentinel: "OSM has no bus stop data this run"
+    unassigned_stops = 0
+    if bus_stops:
+        bus_stop_counts = defaultdict(int)
+        for stop in bus_stops:
+            street_id = assign_stop_to_street(stop["lat"], stop["lon"], proximity_streets)
+            if street_id is None:
+                unassigned_stops += 1
+            else:
+                bus_stop_counts[street_id] += 1
+    else:
+        print(
+            "WARNING: Overpass returned zero bus stop nodes in the Tutrakan bbox. "
+            "Treating this as OSM having no bus stop data for the area, NOT as the "
+            "town having zero bus stops - leaving bus_stops null on every street "
+            "this run rather than writing a false 0.",
+            file=sys.stderr,
+        )
 
     existing = json.loads(GEOJSON_PATH.read_text(encoding="utf-8"))
     existing_features = {f["properties"]["id"]: f for f in existing["features"]}
@@ -215,6 +364,38 @@ def main():
         json.dumps(existing, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     print(f"Wrote {len(updated_features)} features to {GEOJSON_PATH.relative_to(REPO_ROOT)}")
+
+    # Close the hand-sync gap: write the same OSM-derived fields into
+    # data/streets/{id}.json for every street queried fresh this run - see
+    # ADR 004. Streets flagged osm_status=not_found above aren't touched
+    # here either, since there's no fresh geometry/tags to sync from.
+    computed_by_slug = {
+        feature["properties"]["id"]: feature["properties"]
+        for feature in updated_features
+        if feature["properties"]["id"] in overpass_streets
+    }
+
+    today = date.today().isoformat()
+    updated_street_files = 0
+    for slug in overpass_streets:
+        props = computed_by_slug[slug]
+        bus_stops_value = None if bus_stop_counts is None else bus_stop_counts.get(slug, 0)
+        computed_attrs = {
+            "length_m": props["length_m"],
+            "surface_type": props["surface_type"],
+            "road_class": props["road_class"],
+            "bus_stops": bus_stops_value,
+        }
+        if update_street_json(slug, computed_attrs, today):
+            updated_street_files += 1
+
+    print(f"Bus stop nodes found in bbox: {len(bus_stops)}")
+    if bus_stop_counts is not None:
+        total_assigned = sum(bus_stop_counts.values())
+        print(f"  Assigned to a street (within {SECONDARY_THRESHOLD_M:.0f}m): {total_assigned}")
+        print(f"  Unassigned (more than {SECONDARY_THRESHOLD_M:.0f}m from every street): {unassigned_stops}")
+    print(f"Updated OSM-derived attributes in {updated_street_files} data/streets/*.json record(s).")
+
     return 0
 
 
