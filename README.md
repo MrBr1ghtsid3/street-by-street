@@ -26,6 +26,32 @@ See [Current status](#current-status) below.
 own. Read [docs/ethics.md](docs/ethics.md) before treating anything here as
 a model to copy uncritically.
 
+## Why this exists
+
+This isn't an attempt to log every pothole and overgrown hedge in Tutrakan
+before some imagined finish line. It's a much smaller test: does paying
+calm, unglamorous attention to a place's small failures, somewhere other
+than a phone feed, actually do anything? It might not. Finding that out
+would still count as an answer.
+
+The reason this feels worth trying sits a level below the methodology.
+Attention doesn't default to the street outside someone's own door
+anymore. Plenty of young people from towns like this one are told, not
+unfairly, to take what a place with few opportunities can give them and
+build a life somewhere with more. That's sound advice for them
+individually. It also means there's almost nobody left whose job it is to
+notice a place slipping, or to take any satisfaction in stopping it from
+slipping further.
+
+Nothing here claims to undo that pattern. This is a deliberately small,
+low-stakes attempt to see whether even a sliver of the attention people
+already spend on other things can be pointed, for a while, at caring for
+somewhere that's fading rather than thriving — one person, one street, no
+guarantee it adds up to anything. A town doesn't stop being a town just
+because it's dying. Tending it is a reasonable thing to do on its own
+terms, whether or not anyone's watching, and without pretending it's a
+rescue plan.
+
 ## Why this model
 
 street-by-street borrows its core idea from [iNaturalist](https://www.inaturalist.org/):
