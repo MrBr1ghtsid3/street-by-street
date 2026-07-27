@@ -229,11 +229,11 @@ def group_streets(elements):
     return streets
 
 
-def build_feature(slug, street, existing_properties=None):
+def build_feature(slug, street, existing_properties=None, today=None):
     existing_properties = existing_properties or {}
+    today = today or date.today().isoformat()
     segments = street["segments"]
     length_m = round(sum(line_length_m(segment) for segment in segments), 1)
-    today = date.today().isoformat()
 
     properties = {
         "id": slug,
@@ -249,7 +249,6 @@ def build_feature(slug, street, existing_properties=None):
         "surface_type": street["surface_type"],
         "road_class": street["road_class"],
         "source": SOURCE_LABEL,
-        "source_pulled": today,
     }
 
     # Preserve OSM topology: a street split across several disjoint ways
@@ -339,6 +338,12 @@ def update_street_json(slug, computed_attrs, pull_date):
 
 
 def main():
+    # Computed once and reused everywhere a "today" is needed this run
+    # (the geojson's single source_pulled, every build_feature() call's
+    # last_updated fallback, and every street JSON's attributes_note pull
+    # date) so one run can't straddle midnight into two different dates.
+    today = date.today().isoformat()
+
     try:
         elements = fetch_overpass_elements()
     except (urllib.error.URLError, TimeoutError, ValueError) as err:
@@ -391,7 +396,7 @@ def main():
         seen_slugs.add(slug)
         if slug in overpass_streets:
             updated_features.append(
-                build_feature(slug, overpass_streets[slug], feature["properties"])
+                build_feature(slug, overpass_streets[slug], feature["properties"], today)
             )
         else:
             feature["properties"]["osm_status"] = "not_found"
@@ -403,9 +408,17 @@ def main():
 
     for slug, street in overpass_streets.items():
         if slug not in seen_slugs:
-            updated_features.append(build_feature(slug, street))
+            updated_features.append(build_feature(slug, street, today=today))
 
     existing["features"] = updated_features
+    # A single source_pulled on the FeatureCollection, not one per feature:
+    # previously every feature repeated it, so a quarterly refresh where
+    # nothing about the street network actually changed still produced a
+    # 256-line diff (one date change x2 lines x128 features), burying any
+    # real edit inside pure date churn on a PR that exists specifically so
+    # a human can review what changed (ADR 004). One line here now carries
+    # that fact for the whole file.
+    existing["source_pulled"] = today
     GEOJSON_PATH.write_text(
         json.dumps(existing, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
@@ -421,7 +434,6 @@ def main():
         if feature["properties"]["id"] in overpass_streets
     }
 
-    today = date.today().isoformat()
     updated_street_files = 0
     for slug in overpass_streets:
         props = computed_by_slug[slug]
