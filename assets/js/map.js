@@ -449,7 +449,7 @@ function renderStreetDetail(record) {
   wireObservationCardClicks(observations, record.meta.id);
 }
 
-function renderUnauditedStreetDetail(properties) {
+function renderUnauditedStreetDetail(properties, sourcePulled) {
   panel.classList.remove("street-panel--empty");
 
   const attributeRows = [];
@@ -467,9 +467,13 @@ function renderUnauditedStreetDetail(properties) {
     ? `<dl class="attributes-grid">${attributeRows.join("")}</dl>`
     : '<p class="street-panel__placeholder">No OSM attributes available for this street.</p>';
 
+  // sourcePulled comes from the FeatureCollection's single top-level
+  // source_pulled (see scripts/refresh_osm.py), not a per-feature field -
+  // every street was pulled in the same run, so there's nothing to gain
+  // from repeating that date 128 times over.
   const sourceNote = properties.source
     ? `<p class="panel-source-footer">Source: ${properties.source}${
-        properties.source_pulled ? ` (pulled ${properties.source_pulled})` : ""
+        sourcePulled ? ` (pulled ${sourcePulled})` : ""
       }</p>`
     : "";
 
@@ -537,7 +541,7 @@ async function init() {
       if (props.audited && props.status !== "not_started") {
         loadStreetDetail(props.id);
       } else {
-        renderUnauditedStreetDetail(props);
+        renderUnauditedStreetDetail(props, geojson.source_pulled);
       }
     }
 

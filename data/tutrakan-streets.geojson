@@ -1,5 +1,6 @@
 {
   "type": "FeatureCollection",
+  "source_pulled": "2026-07-24",
   "features": [
     {
       "type": "Feature",
@@ -16,8 +17,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -76,8 +76,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -132,8 +131,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -176,8 +174,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "tertiary",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -422,8 +419,7 @@
         "last_updated": "2026-07-24",
         "surface_type": "asphalt",
         "road_class": "tertiary",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -588,8 +584,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -640,8 +635,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -676,8 +670,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -716,8 +709,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -756,8 +748,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "track",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -836,8 +827,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -876,8 +866,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -940,8 +929,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -992,8 +980,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1024,8 +1011,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1098,8 +1084,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1166,8 +1151,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1218,8 +1202,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1298,8 +1281,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1442,8 +1424,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1486,8 +1467,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1582,8 +1562,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1666,8 +1645,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1698,8 +1676,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1742,8 +1719,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1790,8 +1766,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1838,8 +1813,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "concrete",
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -1890,8 +1864,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -1986,8 +1959,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2094,8 +2066,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2142,8 +2113,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2186,8 +2156,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2270,8 +2239,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2350,8 +2318,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2386,8 +2353,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "tertiary",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -2636,8 +2602,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2680,8 +2645,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2720,8 +2684,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -2788,8 +2751,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2820,8 +2782,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2852,8 +2813,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "paving_stones",
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -2928,8 +2888,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -2968,8 +2927,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3028,8 +2986,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3112,8 +3069,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -3156,8 +3112,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -3224,8 +3179,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3260,8 +3214,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3300,8 +3253,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3368,8 +3320,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3400,8 +3351,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3468,8 +3418,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3516,8 +3465,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3604,8 +3552,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -3716,8 +3663,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3776,8 +3722,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3808,8 +3753,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -3936,8 +3880,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -3976,8 +3919,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4080,8 +4022,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4120,8 +4061,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4160,8 +4100,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4196,8 +4135,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4244,8 +4182,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4300,8 +4237,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4352,8 +4288,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "track",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -4432,8 +4367,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4504,8 +4438,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4540,8 +4473,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4596,8 +4528,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4652,8 +4583,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4696,8 +4626,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4796,8 +4725,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -4844,8 +4772,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4916,8 +4843,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4952,8 +4878,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -4996,8 +4921,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5080,8 +5004,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "tertiary",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -5176,8 +5099,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5220,8 +5142,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5260,8 +5181,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5328,8 +5248,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5380,8 +5299,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5468,8 +5386,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5544,8 +5461,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5664,8 +5580,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5724,8 +5639,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5760,8 +5674,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5812,8 +5725,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5868,8 +5780,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5900,8 +5811,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -5936,8 +5846,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "tertiary",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -6132,8 +6041,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6168,8 +6076,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6308,8 +6215,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "tertiary",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -6392,8 +6298,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6444,8 +6349,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6476,8 +6380,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6516,8 +6419,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6548,8 +6450,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6580,8 +6481,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6616,8 +6516,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6668,8 +6567,7 @@
         "last_updated": "2026-06-17",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6712,8 +6610,7 @@
         "last_updated": "2026-06-17",
         "surface_type": "asphalt",
         "road_class": "pedestrian",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -6772,8 +6669,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -6988,8 +6884,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7060,8 +6955,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -7104,8 +6998,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7164,8 +7057,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7200,8 +7092,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7276,8 +7167,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7356,8 +7246,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7440,8 +7329,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7524,8 +7412,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -7572,8 +7459,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7608,8 +7494,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7664,8 +7549,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7716,8 +7600,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7788,8 +7671,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7876,8 +7758,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "unclassified",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -7944,8 +7825,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -8044,8 +7924,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -8080,8 +7959,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -8120,8 +7998,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -8160,8 +8037,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
@@ -8212,8 +8088,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "pedestrian",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -8256,8 +8131,7 @@
         "last_updated": "2026-06-22",
         "surface_type": null,
         "road_class": "residential",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "MultiLineString",
@@ -8358,8 +8232,7 @@
         "last_updated": "2026-06-22",
         "surface_type": "asphalt",
         "road_class": "pedestrian",
-        "source": "OpenStreetMap contributors, via Overpass API",
-        "source_pulled": "2026-07-24"
+        "source": "OpenStreetMap contributors, via Overpass API"
       },
       "geometry": {
         "type": "LineString",
