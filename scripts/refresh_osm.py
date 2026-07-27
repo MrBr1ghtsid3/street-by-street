@@ -11,11 +11,14 @@ osm_status: "not_found" instead.
 
 For every street that already has a data/streets/{id}.json record AND
 fresh OSM data this run, this also writes that record's `attributes`
-block (length_m, surface_type, road_class, bus_stops) and
-`attributes_note` - the same fields previously only hand-copied between
-this file and the geojson, with nothing verifying they agreed (see
-ADR 004). Every other field - meta, trivia, observations, steward,
-official_context, and any non-OSM attribute - is left untouched.
+block and `attributes_note` for exactly the fields named in
+OSM_OWNED_STREET_ATTRS - the same fields previously only hand-copied
+between this file and the geojson, with nothing verifying they agreed
+(see ADR 004), and the same fields the generated note names, with
+nothing verifying THAT agreed either until ADR 010. Every other
+field - meta, trivia, observations, steward, official_context, and
+every other attribute (including road_character, a human ground
+observation this script never writes) - is left untouched.
 
 bus_stops counts OSM bus stop nodes (highway=bus_stop or
 public_transport=platform, Bulgarian OSM tagging uses both
@@ -66,6 +69,16 @@ OVERPASS_QUERY = (
 ).format(south=BBOX_SOUTH, west=BBOX_WEST, north=BBOX_NORTH, east=BBOX_EAST)
 
 SOURCE_LABEL = "OpenStreetMap contributors, via Overpass API"
+
+# The only attribute keys this script may write into data/streets/*.json's
+# `attributes` block. Every other key there (dwellings, parking_spaces,
+# lighting_count, road_character, and any future human-observed field) is
+# ground-observed and must never be touched here - see ADR 010. Adding a
+# new OSM-derived field means adding it to this tuple, nowhere else;
+# update_street_json() and its generated attributes_note both read from it
+# rather than naming fields separately, precisely so the two can't drift
+# apart the way they did before this ADR.
+OSM_OWNED_STREET_ATTRS = ("length_m", "surface_type", "road_class", "bus_stops")
 
 # Official Bulgarian Cyrillic-to-Latin transliteration, used as a fallback
 # when a way has no name:en tag.
@@ -256,14 +269,45 @@ def build_feature(slug, street, existing_properties=None):
     }
 
 
-def update_street_json(slug, computed_attrs, pull_date):
-    """Update data/streets/{slug}.json's OSM-derived attributes in place.
+def _format_field_list(fields):
+    fields = list(fields)
+    if len(fields) == 1:
+        return fields[0]
+    return ", ".join(fields[:-1]) + f", and {fields[-1]}"
 
-    Only `attributes.length_m`, `attributes.surface_type`,
-    `attributes.road_class`, `attributes.bus_stops`, and
-    `attributes_note` are touched - meta, trivia, observations, steward,
-    official_context, and any non-OSM attribute (dwellings,
-    parking_spaces, lighting_count) are left exactly as they were.
+
+def build_attributes_note(pull_date):
+    """Generate attributes_note from OSM_OWNED_STREET_ATTRS, so the note's
+    claim about which fields are OSM-derived cannot drift out of agreement
+    with the fields update_street_json() actually writes - that mismatch
+    (the note naming three fields while four were written) is exactly the
+    defect ADR 010 records.
+    """
+    fields_text = _format_field_list(OSM_OWNED_STREET_ATTRS)
+    return (
+        f"{fields_text} are derived from OpenStreetMap geometry/tags via "
+        f"the Overpass API (pulled {pull_date}), not a ground survey. A "
+        "null value in one of those fields means OSM held no data for it "
+        "on that date, not that it is awaiting a street walk. A null "
+        "value in any other attribute means it has not been surveyed on "
+        "foot yet."
+    )
+
+
+def update_street_json(slug, computed_attrs, pull_date):
+    """Update data/streets/{slug}.json's OSM-owned attributes in place.
+
+    Writes exactly the keys named in OSM_OWNED_STREET_ATTRS (currently
+    length_m, surface_type, road_class, bus_stops) plus attributes_note,
+    which is generated from that same constant - see build_attributes_note
+    and ADR 010. Every other field - meta, trivia, observations, steward,
+    official_context, and every other attribute (dwellings, parking_spaces,
+    lighting_count, road_character, ...) - is left exactly as it was.
+
+    Raises ValueError if `computed_attrs` is missing a key
+    OSM_OWNED_STREET_ATTRS expects; a present key whose value is None is
+    fine and is written as a JSON null (that's the "OSM has no data for
+    this field" case, not a bug).
 
     Returns False without writing anything if no street JSON record
     exists for this slug yet (most streets don't - see docs/methodology.md
@@ -273,18 +317,20 @@ def update_street_json(slug, computed_attrs, pull_date):
     if not street_file.exists():
         return False
 
+    missing = [key for key in OSM_OWNED_STREET_ATTRS if key not in computed_attrs]
+    if missing:
+        raise ValueError(
+            f"update_street_json({slug!r}): computed_attrs is missing "
+            f"{missing} - expected a value (possibly None) for every key "
+            f"in OSM_OWNED_STREET_ATTRS {OSM_OWNED_STREET_ATTRS}"
+        )
+
     record = json.loads(street_file.read_text(encoding="utf-8"))
     attributes = record.setdefault("attributes", {})
-    attributes["length_m"] = computed_attrs["length_m"]
-    attributes["surface_type"] = computed_attrs["surface_type"]
-    attributes["road_class"] = computed_attrs["road_class"]
-    attributes["bus_stops"] = computed_attrs["bus_stops"]
+    for key in OSM_OWNED_STREET_ATTRS:
+        attributes[key] = computed_attrs[key]
 
-    record["attributes_note"] = (
-        "length_m, surface_type, and bus_stops are derived from OpenStreetMap "
-        f"geometry/tags via the Overpass API (pulled {pull_date}), not a ground "
-        "survey. Remaining null fields require a manual street walk to populate."
-    )
+    record["attributes_note"] = build_attributes_note(pull_date)
 
     street_file.write_text(
         json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
