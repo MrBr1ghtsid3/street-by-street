@@ -137,7 +137,7 @@ blocks described in [data-taxonomy.md](data-taxonomy.md):
             "status": "active", "last_updated": "...", "steward": { "name": "...", "contact": "..." } },
   "attributes": { "length_m": null, "dwellings": null, "parking_spaces": null,
                    "bus_stops": null, "lighting_count": null, "surface_type": null,
-                   "road_class": null },
+                   "road_class": null, "road_character": null },
   "trivia": { "text": "...", "sources": [], "verified": false, "note": "..." },
   "official_context": [ { "metric": "...", "value": "...", "source": "...",
                             "source_date": "...", "level": "municipality" } ],

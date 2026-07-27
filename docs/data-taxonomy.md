@@ -23,7 +23,8 @@ block of a street's JSON record.
 | `bus_stops` | Number of bus stops on the street, OSM-derived via `scripts/refresh_osm.py` (see [ADR 004](../decisions/004-data-update-strategy.md)). `null` means OSM has no bus stop data for the area at all — not that the street has none. A literal `0` is only ever written once bus stop data is known to exist somewhere in Tutrakan but none of it falls within 50m of this particular street. |
 | `lighting_count` | Number of street lighting fixtures. |
 | `surface_type` | e.g. asphalt, cobble, unpaved. |
-| `road_class` | Functional classification (e.g. residential, tertiary). |
+| `road_class` | Bare OSM functional classification (e.g. `residential`, `tertiary`), OSM-derived via `scripts/refresh_osm.py` (see [ADR 010](../decisions/010-osm-owned-attributes.md)). Overwritten on every quarterly refresh — do not hand-edit it or record a richer description here; that's `road_character`. |
+| `road_character` | Free-text, human-observed description of the street's actual character where the bare OSM classification doesn't capture it (e.g. "tertiary / residential, mixed along its length"). Never written by `scripts/refresh_osm.py` — deliberately not in `OSM_OWNED_STREET_ATTRS`, so a quarterly refresh can never overwrite it. |
 
 Alongside attributes, each street record carries identity fields that are
 also slow-changing but aren't really "attributes" of the physical street:

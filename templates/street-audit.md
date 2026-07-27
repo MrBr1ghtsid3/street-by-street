@@ -30,7 +30,14 @@ and mark it `TODO` if it isn't known yet — don't guess.
 | Bus stops | |
 | Lighting count | |
 | Surface type | |
-| Road class | |
+| Road class | *(OSM-derived — leave blank; filled in automatically by `scripts/refresh_osm.py`, not by hand)* |
+| Road character | |
+
+**Road character** is the field for what "Road class" can't capture — a
+free-text description of what the street actually is (e.g. "tertiary /
+residential, mixed along its length"), from what you saw walking it.
+Unlike Road class, this one is never touched by the automated refresh; see
+[ADR 010](../decisions/010-osm-owned-attributes.md).
 
 ## Issues
 
