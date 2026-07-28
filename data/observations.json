@@ -47,7 +47,19 @@
       "reported_date": "2026-07-26",
       "resolved_date": null,
       "tracking_issue": null,
-      "photo": "assets/images/observations/obs-2__overflowing-containers-at-the-junction.jpg"
+      "photo": "assets/images/observations/obs-2__overflowing-containers-at-the-junction.jpg",
+      "nearby_streets": [
+        {
+          "street_id": "geo-milev",
+          "distance_m": 8.8,
+          "primary": true
+        },
+        {
+          "street_id": "stratsin",
+          "distance_m": 29.4,
+          "primary": false
+        }
+      ]
     },
     {
       "id": 3,
@@ -63,7 +75,19 @@
       "reported_date": "2026-07-26",
       "resolved_date": null,
       "tracking_issue": null,
-      "photo": "assets/images/observations/obs-3__container-standing-on-unmade-ground-beside-the-footway.jpg"
+      "photo": "assets/images/observations/obs-3__container-standing-on-unmade-ground-beside-the-footway.jpg",
+      "nearby_streets": [
+        {
+          "street_id": "geo-milev",
+          "distance_m": 6.8,
+          "primary": true
+        },
+        {
+          "street_id": "stratsin",
+          "distance_m": 13.6,
+          "primary": false
+        }
+      ]
     },
     {
       "id": 4,
@@ -79,7 +103,14 @@
       "reported_date": "2026-07-28",
       "resolved_date": null,
       "tracking_issue": null,
-      "photo": "assets/images/observations/obs-4__litter-at-the-disused-kiosk-and-shed.jpg"
+      "photo": "assets/images/observations/obs-4__litter-at-the-disused-kiosk-and-shed.jpg",
+      "nearby_streets": [
+        {
+          "street_id": "geo-milev",
+          "distance_m": 33.6,
+          "primary": true
+        }
+      ]
     }
   ]
 }
