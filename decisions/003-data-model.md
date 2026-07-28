@@ -1,5 +1,16 @@
 # ADR 003: Data Model
 
+**Superseded in part by [ADR 011](011-flat-observation-store.md):**
+observations no longer live embedded in a street's own JSON record - they
+are stored in a single flat `data/observations.json`, referencing a
+street (if any) via `nearby_streets[].primary` rather than by which
+street's file they happen to sit inside. The reasoning below - the
+City → Street → Observation hierarchy as a concept, and the attributes/
+observations split within a street's own record - is unchanged and still
+accurate; only *where observations are physically stored* changed. This
+note is an annotation, not a correction: it records what changed and
+why, without rewriting the decision as it stood at the time.
+
 ## Status: Accepted
 
 ## Context

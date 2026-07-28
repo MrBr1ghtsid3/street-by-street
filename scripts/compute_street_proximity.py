@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Flag which street(s) each geotagged observation is near.
 
-For every observation with non-null `coordinates` across all
-`data/streets/*.json` records, compute the distance from that point to
-every street's geometry in `data/tutrakan-streets.geojson` (audited and
-unaudited streets alike, since an observation can be physically close to
-a street that hasn't been walked yet). The closest street is written back
-as `primary: true`; any other street within 50m is added as
-`primary: false` - a "more than one street might be involved" signal, not
-an assertion of responsibility.
+For every observation with non-null `coordinates` in the flat
+`data/observations.json` store (see ADR 011), compute the distance from
+that point to every street's geometry in `data/tutrakan-streets.geojson`
+(audited and unaudited streets alike, since an observation can be
+physically close to a street that hasn't been walked yet). The closest
+street is written back as `primary: true`; any other street within 50m is
+added as `primary: false` - a "more than one street might be involved"
+signal, not an assertion of responsibility. `nearby_streets[].primary` is
+the only place a street relationship is recorded for an observation -
+there is no separate `street_id` field to keep in sync.
 
 Distances are computed on a local equirectangular projection centred on
 each observation's latitude, which is accurate enough at this scale (a
@@ -29,7 +31,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 GEOJSON_PATH = REPO_ROOT / "data" / "tutrakan-streets.geojson"
-STREETS_DIR = REPO_ROOT / "data" / "streets"
+OBSERVATIONS_PATH = REPO_ROOT / "data" / "observations.json"
 
 SECONDARY_THRESHOLD_M = 50.0
 EARTH_RADIUS_M = 6371000.0
@@ -127,34 +129,33 @@ def main():
         print("No street geometries found in tutrakan-streets.geojson; nothing to do.")
         return
 
+    store = json.loads(OBSERVATIONS_PATH.read_text(encoding="utf-8"))
+    observations = store.get("observations", [])
+
     processed = 0
     flagged_secondary = 0
+    changed = False
 
-    for street_file in sorted(STREETS_DIR.glob("*.json")):
-        record = json.loads(street_file.read_text(encoding="utf-8"))
-        observations = record.get("observations", [])
-        changed = False
+    for obs in observations:
+        coords = obs.get("coordinates")
+        if not coords:
+            continue
 
-        for obs in observations:
-            coords = obs.get("coordinates")
-            if not coords:
-                continue
+        nearby = compute_nearby_streets(coords["lat"], coords["lng"], streets)
+        if not nearby:
+            continue
 
-            nearby = compute_nearby_streets(coords["lat"], coords["lng"], streets)
-            if not nearby:
-                continue
+        obs["nearby_streets"] = nearby
+        changed = True
+        processed += 1
+        if len(nearby) > 1:
+            flagged_secondary += 1
 
-            obs["nearby_streets"] = nearby
-            changed = True
-            processed += 1
-            if len(nearby) > 1:
-                flagged_secondary += 1
-
-        if changed:
-            street_file.write_text(
-                json.dumps(record, indent=2, ensure_ascii=False) + "\n",
-                encoding="utf-8",
-            )
+    if changed:
+        OBSERVATIONS_PATH.write_text(
+            json.dumps(store, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
 
     print(f"Observations processed (had coordinates): {processed}")
     print(f"Observations flagged with a secondary nearby street (within {SECONDARY_THRESHOLD_M:.0f}m): {flagged_secondary}")

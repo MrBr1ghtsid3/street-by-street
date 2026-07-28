@@ -2,12 +2,16 @@
 
 ## Overview
 
-street-by-street audits a town one street at a time. Each audit produces a street record
-made of two parts: a small set of slow-changing **attributes** about the
-street, and a growing list of dated **observations** — issues and assets —
-found on it. See [data-taxonomy.md](data-taxonomy.md) for the full field
-and category reference, and [architecture.md](architecture.md) for how
-these records flow into the map.
+street-by-street audits a town one street at a time. Each audit produces a small set of
+slow-changing **attributes** about the street (its own JSON record), and a
+growing list of dated **observations** — issues and assets — found on it,
+recorded in a single flat store shared across every street
+(`data/observations.json`, see
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md))
+rather than embedded in that street's record. See
+[data-taxonomy.md](data-taxonomy.md) for the full field and category
+reference, and [architecture.md](architecture.md) for how these records
+flow into the map.
 
 ## Audit walk procedure
 
@@ -37,7 +41,7 @@ When an observation's exact location is wanted, open
 accessible) — it's an internal workflow tool, not linked from the main
 site. Click the matching point on the map, copy the resulting `{ "lat":
 …, "lng": … }` snippet, and paste it into that observation's
-`coordinates` field in its street's JSON file before committing. See
+`coordinates` field in `data/observations.json` before committing. See
 [data-taxonomy.md](data-taxonomy.md) for the field's exact shape.
 
 After adding coordinates and before committing, run
@@ -66,9 +70,8 @@ rationale. In the audit workflow specifically:
   or it's a recurrence of something already patched once), open a Case
   using the `case.yml` issue form rather than trying to track that
   process inside the JSON record. Reference the observation in the
-  Case's description (`Tracks: streets/{street-id} observation #{id}`)
-  and set that observation's `tracking_issue` field to the new Issue
-  number.
+  Case's description (`Tracks: observation #{id}`) and set that
+  observation's `tracking_issue` field to the new Issue number.
 - When the Case is closed, update the observation's `status` to
   `resolved` (and set `resolved_date`) as a manual step — closing the
   Case does not do this automatically.
@@ -96,13 +99,16 @@ call as setting `status` itself.
 
 ### Photo ingestion
 
-Field photos live under `assets/images/streets/{street-id}/`, one folder
-per street, named following the convention
-`{street-id}__obs-{observationId}__{description}.jpg` — e.g.
-`ana-ventura__obs-2__litter-before.jpg`. The `{description}` segment is
-free text (kebab-case is conventional but not enforced); it's there so
-several photos of the same observation stay distinguishable
-(`...-before.jpg`, `...-after.jpg`) without colliding.
+Field photos live under `assets/images/observations/`, one flat directory
+for every observation regardless of street, named following the
+convention `obs-{observationId}__{description}.jpg` — e.g.
+`obs-1__litter-before.jpg`. There is no street prefix (see
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md)):
+the pipeline looks an observation up by id alone in
+`data/observations.json`. The `{description}` segment is free text
+(kebab-case is conventional but not enforced); it's there so several
+photos of the same observation stay distinguishable (`...-before.jpg`,
+`...-after.jpg`) without colliding.
 
 If `{description}` contains the word `cover` anywhere (case-insensitive —
 `...__cover.jpg`, `...__litter-cover.jpg`), that photo is treated as the
@@ -125,8 +131,8 @@ Ingestion is a two-PR flow, both requiring the usual review before
 merge:
 
 1. **Photo PR** — the photo file(s) are added under
-   `assets/images/streets/{street-id}/` and merged to `main` like any
-   other change.
+   `assets/images/observations/` and merged to `main` like any other
+   change.
 2. **Pipeline run** — merging the photo PR triggers
    `.github/workflows/photo-pipeline.yml`, which runs
    `scripts/photo_pipeline.py` against the newly added files. For each
@@ -156,21 +162,20 @@ merge:
 `tools/coordinate-picker.html` — not linked from the main site. Open it
 locally, fill in a new observation (street, id, type, category, title,
 description, status) and attach an already-vetted photo. It **prepares** a
-correct commit; it does not submit or upload anything:
+correct commit; it does not submit or upload anything.
 
-- It fetches `data/tutrakan-streets.geojson` to populate the street
-  dropdown, and `data/streets/{street-id}.json` on street selection to
-  suggest the next non-colliding observation id (or flag a brand-new
-  street, which starts at id 1).
-- It renames the attached photo to
-  `{street-id}__obs-{id}__{slugified-title}.jpg`, following the naming
-  convention above.
-- It assembles the observation object in the exact shape documented in
-  [data-taxonomy.md](data-taxonomy.md), with `coordinates`, `resolved_date`,
-  `tracking_issue`, and `photo` left `null` for the photo pipeline and
-  later manual steps to fill in.
-- It prints the `mv`/`git` commands to move the photo into place and open
-  the photo PR.
+**Not yet updated for ADR 011:** this form (and the `tools/serve.py`
+button UI wrapping the CLI tool below) still assumes the pre-migration,
+per-street convention — a street dropdown, a street-scoped id suggestion,
+and a `{street-id}__obs-{id}__{description}.jpg` photo rename — none of
+which matches the flat `data/observations.json` store or the
+`obs-{id}__{description}.jpg` naming described above. Bringing the form in
+line with the new store is separate, not-yet-done work; until then, treat
+its output as needing a manual fixup (drop the street prefix from the
+photo filename, re-derive the id from `data/observations.json` rather than
+trusting the form's suggestion) before handing it to
+`scripts/new_observation.py` below, which *has* been updated and is the
+authoritative source of the current filename/id convention.
 
 It sits at the same point in the data-entry workflow as the coordinate
 picker: after a photo has been vetted per [ethics.md](ethics.md) and
@@ -182,24 +187,31 @@ and the pipeline still opens the follow-up data PR once that's merged.
 
 `scripts/new_observation.py` picks up where the intake form's output
 leaves off: given an observation and its vetted photo, it places the
-photo, inserts the observation into the street JSON, and creates a
-branch, commit, push, and PR — the git/gh side of the workflow the
-maintainer would otherwise do by hand from the intake form's printed
-commands. Like the intake form, it **prepares** the photo PR; it never
-merges, and it never touches `coordinates` (still pipeline/coordinate-picker
-territory) or creates a street file.
+photo under `assets/images/observations/`, appends the observation to
+`data/observations.json`, and creates a branch, commit, push, and PR —
+the git/gh side of the workflow the maintainer would otherwise do by hand
+from the intake form's printed commands. Like the intake form, it
+**prepares** the photo PR; it never merges, and it never touches
+`coordinates` (still pipeline/coordinate-picker territory).
+
+No street record is required or created. `--street` is optional (see
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md))
+and, when given, is used only for the branch name, commit message, and PR
+body context — never written onto the observation. The observation id and
+the photo filename (`obs-{id}__{slugified-title}.jpg`) are always derived
+by the script, never supplied.
 
 Two ways to run it, both stopping at "PR opened":
 
 - **CLI:**
 
   ```bash
-  python scripts/new_observation.py --sidecar observation.sbs.json --photo observation.jpg
+  python3 scripts/new_observation.py --sidecar observation.sbs.json --photo observation.jpg
   ```
 
-  (or the equivalent `--street --id --type --category --title --description`
-  flags instead of a sidecar file — see the script's `--help`). Add
-  `--dry-run` to print the planned actions and the JSON that would be
+  (or the equivalent `--street --type --category --title --description
+  --status` flags instead of a sidecar file — see the script's `--help`).
+  Add `--dry-run` to print the planned actions and the JSON that would be
   inserted without touching git or the filesystem.
 
 - **Button UI:** `tools/serve.py` is a local Flask wrapper around the same
@@ -278,14 +290,23 @@ To onboard a new street:
    known — otherwise leave it explicitly marked TODO).
 2. Walk the street per the procedure above and fill in the Attributes,
    Issues, Assets, Trivia, and Official Context sections.
-3. Convert the filled-in template into a JSON record under
-   `data/streets/<street-id>.json`, following the structure used by
-   `data/streets/ana-ventura.json`. The template's sections map directly
-   onto the JSON schema's blocks, so this is a mechanical conversion, not a
-   rewrite.
+3. Convert the filled-in template's Attributes, Trivia, and Official
+   Context sections into a JSON record under `data/streets/<street-id>.json`,
+   following the structure used by `data/streets/ana-ventura.json` —
+   `meta` / `attributes` / `trivia` / `official_context`, with no
+   `observations` block (that moved to `data/observations.json`, see
+   [decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md)).
+   The template's Issues and Assets sections instead become entries
+   appended to `data/observations.json`, each with this street's id as its
+   `nearby_streets[].primary` entry once `scripts/compute_street_proximity.py`
+   has run — `scripts/new_street.py` and `scripts/new_observation.py`
+   automate the mechanical parts of both conversions.
 4. Add or update the street's entry in `data/tutrakan-streets.geojson`:
-   set `status` and `audited` to reflect the new record, and update
-   `observations_count` and `issues_open` to match.
+   set `status` and `audited` to reflect the new record. `observations_count`
+   and `issues_open` are derivable from `data/observations.json` but
+   nothing currently refreshes them automatically — update them by hand to
+   match, or leave them stale and note it, consistent with how the
+   existing Ana Ventura entry is currently handled (see ADR 011).
 5. Confirm the street renders correctly on the map and that its detail
    panel loads before considering the audit published.
 
@@ -297,15 +318,18 @@ project's live state:
 
 - **Summary** — total observations, open issues, resolved issues, streets
   audited, and total intervention cost/person-hours, computed client-side
-  by fetching `data/tutrakan-streets.geojson` and every audited street's
-  JSON record. No server-side aggregation exists; every number is derived
-  in the browser on each page load.
+  by fetching `data/tutrakan-streets.geojson` and `data/observations.json`
+  (the flat store — see
+  [decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md)).
+  No server-side aggregation exists; every number is derived in the
+  browser on each page load.
 - **Open cases** — currently open GitHub Issues labelled `case`, fetched
   live and unauthenticated from the public GitHub REST API
   (`api.github.com/repos/.../issues`). Where an Issue's body contains the
-  usual `Tracks: streets/{street-id} observation #{id}` line (see
+  usual `Tracks: observation #{id}` line (see
   [case-tracking.md](case-tracking.md#linking-convention)), the linked
-  street's name is shown alongside it.
+  street's name — resolved via that observation's `nearby_streets[].primary`
+  — is shown alongside it.
 - **Recent resolutions** — every observation carrying a `resolution`
   object (see [data-taxonomy.md](data-taxonomy.md#resolution)), newest
   first.

@@ -1,6 +1,6 @@
-// Loads data/*.geojson, data/streets/*.json, and data/taxonomy.json via
-// fetch(), which browsers block under file://. Serve this directory over
-// HTTP (see README) to test locally.
+// Loads data/*.geojson, data/observations.json, data/streets/*.json, and
+// data/taxonomy.json via fetch(), which browsers block under file://.
+// Serve this directory over HTTP (see README) to test locally.
 
 const TUTRAKAN_CENTER = [44.0386, 26.6195];
 
@@ -50,16 +50,25 @@ legend.onAdd = function () {
 };
 legend.addTo(map);
 
-// Holds every audited street's observation markers, all at once, regardless
-// of which street's panel is currently open. Populated once at startup and
-// never cleared on street switch - marker visibility is independent of
-// panel selection.
+// Holds every observation's marker, all at once, regardless of which
+// street's panel is currently open - or of whether its street has been
+// onboarded at all. A pin exists as soon as an observation has
+// coordinates; see ADR 011 for why that's no longer gated on a street's
+// audited status. Populated once at startup and never cleared on street
+// switch - marker visibility is independent of panel selection.
 const observationMarkersLayer = L.layerGroup().addTo(map);
 
-// `${streetId}::${obs.id}` -> Leaflet marker, across all audited streets.
-// Composite-keyed because obs.id is only unique within a street. Lets a
-// click on a side-panel card find and open the matching map marker's popup.
+// obs.id -> Leaflet marker. data/observations.json is a single flat,
+// globally-numbered store (ADR 011), so obs.id alone is enough to key
+// this - no more composite "streetId::obsId" key. Lets a click on a
+// side-panel card find and open the matching map marker's popup.
 const markersByKey = {};
+
+// The full contents of data/observations.json, loaded once by init() below
+// before anything that renders an observation can run. The street detail
+// panel filters this by nearby_streets[].primary rather than reading an
+// embedded per-street list - see observationsForStreet().
+let allObservations = [];
 
 const OBSERVATION_MARKER_COLOR = {
   issue: "#D85A30",
@@ -230,14 +239,16 @@ function renderObservationPhoto(photoPath, altText) {
   `;
 }
 
-function renderCaseLink(obs, streetId) {
+function renderCaseLink(obs) {
   if (obs.tracking_issue) {
     return `<a class="observation-popup__case" href="${REPO_ISSUES_URL}/${obs.tracking_issue}" target="_blank" rel="noopener noreferrer">Case #${obs.tracking_issue}</a>`;
   }
 
+  // No street-ref pre-fill any more: a Case links to an observation only
+  // (Tracks: observation #{n}), not a street - see ADR 011 and
+  // docs/case-tracking.md.
   const params = new URLSearchParams({
     template: "case.yml",
-    "street-ref": streetId,
     "observation-ref": String(obs.id),
   });
 
@@ -247,7 +258,7 @@ function renderCaseLink(obs, streetId) {
   `;
 }
 
-function renderResolutionSection(obs, streetId) {
+function renderResolutionSection(obs) {
   const resolution = obs.resolution;
   if (!resolution) {
     return "";
@@ -271,7 +282,7 @@ function renderResolutionSection(obs, streetId) {
 
   const photoBlock = resolution.after_photo
     ? renderObservationPhoto(
-        `assets/images/streets/${streetId}/${resolution.after_photo}`,
+        `assets/images/observations/${resolution.after_photo}`,
         `After: ${obs.title}`
       )
     : "";
@@ -296,7 +307,7 @@ function renderResolutionSection(obs, streetId) {
   `;
 }
 
-function renderObservationPopup(obs, streetId) {
+function renderObservationPopup(obs) {
   const icon = CATEGORY_ICON[obs.category] || FALLBACK_ICON;
   return `
     <div class="observation-popup">
@@ -308,56 +319,37 @@ function renderObservationPopup(obs, streetId) {
       ${obs.photo ? renderObservationPhoto(obs.photo, obs.title) : renderPhotoPlaceholder()}
       <p class="observation-popup__date">${renderObservationDate(obs)}</p>
       ${obs.description ? `<p class="observation-popup__description">${obs.description}</p>` : ""}
-      <div class="observation-popup__case-row">${renderCaseLink(obs, streetId)}</div>
-      ${renderResolutionSection(obs, streetId)}
+      <div class="observation-popup__case-row">${renderCaseLink(obs)}</div>
+      ${renderResolutionSection(obs)}
     </div>
   `;
 }
 
-function addObservationMarkers(streetId, observations) {
+// Renders a pin for every observation that has coordinates, independent of
+// any street's audited status - the whole point of the flat store (ADR
+// 011) is that a photo can become a pin before a street exists to own it.
+function addObservationMarkers(observations) {
   observations
     .filter((obs) => obs.coordinates)
     .forEach((obs) => {
       const marker = L.marker([obs.coordinates.lat, obs.coordinates.lng], {
         icon: buildPinIcon(obs),
       });
-      marker.bindPopup(renderObservationPopup(obs, streetId), {
+      marker.bindPopup(renderObservationPopup(obs), {
         maxWidth: 320,
         className: "observation-popup-wrapper",
       });
       observationMarkersLayer.addLayer(marker);
-      markersByKey[`${streetId}::${obs.id}`] = marker;
+      markersByKey[`${obs.id}`] = marker;
     });
 }
 
-async function loadAllObservationMarkers(geojson) {
-  const auditedFeatures = geojson.features.filter(
-    (feature) => feature.properties.audited === true
-  );
-
-  await Promise.all(
-    auditedFeatures.map(async (feature) => {
-      const streetId = feature.properties.id;
-      try {
-        const response = await fetch(`data/streets/${streetId}.json`);
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const record = await response.json();
-        addObservationMarkers(streetId, record.observations || []);
-      } catch (err) {
-        console.error(`Could not load observations for ${streetId}. (${err.message})`);
-      }
-    })
-  );
-}
-
-function wireObservationCardClicks(observations, streetId) {
+function wireObservationCardClicks(observations) {
   panel.querySelectorAll(".observation-card--locatable").forEach((card) => {
     card.addEventListener("click", () => {
       const obsId = Number(card.dataset.obsId);
       const obs = observations.find((o) => o.id === obsId);
-      const marker = markersByKey[`${streetId}::${obsId}`];
+      const marker = markersByKey[`${obsId}`];
       if (!obs || !obs.coordinates || !marker) {
         return;
       }
@@ -377,6 +369,19 @@ function renderOfficialContextRow(entry) {
       <td class="source-label">${entry.source}, ${entry.source_date} (${entry.level})</td>
     </tr>
   `;
+}
+
+// Observations no longer live embedded in a street's own record (ADR 011)
+// - a street "has" an observation only in the sense that the observation's
+// own nearby_streets flags this street as primary=true. Secondary matches
+// are deliberately excluded here: they're a "might also be involved"
+// signal, not this street's own list.
+function observationsForStreet(streetId) {
+  return allObservations.filter((obs) =>
+    (obs.nearby_streets || []).some(
+      (entry) => entry.primary && entry.street_id === streetId
+    )
+  );
 }
 
 function renderStreetDetail(record) {
@@ -418,7 +423,7 @@ function renderStreetDetail(record) {
     `
     : "";
 
-  const observations = record.observations || [];
+  const observations = observationsForStreet(record.meta.id);
   const observationsHtml = observations.length
     ? observations.map(renderObservationCard).join("")
     : '<p class="street-panel__placeholder">No observations logged yet.</p>';
@@ -446,7 +451,7 @@ function renderStreetDetail(record) {
     </section>
   `;
 
-  wireObservationCardClicks(observations, record.meta.id);
+  wireObservationCardClicks(observations);
 }
 
 function renderUnauditedStreetDetail(properties, sourcePulled) {
@@ -518,7 +523,7 @@ async function loadStreetDetail(streetId) {
 
 async function init() {
   try {
-    const [geojson, taxonomy] = await Promise.all([
+    const [geojson, taxonomy, observationsData] = await Promise.all([
       fetch("data/tutrakan-streets.geojson").then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP ${response.status} loading tutrakan-streets.geojson`);
@@ -531,10 +536,17 @@ async function init() {
         }
         return response.json();
       }),
+      fetch("data/observations.json").then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} loading observations.json`);
+        }
+        return response.json();
+      }),
     ]);
 
     CATEGORY_ICON = taxonomy.category_icon;
     FALLBACK_ICON = taxonomy.fallback_icon;
+    allObservations = observationsData.observations || [];
 
     function selectStreet(layer, props) {
       selectStreetLayer(layer, props.status);
@@ -575,7 +587,7 @@ async function init() {
       },
     }).addTo(map);
 
-    loadAllObservationMarkers(geojson);
+    addObservationMarkers(allObservations);
   } catch (err) {
     showError(`Could not load the map data. (${err.message})`);
   }
