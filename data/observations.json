@@ -32,6 +32,19 @@
         }
       ],
       "photo": "assets/images/observations/obs-1__litter.jpg"
+    },
+    {
+      "id": 2,
+      "type": "issue",
+      "category": "cleanliness",
+      "title": "Overflowing containers at the junction",
+      "description": "Both containers full, bags and cardboard left on top. Stray dogs resting at the same point.",
+      "coordinates": null,
+      "status": "open",
+      "reported_date": "2026-07-26",
+      "resolved_date": null,
+      "tracking_issue": null,
+      "photo": null
     }
   ]
 }
