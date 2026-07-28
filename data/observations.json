@@ -40,8 +40,8 @@
       "title": "Overflowing containers at the junction",
       "description": "Both containers full, bags and cardboard left on top. Stray dogs resting at the same point.",
       "coordinates": {
-        "lat": 44.042667,
-        "lng": 26.614933
+        "lat": 44.042858,
+        "lng": 26.614803
       },
       "status": "open",
       "reported_date": "2026-07-26",
@@ -51,12 +51,12 @@
       "nearby_streets": [
         {
           "street_id": "geo-milev",
-          "distance_m": 8.8,
+          "distance_m": 6.8,
           "primary": true
         },
         {
           "street_id": "stratsin",
-          "distance_m": 29.4,
+          "distance_m": 13.6,
           "primary": false
         }
       ]
@@ -68,8 +68,8 @@
       "title": "Container standing on unmade ground beside the footway",
       "description": "General waste container off its hardstanding, on gravel next to the pavement",
       "coordinates": {
-        "lat": 44.042858,
-        "lng": 26.614803
+        "lat": 44.042667,
+        "lng": 26.614933
       },
       "status": "open",
       "reported_date": "2026-07-26",
@@ -79,12 +79,12 @@
       "nearby_streets": [
         {
           "street_id": "geo-milev",
-          "distance_m": 6.8,
+          "distance_m": 8.8,
           "primary": true
         },
         {
           "street_id": "stratsin",
-          "distance_m": 13.6,
+          "distance_m": 29.4,
           "primary": false
         }
       ]
