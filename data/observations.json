@@ -64,6 +64,19 @@
       "resolved_date": null,
       "tracking_issue": null,
       "photo": "assets/images/observations/obs-3__container-standing-on-unmade-ground-beside-the-footway.jpg"
+    },
+    {
+      "id": 4,
+      "type": "issue",
+      "category": "cleanliness",
+      "title": "Litter at the disused kiosk and shed",
+      "description": "Fly-tipped debris and scattered litter at the base of two derelict structures",
+      "coordinates": null,
+      "status": "open",
+      "reported_date": "2026-07-28",
+      "resolved_date": null,
+      "tracking_issue": null,
+      "photo": null
     }
   ]
 }
