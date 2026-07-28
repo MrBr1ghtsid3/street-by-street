@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register &middot; street-by-street</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css"
+  />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header__top">
+      <div>
+        <h1>street-by-street &middot; Register</h1>
+        <p class="app-header__subtitle">Every recorded observation, as a printable work list</p>
+      </div>
+      <div class="app-header__actions">
+        <a class="about-button" href="status.html">Status</a>
+        <a class="about-button" href="index.html">&larr; Map</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="register-main">
+    <p class="trivia-block register-ideation-note">
+      This register is generated from this repository's own data files, not
+      from a database or a form submission. It is incomplete by
+      construction: it lists what has been walked and recorded so far, on
+      the one street audited to date, not every street in Tutrakan.
+    </p>
+
+    <section class="register-controls" aria-label="Filters">
+      <div class="register-filter">
+        <label class="register-filter__label" for="filter-category">Category</label>
+        <select class="register-filter__select" id="filter-category">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <div class="register-filter">
+        <label class="register-filter__label" for="filter-status">Status</label>
+        <select class="register-filter__select" id="filter-status">
+          <option value="">All statuses</option>
+        </select>
+      </div>
+      <div class="register-filter">
+        <label class="register-filter__label" for="filter-street">Street</label>
+        <select class="register-filter__select" id="filter-street">
+          <option value="">All streets</option>
+        </select>
+      </div>
+      <div class="register-controls__spacer"></div>
+      <p class="register-count" id="register-count" aria-live="polite"></p>
+      <button class="register-export" id="export-csv" type="button">
+        <i class="ti ti-download" aria-hidden="true"></i> Export CSV
+      </button>
+    </section>
+
+    <div class="register-table-wrap">
+      <table class="register-table" id="register-table">
+        <thead>
+          <tr>
+            <th class="register-table__header" data-sort-key="id" scope="col">#</th>
+            <th class="register-table__header" data-sort-key="street" scope="col">Street</th>
+            <th class="register-table__header" data-sort-key="condition" scope="col">Condition</th>
+            <th class="register-table__header" data-sort-key="category" scope="col">Category</th>
+            <th class="register-table__header" data-sort-key="type" scope="col">Type</th>
+            <th class="register-table__header" data-sort-key="status" scope="col">Status</th>
+            <th class="register-table__header" data-sort-key="reported" scope="col">Reported</th>
+            <th class="register-table__header" data-sort-key="photo" scope="col">Photo</th>
+            <th class="register-table__header" data-sort-key="case" scope="col">Case</th>
+          </tr>
+        </thead>
+        <tbody id="register-table-body">
+          <tr>
+            <td class="register-table__loading" colspan="9">Loading register&hellip;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="app-footer">
+    <p class="app-footer__text">street-by-street &middot; an open source (personal) project / 2026</p>
+    <a class="app-footer__link" href="index.html">&larr; back to map</a>
+  </footer>
+
+  <script src="assets/js/register.js"></script>
+</body>
+</html>
