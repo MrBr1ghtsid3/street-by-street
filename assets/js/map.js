@@ -95,6 +95,202 @@ const STATUS_LABEL = {
   normal: "Documented",
 };
 
+// A live-filtering street search, overlaid on the map as its own Leaflet
+// control (top-right - the default zoom control takes top-left, the
+// legend takes bottom-left). Matches against both the English and
+// Cyrillic name, so a visitor typing either script finds the street.
+// `onSelect(streetId)` mirrors clicking the street directly, plus flies
+// the map to it - a search result usually isn't already in view, unlike
+// a street someone just clicked on the visible map.
+function createStreetSearchControl(features, onSelect) {
+  const control = L.control({ position: "topright" });
+
+  control.onAdd = function () {
+    const container = L.DomUtil.create("div", "street-search");
+    // Leaflet drags/zooms the map on mouse and scroll events that reach
+    // it - typing, clicking a result, or scrolling a long result list
+    // would otherwise pan/zoom the map underneath this control.
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
+
+    container.innerHTML = `
+      <div class="street-search__input-wrap">
+        <i class="ti ti-search street-search__icon" aria-hidden="true"></i>
+        <input
+          type="text"
+          class="street-search__input"
+          placeholder="Find a street&hellip;"
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          aria-label="Search streets"
+        />
+        <button type="button" class="street-search__clear" aria-label="Clear search" hidden>&times;</button>
+      </div>
+      <ul class="street-search__results" role="listbox" hidden></ul>
+    `;
+
+    const input = container.querySelector(".street-search__input");
+    const clearButton = container.querySelector(".street-search__clear");
+    const resultsList = container.querySelector(".street-search__results");
+
+    let matches = [];
+    let highlightedIndex = -1;
+
+    function closeResults() {
+      resultsList.hidden = true;
+      resultsList.innerHTML = "";
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      matches = [];
+      highlightedIndex = -1;
+    }
+
+    function selectMatch(feature) {
+      const props = feature.properties;
+      input.value = props.name;
+      clearButton.hidden = false;
+      closeResults();
+      onSelect(props.id);
+    }
+
+    function renderResults() {
+      if (!matches.length) {
+        resultsList.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        return;
+      }
+      resultsList.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      resultsList.innerHTML = matches
+        .map((feature, index) => {
+          const props = feature.properties;
+          // Only worth a note when it's not the steady-state "normal" -
+          // same distinction STATUS_LABEL already exists for.
+          const statusNote =
+            props.status !== "normal"
+              ? ` <span class="street-search__result-status">${STATUS_LABEL[props.status] || ""}</span>`
+              : "";
+          return `
+            <li
+              id="street-search-option-${index}"
+              class="street-search__result${index === highlightedIndex ? " street-search__result--active" : ""}"
+              role="option"
+              aria-selected="${index === highlightedIndex}"
+              data-index="${index}"
+            >
+              ${props.name_bg} / ${props.name}${statusNote}
+            </li>
+          `;
+        })
+        .join("");
+      if (highlightedIndex >= 0) {
+        input.setAttribute("aria-activedescendant", `street-search-option-${highlightedIndex}`);
+      } else {
+        input.removeAttribute("aria-activedescendant");
+      }
+    }
+
+    function runSearch(query) {
+      const q = query.trim().toLowerCase();
+      if (!q) {
+        closeResults();
+        return;
+      }
+      matches = features
+        .filter((feature) => {
+          const props = feature.properties;
+          return (
+            props.name.toLowerCase().includes(q) ||
+            (props.name_bg && props.name_bg.toLowerCase().includes(q))
+          );
+        })
+        .sort((a, b) => {
+          const an = a.properties.name.toLowerCase();
+          const bn = b.properties.name.toLowerCase();
+          const aStarts = an.startsWith(q) ? 0 : 1;
+          const bStarts = bn.startsWith(q) ? 0 : 1;
+          return aStarts - bStarts || an.localeCompare(bn);
+        })
+        .slice(0, 8);
+      highlightedIndex = matches.length ? 0 : -1;
+      renderResults();
+    }
+
+    input.addEventListener("input", () => {
+      clearButton.hidden = !input.value;
+      runSearch(input.value);
+    });
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        if (matches.length) {
+          highlightedIndex = (highlightedIndex + 1) % matches.length;
+          renderResults();
+        }
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        if (matches.length) {
+          highlightedIndex = (highlightedIndex - 1 + matches.length) % matches.length;
+          renderResults();
+        }
+      } else if (event.key === "Enter") {
+        event.preventDefault();
+        if (highlightedIndex >= 0 && matches[highlightedIndex]) {
+          selectMatch(matches[highlightedIndex]);
+        }
+      } else if (event.key === "Escape") {
+        if (matches.length) {
+          closeResults();
+        } else {
+          input.value = "";
+          clearButton.hidden = true;
+        }
+      }
+    });
+
+    resultsList.addEventListener("click", (event) => {
+      const item = event.target.closest(".street-search__result");
+      if (!item) return;
+      const feature = matches[Number(item.dataset.index)];
+      if (feature) selectMatch(feature);
+    });
+
+    resultsList.addEventListener("mousemove", (event) => {
+      const item = event.target.closest(".street-search__result");
+      if (!item) return;
+      const index = Number(item.dataset.index);
+      if (index !== highlightedIndex) {
+        highlightedIndex = index;
+        renderResults();
+      }
+    });
+
+    clearButton.addEventListener("click", () => {
+      input.value = "";
+      clearButton.hidden = true;
+      closeResults();
+      input.focus();
+    });
+
+    // Closes the dropdown on a genuine outside click. A click inside the
+    // control never reaches here - disableClickPropagation above stops it
+    // from bubbling this far - so this only ever fires for the "clicked
+    // away" case, not as a race against the result-click handler above.
+    document.addEventListener("click", (event) => {
+      if (!container.contains(event.target)) {
+        closeResults();
+      }
+    });
+
+    return container;
+  };
+
+  return control;
+}
+
 function formatLength(metres) {
   if (metres == null) return "—";
   if (metres >= 1000) {
@@ -548,6 +744,12 @@ async function init() {
     FALLBACK_ICON = taxonomy.fallback_icon;
     allObservations = observationsData.observations || [];
 
+    // id -> { layer, props }, for the search control below to jump to a
+    // street that isn't necessarily visible or already clicked - the plain
+    // click/keyboard path above never needed this, it always already has
+    // the layer in hand.
+    const streetLayersById = {};
+
     function selectStreet(layer, props) {
       selectStreetLayer(layer, props.status);
       if (props.audited && props.status !== "not_started") {
@@ -561,6 +763,7 @@ async function init() {
       style: (feature) => styleForStreet(feature.properties),
       onEachFeature: (feature, layer) => {
         const props = feature.properties;
+        streetLayersById[props.id] = { layer, props };
         layer.bindTooltip(props.name);
         layer.on("click", () => selectStreet(layer, props));
 
@@ -586,6 +789,24 @@ async function init() {
         });
       },
     }).addTo(map);
+
+    // Search-driven selection: same select-and-load-detail behaviour as a
+    // direct click, plus flying the map to the street - a search result
+    // usually isn't already in view.
+    function focusStreet(streetId) {
+      const entry = streetLayersById[streetId];
+      if (!entry) {
+        return;
+      }
+      selectStreet(entry.layer, entry.props);
+      map.flyToBounds(entry.layer.getBounds(), {
+        maxZoom: 17,
+        duration: 0.8,
+        padding: [40, 40],
+      });
+    }
+
+    createStreetSearchControl(geojson.features, focusStreet).addTo(map);
 
     addObservationMarkers(allObservations);
   } catch (err) {
