@@ -53,6 +53,24 @@ the sidecar is the base, not all-or-nothing):
         Full flags, no sidecar. `status` defaults to "open" for issues and
         "active" for assets if omitted. --street is optional.
 
+reported_date is resolved separately from the sidecar/flags merge above,
+by its own precedence, highest first:
+
+    1. --reported-date YYYY-MM-DD, if given. Rejected (clear error, not a
+       traceback) if it isn't a real date or is in the future.
+    2. The photo's EXIF capture date - DateTimeOriginal (tag 0x9003, in
+       the Exif sub-IFD), falling back to DateTime (tag 0x0132) - date
+       portion only, no timezone conversion (EXIF datetimes don't carry
+       one). Requires Pillow; imported lazily, only here, so the rest of
+       this script keeps running without it installed.
+    3. Today.
+
+Whichever is used is printed - "reported_date: 2026-07-26 (from photo
+EXIF)" or similar - in both normal and --dry-run output, specifically so
+a silent fall-through to today (the original defect: an observation
+stamped with the day it was filed, not the day it was seen) is visible
+immediately rather than discovered later in the register.
+
 Both forms build the same observation dict and go through the same
 validation and PR-creation path (create_observation_pr), which is also
 what tools/serve.py imports and calls for the button UI — this module is
@@ -76,13 +94,21 @@ import shlex
 import shutil
 import subprocess
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OBSERVATIONS_PATH = REPO_ROOT / "data" / "observations.json"
 IMAGES_DIR = REPO_ROOT / "assets" / "images" / "observations"
 TAXONOMY_PATH = REPO_ROOT / "data" / "taxonomy.json"
+
+# EXIF tag numbers, not PIL.ExifTags names - mirrors
+# scripts/photo_pipeline.py's own style (see its GPS_IFD_TAG etc.).
+# DateTimeOriginal lives in the Exif sub-IFD, reached via the IFD0 pointer
+# tag 0x8769; DateTime lives directly in IFD0 (img.getexif()'s own dict).
+EXIF_IFD_TAG = 0x8769
+DATETIME_ORIGINAL_TAG = 0x9003
+DATETIME_TAG = 0x0132
 
 # data/taxonomy.json is the single source of truth for the category list,
 # the category->icon mapping, the fallback icon, and the issue/asset status
@@ -168,6 +194,71 @@ def _next_id(store):
     return max(existing_ids, default=0) + 1
 
 
+def _validate_reported_date(value):
+    try:
+        parsed = datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError:
+        raise ValidationError(
+            f"--reported-date must be a real date in YYYY-MM-DD format, got {value!r}."
+        )
+    if parsed > date.today():
+        raise ValidationError(
+            f"--reported-date cannot be in the future (got {value}, today is {date.today().isoformat()})."
+        )
+
+
+def _photo_exif_capture_date(photo_path):
+    """Return (date_str, None) if photo_path's EXIF carries a capture
+    date, or (None, reason) explaining why not - "Pillow not installed"
+    or "no EXIF capture date found". Pillow is imported lazily, here only
+    - this script has to keep running without it (see module docstring);
+    only this one fallback tier of date resolution needs it.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return None, "Pillow not installed"
+
+    try:
+        with Image.open(photo_path) as img:
+            exif = img.getexif()
+            exif_ifd = exif.get_ifd(EXIF_IFD_TAG) if exif else {}
+            raw = (exif_ifd or {}).get(DATETIME_ORIGINAL_TAG) or (exif or {}).get(DATETIME_TAG)
+    except Exception:
+        return None, "no EXIF capture date found"
+
+    if not raw:
+        return None, "no EXIF capture date found"
+
+    # EXIF datetime format is "YYYY:MM:DD HH:MM:SS", no timezone - take
+    # the date portion as-is, no conversion.
+    date_part = str(raw).split(" ", 1)[0]
+    try:
+        datetime.strptime(date_part, "%Y:%m:%d")
+    except ValueError:
+        return None, "no EXIF capture date found"
+
+    return date_part.replace(":", "-"), None
+
+
+def _resolve_reported_date(explicit_date, photo_path):
+    """(date_str, source_label), by the precedence in the module
+    docstring: an explicit --reported-date, then the photo's EXIF capture
+    date, then today. The two ways EXIF can come up empty (no Pillow, no
+    capture date found) surface in source_label rather than raising -
+    neither is the caller's mistake to fix, unlike a malformed or future
+    explicit_date, which is."""
+    if explicit_date:
+        _validate_reported_date(explicit_date)
+        return explicit_date, "from --reported-date"
+
+    exif_date, unavailable_reason = _photo_exif_capture_date(photo_path)
+    if exif_date:
+        return exif_date, "from photo EXIF"
+
+    return date.today().isoformat(), f"{unavailable_reason}; using today"
+
+
 def _build_pr_body(street_id, observation, photo_name):
     street_line = f"- **Street (context only, not stored):** {street_id}\n" if street_id else ""
     return (
@@ -237,7 +328,7 @@ def _open_pr(branch, street_id, observation, photo_name, commit_message):
     return pr_url, None, compare_url
 
 
-def create_observation_pr(observation, photo_path, street_id=None, dry_run=False, force=False):
+def create_observation_pr(observation, photo_path, street_id=None, reported_date=None, dry_run=False, force=False):
     """Validate, then (unless dry_run) derive the id, place the photo,
     append the observation, branch, commit, push, and open a PR. Never
     merges.
@@ -251,9 +342,18 @@ def create_observation_pr(observation, photo_path, street_id=None, dry_run=False
     is used only for the branch name, commit message, and PR body — it is
     never written into the observation.
 
+    `reported_date`, if given, is an explicit "YYYY-MM-DD" override -
+    validated (real date, not in the future) and used as-is. If omitted,
+    it's resolved from the photo's EXIF capture date, falling back to
+    today - see _resolve_reported_date and the module docstring. Any
+    `reported_date` key in `observation` itself is ignored; this
+    parameter is the only input to that field now, so there's exactly one
+    place its precedence is decided.
+
     Returns a dict: {dry_run, branch, pr_url, manual_pr_command,
-    compare_url, actions, observation, photo_destination}. pr_url is None
-    when gh isn't available/authenticated or `gh pr create` itself fails —
+    compare_url, actions, observation, photo_destination,
+    reported_date_source}. pr_url is None when gh isn't
+    available/authenticated or `gh pr create` itself fails —
     manual_pr_command and compare_url are populated in that case instead
     (the branch is still pushed; this is a soft fallback, not a raised
     error). Raises ValidationError for anything the caller can fix before
@@ -303,6 +403,11 @@ def create_observation_pr(observation, photo_path, street_id=None, dry_run=False
             f"'{status}' is not a valid status for an {obs_type} — expected one of {', '.join(valid_statuses)}."
         )
 
+    # Resolved once, here, so the dry-run preview below and the real write
+    # further down report and use the exact same date - not two separate
+    # date.today() calls that could disagree if run right at midnight.
+    resolved_reported_date, reported_date_source = _resolve_reported_date(reported_date, photo_path)
+
     store = json.loads(OBSERVATIONS_PATH.read_text(encoding="utf-8"))
     preview_id = _next_id(store)
     preview_filename = f"obs-{preview_id}__{slug}.jpg"
@@ -323,7 +428,7 @@ def create_observation_pr(observation, photo_path, street_id=None, dry_run=False
             "description": description,
             "coordinates": None,
             "status": status,
-            "reported_date": observation.get("reported_date") or date.today().isoformat(),
+            "reported_date": resolved_reported_date,
             "resolved_date": None,
             "tracking_issue": None,
             "photo": None,
@@ -337,6 +442,7 @@ def create_observation_pr(observation, photo_path, street_id=None, dry_run=False
             "actions": actions,
             "observation": new_observation,
             "photo_destination": f"assets/images/observations/{preview_filename}",
+            "reported_date_source": reported_date_source,
         }
 
     _run_git(["fetch", "origin", "main"])
@@ -373,7 +479,7 @@ def create_observation_pr(observation, photo_path, street_id=None, dry_run=False
             "description": description,
             "coordinates": None,
             "status": status,
-            "reported_date": observation.get("reported_date") or date.today().isoformat(),
+            "reported_date": resolved_reported_date,
             "resolved_date": None,
             "tracking_issue": None,
             "photo": None,
@@ -413,14 +519,18 @@ def create_observation_pr(observation, photo_path, street_id=None, dry_run=False
         "actions": actions,
         "observation": new_observation,
         "photo_destination": str(dest_rel),
+        "reported_date_source": reported_date_source,
     }
 
 
 def _load_observation_and_photo(args):
     """CLI-only: apply sidecar-then-flags precedence and return
-    (street_id, observation_dict, photo_path). All semantic validation
-    (valid category, title, cover-slug, ...) happens once, inside
-    create_observation_pr — this just assembles the inputs."""
+    (street_id, observation_dict, photo_path, reported_date). All semantic
+    validation (valid category, title, cover-slug, reported_date, ...)
+    happens once, inside create_observation_pr — this just assembles the
+    inputs. reported_date is --reported-date only - a sidecar's own
+    "reported_date" key, if any, is not read here or anywhere else; see
+    create_observation_pr's docstring for why."""
     street_id = None
     observation = {}
     photo_path = None
@@ -456,7 +566,7 @@ def _load_observation_and_photo(args):
     if missing:
         raise SystemExit(f"Missing required observation field(s): {', '.join(missing)} (via --sidecar or flags).")
 
-    return street_id, observation, photo_path
+    return street_id, observation, photo_path, args.reported_date
 
 
 def main():
@@ -469,17 +579,27 @@ def main():
     parser.add_argument("--title", help="Observation title. Overrides the sidecar.")
     parser.add_argument("--description", help="Observation description. Overrides the sidecar.")
     parser.add_argument("--status", help="Observation status. Overrides the sidecar; defaults issue->open, asset->active.")
+    parser.add_argument(
+        "--reported-date",
+        help="Date the observation was actually seen, YYYY-MM-DD. Defaults to the "
+        "photo's EXIF capture date, then today; rejected if malformed or in the future.",
+    )
     parser.add_argument("--dry-run", action="store_true", help="Print every planned action; touch nothing.")
     parser.add_argument("--force", action="store_true", help="Overwrite an existing photo of the same name if its content differs.")
     args = parser.parse_args()
 
-    street_id, observation, photo_path = _load_observation_and_photo(args)
+    street_id, observation, photo_path, reported_date = _load_observation_and_photo(args)
 
     try:
-        result = create_observation_pr(observation, photo_path, street_id=street_id, dry_run=args.dry_run, force=args.force)
+        result = create_observation_pr(
+            observation, photo_path, street_id=street_id, reported_date=reported_date,
+            dry_run=args.dry_run, force=args.force,
+        )
     except (ValidationError, GitOperationError) as e:
         print(f"ERROR: {e}")
         return 1
+
+    print(f"reported_date: {result['observation']['reported_date']} ({result['reported_date_source']})\n")
 
     if result["dry_run"]:
         print("DRY RUN — no files, commits, or pushes were made.\n")

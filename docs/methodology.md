@@ -201,6 +201,21 @@ body context — never written onto the observation. The observation id and
 the photo filename (`obs-{id}__{slugified-title}.jpg`) are always derived
 by the script, never supplied.
 
+`reported_date` is resolved, not just stamped with today: an explicit
+`--reported-date YYYY-MM-DD` wins if given (rejected up front if it isn't
+a real date or is in the future); otherwise the script reads the photo's
+own EXIF capture date; only if neither is available does it fall back to
+today. Filing a batch of photos days after the walk that produced them
+used to always record the filing date, not the day they were actually
+seen — the script now prints which of the three it used
+(`reported_date: 2026-07-26 (from photo EXIF)`, `... (from
+--reported-date)`, or `... (no EXIF capture date found; using today)`),
+in both normal and `--dry-run` output, so a fallback to today is visible
+at the moment it happens rather than found later in the register. EXIF
+reading needs Pillow but doesn't require it: if Pillow isn't installed,
+the script says so (`... (Pillow not installed; using today)`) and keeps
+running rather than failing.
+
 Two ways to run it, both stopping at "PR opened":
 
 - **CLI:**
@@ -210,9 +225,9 @@ Two ways to run it, both stopping at "PR opened":
   ```
 
   (or the equivalent `--street --type --category --title --description
-  --status` flags instead of a sidecar file — see the script's `--help`).
-  Add `--dry-run` to print the planned actions and the JSON that would be
-  inserted without touching git or the filesystem.
+  --status --reported-date` flags instead of a sidecar file — see the
+  script's `--help`). Add `--dry-run` to print the planned actions and the
+  JSON that would be inserted without touching git or the filesystem.
 
 - **Button UI:** `tools/serve.py` is a local Flask wrapper around the same
   script — it imports and calls `create_observation_pr` directly rather
