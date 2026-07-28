@@ -2,11 +2,12 @@
 """Prepare a new observation and open its photo PR — the manual data-entry
 workflow, automated up to (never past) "PR opened".
 
-For one observation on one already-audited street, this: places the vetted
-photo under assets/images/streets/{street_id}/, appends the observation to
-data/streets/{street_id}.json, creates a branch, commits exactly those two
-paths, pushes, and opens a PR via `gh`. It STOPS there — it never merges;
-merge is the maintainer's manual review gate, same as any other PR.
+For one observation, this: places the vetted photo under
+assets/images/observations/, appends the observation to
+data/observations.json (a single flat, globally-numbered store - see
+ADR 011), creates a branch, commits exactly those two paths, pushes, and
+opens a PR via `gh`. It STOPS there — it never merges; merge is the
+maintainer's manual review gate, same as any other PR.
 
 This mirrors the photo PR half of the two-PR ingestion flow described in
 docs/methodology.md#photo-ingestion: merging the PR this script opens is
@@ -14,24 +15,43 @@ what triggers scripts/photo_pipeline.py (via .github/workflows/
 photo-pipeline.yml), which writes coordinates/photo from EXIF and opens the
 second, data PR. That second PR still needs its own manual merge.
 
-Never creates a street file (data/streets/{street_id}.json must already
-exist), never sets coordinates (left null for the pipeline/coordinate
-picker), never accepts a cover photo as an observation photo (covers are
-Case-only — see docs/methodology.md#photo-ingestion), and never clobbers
-an existing observation id.
+No street record is required, or ever created here. `--street` is
+entirely optional and, when given, is used only for human context in the
+branch name, commit message, and PR body — it is never written into the
+observation itself. street_id belongs nowhere on an observation; once the
+observation has coordinates, scripts/compute_street_proximity.py computes
+`nearby_streets` (with the closest street flagged `primary: true`), and
+that's the only place a street relationship is recorded. A photo can
+become a pin before any street owns it, and street, category, title, and
+Case links can all be added afterwards, in any order.
+
+The observation id is always derived, never supplied: it's
+max(existing ids in data/observations.json) + 1, computed fresh from
+origin/main immediately before writing (same "re-read after checkout"
+pattern the id derivation always used, now applied to a counter instead
+of a collision check — there is no counter to drift, per ADR 011). The
+photo filename is generated from the title
+(obs-{id}__{slugified-title}.jpg), not supplied or validated against a
+pre-named file; never accepts a title that would slugify to a filename
+containing "cover" (Case-cover photos are a separate, filename-only
+concept scripts/photo_pipeline.py owns - see
+docs/methodology.md#photo-ingestion), and never clobbers an existing
+observation id, which is structurally impossible now: the id is only
+ever read, incremented, and written once, inside this same operation.
 
 Inputs, in order of precedence (flags override individual sidecar fields;
 the sidecar is the base, not all-or-nothing):
 
-    --sidecar path/to/X.sbs.json --photo path/to/X.jpg
-        Sidecar shape: {"street_id": ..., "photo_filename": ...,
-        "observation": {"id", "type", "category", "title", "description",
-        "status"?}}. --photo is the actual image file; if omitted, the
-        photo is resolved as sidecar_dir / photo_filename.
+    --sidecar path/to/X.json --photo path/to/X.jpg
+        Sidecar shape: {"street_id"?: ..., "observation": {"type",
+        "category", "title", "description", "status"?}}. --photo is the
+        actual image file; if omitted, the sidecar must set
+        "photo_filename" and the photo is resolved as sidecar_dir /
+        photo_filename.
 
-    --street --photo --id --type --category --title --description --status
+    --street --photo --type --category --title --description --status
         Full flags, no sidecar. `status` defaults to "open" for issues and
-        "active" for assets if omitted.
+        "active" for assets if omitted. --street is optional.
 
 Both forms build the same observation dict and go through the same
 validation and PR-creation path (create_observation_pr), which is also
@@ -40,11 +60,13 @@ the single source of truth for the operation; nothing here is
 CLI-specific except argument parsing.
 
 Usage:
-    python scripts/new_observation.py --sidecar obs.sbs.json --photo obs.jpg
-    python scripts/new_observation.py --dry-run --street ana-ventura --id 7 \\
-        --photo ana-ventura__obs-7__new-bin.jpg --type asset \\
-        --category cleanliness --title "New litter bin" \\
+    python3 scripts/new_observation.py --sidecar obs.json --photo obs.jpg
+    python3 scripts/new_observation.py --dry-run --photo new-bin.jpg \\
+        --type asset --category cleanliness --title "New litter bin" \\
         --description "Outside no. 30"
+    python3 scripts/new_observation.py --dry-run --street ana-ventura \\
+        --photo new-bin.jpg --type asset --category cleanliness \\
+        --title "New litter bin" --description "Outside no. 30"
 """
 
 import argparse
@@ -58,8 +80,8 @@ from datetime import date
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-STREETS_DIR = REPO_ROOT / "data" / "streets"
-IMAGES_DIR = REPO_ROOT / "assets" / "images" / "streets"
+OBSERVATIONS_PATH = REPO_ROOT / "data" / "observations.json"
+IMAGES_DIR = REPO_ROOT / "assets" / "images" / "observations"
 TAXONOMY_PATH = REPO_ROOT / "data" / "taxonomy.json"
 
 # data/taxonomy.json is the single source of truth for the category list,
@@ -76,14 +98,13 @@ FALLBACK_ICON = _TAXONOMY["fallback_icon"]
 ISSUE_STATUSES = _TAXONOMY["issue_statuses"]
 ASSET_STATUSES = _TAXONOMY["asset_statuses"]
 
-OBS_FIELD_RE = re.compile(r"^obs-(\d+)$")
 COVER_MARKER = "cover"
 
 
 class ValidationError(Exception):
-    """A precondition the caller can fix (bad input, id collision, cover
-    photo, etc). No git/gh side effect has happened yet when this is
-    raised, except in the one place noted in create_observation_pr where a
+    """A precondition the caller can fix (bad input, cover-photo slug,
+    etc). No git/gh side effect has happened yet when this is raised,
+    except in the one place noted in create_observation_pr where a
     post-checkout re-check fails — see the comment there."""
 
 
@@ -92,28 +113,13 @@ class GitOperationError(Exception):
     says so explicitly; see create_observation_pr's rollback handling."""
 
 
-def parse_photo_filename(filename):
-    """Return (street_id, observation_id, is_cover), or None if `filename`
-    doesn't match {street-id}__obs-{id}__{description}.ext.
-
-    Mirrors scripts/photo_pipeline.py's parse_filename: split on "__" with
-    no cap on the description field (so a description containing "__"
-    doesn't break parsing), is_cover true when "cover" appears anywhere in
-    the description segment, case-insensitive.
-    """
-    stem = Path(filename).stem
-    parts = stem.split("__")
-    if len(parts) < 3:
-        return None
-
-    street_id, obs_field = parts[0], parts[1]
-    match = OBS_FIELD_RE.match(obs_field)
-    if not street_id or not match:
-        return None
-
-    description = "__".join(parts[2:])
-    is_cover = COVER_MARKER in description.lower()
-    return street_id, int(match.group(1)), is_cover
+def slugify(title):
+    """Mirrors tools/observation-form.html's client-side slugify(), so a
+    title produces the same filename segment whether the photo PR is
+    prepared by this script or by hand from that form's output."""
+    cleaned = re.sub(r"['\"]", "", title.strip().lower())
+    cleaned = re.sub(r"[^a-z0-9]+", "-", cleaned)
+    return cleaned.strip("-")
 
 
 def _same_content(path_a, path_b):
@@ -157,26 +163,33 @@ def _remote_owner_repo():
     return f"{match.group(1)}/{match.group(2)}" if match else None
 
 
+def _next_id(store):
+    existing_ids = {obs.get("id") for obs in store.get("observations", [])}
+    return max(existing_ids, default=0) + 1
+
+
 def _build_pr_body(street_id, observation, photo_name):
+    street_line = f"- **Street (context only, not stored):** {street_id}\n" if street_id else ""
     return (
         "## Observation\n\n"
-        f"- **Street:** {street_id}\n"
+        f"{street_line}"
         f"- **Type / category:** {observation['type']} / {observation['category']}\n"
         f"- **Title:** {observation['title']}\n"
         f"- **Description:** {observation['description']}\n"
         f"- **Status:** {observation['status']}\n"
-        f"- **Photo:** `assets/images/streets/{street_id}/{photo_name}`\n\n"
+        f"- **Photo:** `assets/images/observations/{photo_name}`\n\n"
         "## Review checklist\n\n"
         "- [ ] Photo is vetted per docs/ethics.md (no identifiable faces/animals/plates)\n"
-        "- [ ] Photo name matches this street id and observation id\n"
-        "- [ ] Category, status, and description accurately describe what's on the street\n"
+        "- [ ] Category, status, and description accurately describe the observation\n"
         "- [ ] Not a duplicate of an existing observation\n\n"
         "## What happens after merge\n\n"
         "Merging this PR triggers `photo-pipeline.yml`, which extracts GPS EXIF into "
         "this observation's `coordinates`, sets its `photo` field, strips EXIF from the "
         "served copy, and opens a second, **separate data PR** with those changes. That "
         "PR needs its own review and merge before this observation shows coordinates or "
-        "a photo on the map — see docs/methodology.md#photo-ingestion.\n\n"
+        "a photo on the map — see docs/methodology.md#photo-ingestion. Once it has "
+        "coordinates, run scripts/compute_street_proximity.py to fill in `nearby_streets` "
+        "— that's the only place a street relationship gets recorded.\n\n"
         "_Opened by `scripts/new_observation.py` — never auto-merged._\n"
     )
 
@@ -224,16 +237,19 @@ def _open_pr(branch, street_id, observation, photo_name, commit_message):
     return pr_url, None, compare_url
 
 
-def create_observation_pr(street_id, observation, photo_path, dry_run=False, force=False):
-    """Validate, then (unless dry_run) place the photo, insert the
-    observation, branch, commit, push, and open a PR. Never merges.
+def create_observation_pr(observation, photo_path, street_id=None, dry_run=False, force=False):
+    """Validate, then (unless dry_run) derive the id, place the photo,
+    append the observation, branch, commit, push, and open a PR. Never
+    merges.
 
-    `observation` needs at minimum: id, type, category, title, description.
+    `observation` needs at minimum: type, category, title, description.
     `status` defaults to "open" (issue) / "active" (asset) if omitted.
-    coordinates/resolved_date/tracking_issue/photo are always forced to
-    null and nearby_streets is always omitted, regardless of what's passed
-    in — those are pipeline/proximity-script/coordinate-picker territory,
-    not this script's.
+    id/coordinates/resolved_date/tracking_issue/photo are always forced
+    (id derived, the rest null) and nearby_streets is always omitted,
+    regardless of what's passed in — those are pipeline/proximity-script/
+    coordinate-picker territory, not this script's. `street_id`, if given,
+    is used only for the branch name, commit message, and PR body — it is
+    never written into the observation.
 
     Returns a dict: {dry_run, branch, pr_url, manual_pr_command,
     compare_url, actions, observation, photo_destination}. pr_url is None
@@ -246,41 +262,11 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
     photo_path = Path(photo_path)
     observation = dict(observation)
 
-    street_file = STREETS_DIR / f"{street_id}.json"
-    if not street_file.exists():
-        raise ValidationError(
-            f"No street record at data/streets/{street_id}.json — this tool never creates a new street."
-        )
-
     if not photo_path.exists():
         raise ValidationError(f"Photo not found: {photo_path}")
 
     if photo_path.suffix.lower() not in (".jpg", ".jpeg"):
         raise ValidationError(f"Photo must be a .jpg/.jpeg file, got '{photo_path.suffix}'.")
-
-    parsed = parse_photo_filename(photo_path.name)
-    if parsed is None:
-        raise ValidationError(
-            f"Photo name '{photo_path.name}' doesn't match the naming convention "
-            "{street-id}__obs-{id}__{description}.jpg."
-        )
-    parsed_street_id, parsed_obs_id, is_cover = parsed
-
-    obs_id = observation.get("id")
-    if not isinstance(obs_id, int) or obs_id < 1:
-        raise ValidationError("Observation id must be a positive integer.")
-
-    if parsed_street_id != street_id or parsed_obs_id != obs_id:
-        raise ValidationError(
-            f"Photo name implies {parsed_street_id}/obs-{parsed_obs_id}, but this is "
-            f"{street_id}/obs-{obs_id} — rename the photo or fix the observation id."
-        )
-    if is_cover:
-        raise ValidationError(
-            "Refusing a cover photo as an observation photo — cover photos are Case-only "
-            "(embedded on the linked Case's issue body) and never populate an observation's "
-            "`photo` field. See docs/methodology.md#photo-ingestion for the Case-cover flow."
-        )
 
     obs_type = observation.get("type")
     if obs_type not in ("issue", "asset"):
@@ -299,6 +285,17 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
     if not description:
         raise ValidationError("description is required.")
 
+    slug = slugify(title)
+    if not slug:
+        raise ValidationError(f"Title {title!r} slugifies to an empty filename segment — pick a title with at least one letter or number.")
+    if COVER_MARKER in slug:
+        raise ValidationError(
+            f"Title {title!r} slugifies to '{slug}', which contains 'cover' — "
+            "scripts/photo_pipeline.py treats any photo filename containing "
+            "'cover' as a Case cover photo, never an observation photo. "
+            "Rephrase the title to avoid that word."
+        )
+
     status = observation.get("status") or ("open" if obs_type == "issue" else "active")
     valid_statuses = ISSUE_STATUSES if obs_type == "issue" else ASSET_STATUSES
     if status not in valid_statuses:
@@ -306,60 +303,44 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
             f"'{status}' is not a valid status for an {obs_type} — expected one of {', '.join(valid_statuses)}."
         )
 
-    record = json.loads(street_file.read_text(encoding="utf-8"))
-    existing_ids = {obs.get("id") for obs in record.get("observations", [])}
-    if obs_id in existing_ids:
-        suggested = max(existing_ids, default=0) + 1
-        raise ValidationError(f"Observation id {obs_id} already exists on {street_id} — next free id is {suggested}.")
-
-    dest_dir = IMAGES_DIR / street_id
-    dest_path = dest_dir / photo_path.name
-    if dest_path.exists() and not force and not _same_content(dest_path, photo_path):
-        raise ValidationError(
-            f"{dest_path.relative_to(REPO_ROOT)} already exists with different content — pass force=True to overwrite."
-        )
-
-    new_observation = {
-        "id": obs_id,
-        "type": obs_type,
-        "category": category,
-        "title": title,
-        "description": description,
-        "coordinates": None,
-        "status": status,
-        "reported_date": observation.get("reported_date") or date.today().isoformat(),
-        "resolved_date": None,
-        "tracking_issue": None,
-        "photo": None,
-    }
-
-    branch = f"obs/{street_id}-{obs_id}"
-    commit_message = f"obs: add {title} on {street_id}"
-    dest_rel = dest_path.relative_to(REPO_ROOT)
-    street_rel = street_file.relative_to(REPO_ROOT)
+    store = json.loads(OBSERVATIONS_PATH.read_text(encoding="utf-8"))
+    preview_id = _next_id(store)
+    preview_filename = f"obs-{preview_id}__{slug}.jpg"
 
     actions = [
-        f"Copy photo to {dest_rel}",
-        f"Insert observation #{obs_id} into {street_rel}",
-        f"Create branch {branch} off origin/main",
-        f'Commit: "{commit_message}"',
-        f"Push {branch} to origin",
-        "Open a PR via gh pr create --base main (print the manual command instead if gh isn't available)",
+        f"Copy photo to assets/images/observations/{preview_filename}",
+        f"Append observation #{preview_id} to data/observations.json",
+        "Create a branch off origin/main",
+        "Commit, push, and open a PR (gh pr create --base main, or print the manual command if gh isn't available)",
     ]
 
     if dry_run:
+        new_observation = {
+            "id": preview_id,
+            "type": obs_type,
+            "category": category,
+            "title": title,
+            "description": description,
+            "coordinates": None,
+            "status": status,
+            "reported_date": observation.get("reported_date") or date.today().isoformat(),
+            "resolved_date": None,
+            "tracking_issue": None,
+            "photo": None,
+        }
         return {
             "dry_run": True,
-            "branch": branch,
+            "branch": f"obs/{street_id}-{preview_id}" if street_id else f"obs/{preview_id}",
             "pr_url": None,
             "manual_pr_command": None,
             "compare_url": None,
             "actions": actions,
             "observation": new_observation,
-            "photo_destination": str(dest_rel),
+            "photo_destination": f"assets/images/observations/{preview_filename}",
         }
 
     _run_git(["fetch", "origin", "main"])
+    branch = f"obs/{street_id}-{preview_id}" if street_id else f"obs/{preview_id}"
     if _branch_exists(branch):
         raise ValidationError(f"Branch '{branch}' already exists (locally or on origin) — refusing to overwrite.")
 
@@ -368,25 +349,48 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
     try:
         _run_git(["checkout", "-b", branch, "origin/main"])
 
-        dest_dir.mkdir(parents=True, exist_ok=True)
+        # Re-read post-checkout: origin/main's copy of the store is now
+        # what's on disk, which may differ from the pre-checkout read used
+        # for the dry-run preview above (e.g. someone else merged an
+        # observation in the meantime) — derive the id fresh against what
+        # we're actually about to commit on top of, same "re-read after
+        # checkout" reasoning the old per-street id-collision check used.
+        store = json.loads(OBSERVATIONS_PATH.read_text(encoding="utf-8"))
+        obs_id = _next_id(store)
+        filename = f"obs-{obs_id}__{slug}.jpg"
+        dest_path = IMAGES_DIR / filename
+
+        if dest_path.exists() and not force and not _same_content(dest_path, photo_path):
+            raise ValidationError(
+                f"{dest_path.relative_to(REPO_ROOT)} already exists with different content — pass force=True to overwrite."
+            )
+
+        new_observation = {
+            "id": obs_id,
+            "type": obs_type,
+            "category": category,
+            "title": title,
+            "description": description,
+            "coordinates": None,
+            "status": status,
+            "reported_date": observation.get("reported_date") or date.today().isoformat(),
+            "resolved_date": None,
+            "tracking_issue": None,
+            "photo": None,
+        }
+
+        IMAGES_DIR.mkdir(parents=True, exist_ok=True)
         if dest_path.resolve() != photo_path.resolve():
             shutil.copyfile(photo_path, dest_path)
 
-        # Re-read post-checkout: origin/main's copy of the street file is
-        # now what's on disk, which may differ from the pre-checkout read
-        # used for validation above (e.g. someone else merged an
-        # observation in the meantime) — re-check the id collision against
-        # what we're actually about to commit on top of.
-        record = json.loads(street_file.read_text(encoding="utf-8"))
-        observations = record.setdefault("observations", [])
-        if any(obs.get("id") == obs_id for obs in observations):
-            raise ValidationError(
-                f"Observation id {obs_id} already exists on {street_id} on origin/main (added after this run's initial check)."
-            )
-        observations.append(new_observation)
-        street_file.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        store.setdefault("observations", []).append(new_observation)
+        OBSERVATIONS_PATH.write_text(json.dumps(store, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-        _run_git(["add", str(dest_rel), str(street_rel)])
+        commit_message = f"obs: add {title} on {street_id}" if street_id else f"obs: add {title}"
+        dest_rel = dest_path.relative_to(REPO_ROOT)
+        observations_rel = OBSERVATIONS_PATH.relative_to(REPO_ROOT)
+
+        _run_git(["add", str(dest_rel), str(observations_rel)])
         _run_git(["commit", "-m", commit_message])
         _run_git(["push", "-u", "origin", branch])
         pushed = True
@@ -398,7 +402,7 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
             raise GitOperationError(f"{e}\n\nRolled back local branch '{branch}' — nothing was pushed.") from e
         raise GitOperationError(f"{e}\n\nNOTE: branch '{branch}' was already pushed to origin before this failure — it exists remotely; resolve manually rather than re-running.") from e
 
-    pr_url, manual_pr_command, compare_url = _open_pr(branch, street_id, new_observation, photo_path.name, commit_message)
+    pr_url, manual_pr_command, compare_url = _open_pr(branch, street_id, new_observation, filename, commit_message)
 
     return {
         "dry_run": False,
@@ -415,8 +419,8 @@ def create_observation_pr(street_id, observation, photo_path, dry_run=False, for
 def _load_observation_and_photo(args):
     """CLI-only: apply sidecar-then-flags precedence and return
     (street_id, observation_dict, photo_path). All semantic validation
-    (valid category, id collisions, cover photos, ...) happens once,
-    inside create_observation_pr — this just assembles the inputs."""
+    (valid category, title, cover-slug, ...) happens once, inside
+    create_observation_pr — this just assembles the inputs."""
     street_id = None
     observation = {}
     photo_path = None
@@ -432,8 +436,6 @@ def _load_observation_and_photo(args):
 
     if args.street:
         street_id = args.street
-    if args.id is not None:
-        observation["id"] = args.id
     if args.type:
         observation["type"] = args.type
     if args.category:
@@ -447,12 +449,10 @@ def _load_observation_and_photo(args):
     if args.photo:
         photo_path = Path(args.photo)
 
-    if not street_id:
-        raise SystemExit("Missing street id (--street, or street_id in --sidecar).")
     if not photo_path:
         raise SystemExit("Missing photo path (--photo, or photo_filename in --sidecar).")
 
-    missing = [f for f in ("id", "type", "category", "title", "description") if observation.get(f) is None]
+    missing = [f for f in ("type", "category", "title", "description") if observation.get(f) is None]
     if missing:
         raise SystemExit(f"Missing required observation field(s): {', '.join(missing)} (via --sidecar or flags).")
 
@@ -461,10 +461,9 @@ def _load_observation_and_photo(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--sidecar", help="Path to a *.sbs.json sidecar: {street_id, photo_filename, observation}.")
+    parser.add_argument("--sidecar", help="Path to a sidecar JSON file: {street_id?, photo_filename, observation}.")
     parser.add_argument("--photo", help="Path to the photo file (required unless the sidecar's photo_filename resolves it).")
-    parser.add_argument("--street", help="Street id. Overrides the sidecar's street_id.")
-    parser.add_argument("--id", type=int, help="Observation id. Overrides the sidecar.")
+    parser.add_argument("--street", help="Street id, for branch/commit/PR context only — never written into the observation. Optional.")
     parser.add_argument("--type", choices=["issue", "asset"], help="Observation type. Overrides the sidecar.")
     parser.add_argument("--category", help="Observation category. Overrides the sidecar.")
     parser.add_argument("--title", help="Observation title. Overrides the sidecar.")
@@ -477,7 +476,7 @@ def main():
     street_id, observation, photo_path = _load_observation_and_photo(args)
 
     try:
-        result = create_observation_pr(street_id, observation, photo_path, dry_run=args.dry_run, force=args.force)
+        result = create_observation_pr(observation, photo_path, street_id=street_id, dry_run=args.dry_run, force=args.force)
     except (ValidationError, GitOperationError) as e:
         print(f"ERROR: {e}")
         return 1

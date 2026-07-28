@@ -33,8 +33,12 @@ pre-1944) name, where known.
 
 **Observations** describe things found on the street at a point in time.
 They are added continuously as the street is revisited, and each one is
-independently dated and statused. They live in the `observations` array of
-a street's JSON record.
+independently dated and statused. They live in `data/observations.json`, a
+single flat store shared across every street rather than embedded in a
+street's own JSON record — see
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md).
+An observation's street relationship is carried by `nearby_streets[]`
+(below), not by which file it happens to sit in.
 
 ### Canonical observation example
 
@@ -60,13 +64,14 @@ optional fields populated; see the note after the table.
   "nearby_streets": [
     { "street_id": "ana-ventura", "distance_m": 29.7, "primary": true },
     { "street_id": "panayot-volov", "distance_m": 37.6, "primary": false }
-  ]
+  ],
+  "photo": "assets/images/observations/obs-2__litter.jpg"
 }
 ```
 
 | Field | Required? | Description |
 | --- | --- | --- |
-| `id` | Required | Unique identifier within the street. |
+| `id` | Required | Unique identifier, global across `data/observations.json` — not scoped to a street. Derived as `max(existing ids) + 1` at write time; there is no stored counter. |
 | `type` | Required | `issue` or `asset`. |
 | `category` | Required | See category lists below. |
 | `title` | Required | Short label. |
@@ -79,12 +84,12 @@ optional fields populated; see the note after the table.
 | `tracking_issue` | Optional | GitHub Issue number of the Case tracking this observation, once one exists. Integer or `null`/absent. |
 | `nearby_streets` | Optional | Array of `{ "street_id", "distance_m", "primary" }`, written by `scripts/compute_street_proximity.py`. Absent until that script has been run for a geotagged observation. Recorded in the data but not displayed on the public map. |
 | `resolution` | Optional | Hand-curated public summary of an intervention (people, time, cost, outcome). Absent until the observation has actually been acted on. See [Resolution](#resolution) below. |
-| `photo` | Optional | Repo-relative path to this observation's primary photo (e.g. `assets/images/streets/ana-ventura/ana-ventura__obs-2__litter.jpg`), rendered on the map popup. Written by `scripts/photo_pipeline.py` for the most recently ingested non-cover photo targeting this observation; absent until one exists. |
+| `photo` | Optional | Repo-relative path to this observation's primary photo (e.g. `assets/images/observations/obs-2__litter.jpg`), rendered on the map popup. Written by `scripts/photo_pipeline.py` for the most recently ingested non-cover photo targeting this observation; absent until one exists. |
 
-Verified against `data/streets/ana-ventura.json`, the one real record that
-exists today: its one real observation (#2) has the seven required fields
-plus a real (non-`null`) value for `coordinates`. That same geotagged
-observation also carries a `tracking_issue` (linking it to a Case) and a
+Verified against `data/observations.json`, the one real record that exists
+today: its one real observation (#1) has the seven required fields plus a
+real (non-`null`) value for `coordinates`. That same geotagged observation
+also carries a `tracking_issue` (linking it to a Case) and a
 `nearby_streets` array (written by `scripts/compute_street_proximity.py`).
 It does not use `reported_time` — that field stays documented ahead of
 use.
@@ -98,7 +103,7 @@ the coordinate-picker tool or the renderer enforces this — it's a
 judgement call at data-entry time, the same way category and status are.
 
 `tracking_issue` is optional. It is present on the one observation
-currently logged (`ana-ventura.json`'s #2, tracked by a Case) — see
+currently logged (`data/observations.json`'s #1, tracked by a Case) — see
 [docs/case-tracking.md](case-tracking.md) for the linking convention. Add
 it only when a Case is actually opened for an observation; do not backfill
 it onto observations that have no Case.
@@ -138,7 +143,7 @@ Case — is what keeps the two from drifting apart; see
   "equipment": ["litter pickers", "refuse bags", "gloves"],
   "cost_eur": 12.50,
   "cost_note": "bags and gloves; pickers borrowed",
-  "after_photo": "ana-ventura__obs-2__after.jpg",
+  "after_photo": "obs-2__after.jpg",
   "case_ref": 5,
   "summary": "Corner cleared; recurrence likely without a bin nearby."
 }
@@ -154,7 +159,7 @@ Case — is what keeps the two from drifting apart; see
 | `equipment` | Optional | Array of strings naming what was used. |
 | `cost_eur` | Optional | Number, in euros (the project's cost unit throughout, not BGN/lev). |
 | `cost_note` | Optional | Free text for itemisation or context the bare number doesn't capture (what was bought vs. borrowed, etc). |
-| `after_photo` | Optional | Filename of an after photo, following the same `{street-id}__obs-{id}__after.{ext}` naming convention as other observation photos, stored under `assets/images/streets/{street-id}/`. Absent if no after photo was taken. |
+| `after_photo` | Optional | Filename of an after photo, following the same `obs-{id}__after.{ext}` naming convention as other observation photos, stored under `assets/images/observations/`. Absent if no after photo was taken. |
 | `case_ref` | Optional | The GitHub issue number of the Case with full private detail — the same value as the observation's own `tracking_issue`, duplicated here so the resolution record is self-contained even if read apart from the rest of the observation. |
 
 The `resolution` object as a whole is absent on every observation that

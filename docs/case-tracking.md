@@ -5,8 +5,10 @@ different systems on purpose. This page covers the second one.
 
 ## State vs. process
 
-**street-by-street observations** (`data/streets/*.json`, see
-[data-taxonomy.md](data-taxonomy.md)) record *state* — what's currently
+**street-by-street observations** (`data/observations.json`, a single flat store — see
+[data-taxonomy.md](data-taxonomy.md) and
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md))
+record *state* — what's currently
 true about a street. A pothole observation says "this exists, here, as of
 this date, status `open`." It doesn't track who's looking at it, what was
 tried, or when it's expected to be fixed. It's a snapshot, refreshed by a
@@ -53,20 +55,25 @@ standing up either is deferred rather than ruled out.
 ## Linking convention
 
 There is no hard foreign key between a GitHub Issue and an observation —
-GitHub Issues and the street JSON files are separate systems, and forcing
-a hard link between them would mean building and maintaining sync
+GitHub Issues and `data/observations.json` are separate systems, and
+forcing a hard link between them would mean building and maintaining sync
 tooling neither system needs otherwise. Instead, the link is a documented
 text convention:
 
 - In a Case's description, reference the observation it tracks with:
 
   ```text
-  Tracks: streets/{street-id} observation #{id}
+  Tracks: observation #{id}
   ```
 
-  e.g. `Tracks: streets/ana-ventura observation #1`. Once the Case exists,
-  set that observation's `tracking_issue` field (see
-  [data-taxonomy.md](data-taxonomy.md)) to the Case's issue number.
+  e.g. `Tracks: observation #1`. The convention drops the street entirely
+  (see [decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md))
+  — an observation's id is unique across the whole store, so a street
+  qualifier is redundant, and the observation's street relationship (if
+  any) already lives in its own `nearby_streets[].primary`, not in the
+  Case. Once the Case exists, set that observation's `tracking_issue`
+  field (see [data-taxonomy.md](data-taxonomy.md)) to the Case's issue
+  number.
 
 - If a Case is opened for a problem that recurs after an earlier Case
   resolved it, reference the earlier Case with:
@@ -102,8 +109,8 @@ in order, are:
 1. **To Triage** — newly opened, not yet read closely enough to confirm
    it's real, in-scope, and not a duplicate.
 2. **Backlog** — confirmed and in-scope, but not yet being worked.
-   `Linked street` / `Linked observation ID` filled in if applicable;
-   `Recurrence ref` filled in if this follows an earlier Case.
+   `Linked observation ID` filled in if applicable; `Recurrence ref`
+   filled in if this follows an earlier Case.
 3. **Ready** — next in line to be picked up; no blockers.
 4. **In Progress** — actively being worked. `Workaround applied` filled
    in if an interim fix is in place, including its known limitations, so

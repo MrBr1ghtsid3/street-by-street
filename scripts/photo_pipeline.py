@@ -2,11 +2,13 @@
 """Ingest newly-added field photos: extract GPS, strip EXIF, queue Case comments.
 
 Triggered by .github/workflows/photo-pipeline.yml whenever new files land
-under assets/images/streets/**. Takes a list of photo paths (one per
+under assets/images/observations/**. Takes a list of photo paths (one per
 line, via --from-file) and, for each one named
-`{street-id}__obs-{observationId}__{description}.jpg`:
+`obs-{observationId}__{description}.jpg`:
 
-  1. Locates the matching observation in data/streets/{street-id}.json.
+  1. Locates the matching observation in data/observations.json - a
+     single flat, globally-numbered store (ADR 011). There is no street
+     lookup: the filename no longer carries one.
   2. Extracts GPS from EXIF (if present) and writes it to the
      observation's `coordinates` field - but only if that field is
      currently null. An observation that already has coordinates keeps
@@ -29,9 +31,9 @@ line, via --from-file) and, for each one named
      body instead of posting it as a plain comment, and it's Case-only:
      it never populates the observation's `photo` field.
 
-Never creates or deletes an observation or a street file - a filename
-that doesn't resolve to an existing street/observation is logged and
-skipped, not invented.
+Never creates or deletes an observation - a filename that doesn't
+resolve to an existing observation id is logged and skipped, not
+invented.
 
 Usage:
     python scripts/photo_pipeline.py --from-file new_photos.txt
@@ -46,7 +48,7 @@ from pathlib import Path
 from PIL import Image
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-STREETS_DIR = REPO_ROOT / "data" / "streets"
+OBSERVATIONS_PATH = REPO_ROOT / "data" / "observations.json"
 PENDING_COMMENTS_PATH = REPO_ROOT / "pending_comments.json"
 
 OBS_FIELD_RE = re.compile(r"^obs-(\d+)$")
@@ -63,9 +65,9 @@ COVER_MARKER = "cover"
 
 
 def parse_filename(photo_path):
-    """Return (street_id, observation_id, is_cover) or None if no match.
+    """Return (observation_id, is_cover) or None if no match.
 
-    Expected shape: {street-id}__obs-{observationId}__{description}.ext
+    Expected shape: obs-{observationId}__{description}.ext
     Split on "__" with no cap on the description field, so a description
     that itself contains "__" doesn't break parsing. `is_cover` is true
     when the description segment contains "cover" (case-insensitive),
@@ -73,18 +75,17 @@ def parse_filename(photo_path):
     """
     stem = Path(photo_path).stem
     parts = stem.split("__")
-    if len(parts) < 3:
+    if len(parts) < 2:
         return None
 
-    street_id, obs_field = parts[0], parts[1]
-    match = OBS_FIELD_RE.match(obs_field)
-    if not street_id or not match:
+    match = OBS_FIELD_RE.match(parts[0])
+    if not match:
         return None
 
-    description = "__".join(parts[2:])
+    description = "__".join(parts[1:])
     is_cover = COVER_MARKER in description.lower()
 
-    return street_id, int(match.group(1)), is_cover
+    return int(match.group(1)), is_cover
 
 
 def dms_to_decimal(dms, ref):
@@ -145,22 +146,20 @@ def compress_and_strip_exif(photo_path):
     return had_exif, original_size, new_size
 
 
-def load_street(street_id):
-    street_file = STREETS_DIR / f"{street_id}.json"
-    if not street_file.exists():
-        return None, None
-    record = json.loads(street_file.read_text(encoding="utf-8"))
-    return street_file, record
+def load_store():
+    if not OBSERVATIONS_PATH.exists():
+        return None
+    return json.loads(OBSERVATIONS_PATH.read_text(encoding="utf-8"))
 
 
-def find_observation(record, observation_id):
+def find_observation(store, observation_id):
     return next(
-        (obs for obs in record.get("observations", []) if obs.get("id") == observation_id),
+        (obs for obs in store.get("observations", []) if obs.get("id") == observation_id),
         None,
     )
 
 
-def process_photo(photo_path, counts, pending_comments):
+def process_photo(photo_path, counts, pending_comments, store):
     name = Path(photo_path).name
     parsed = parse_filename(photo_path)
     if parsed is None:
@@ -168,16 +167,10 @@ def process_photo(photo_path, counts, pending_comments):
         counts["bad_filename"] += 1
         return
 
-    street_id, observation_id, is_cover = parsed
-    street_file, record = load_street(street_id)
-    if record is None:
-        print(f"ERROR: no street file for '{street_id}' ({name})")
-        counts["not_found"] += 1
-        return
-
-    observation = find_observation(record, observation_id)
+    observation_id, is_cover = parsed
+    observation = find_observation(store, observation_id)
     if observation is None:
-        print(f"OBSERVATION_NOT_FOUND: {street_id} obs {observation_id} ({name})")
+        print(f"OBSERVATION_NOT_FOUND: obs {observation_id} ({name})")
         counts["not_found"] += 1
         return
 
@@ -190,26 +183,23 @@ def process_photo(photo_path, counts, pending_comments):
         print(f"NO_GPS: {name}")
         counts["no_gps"] += 1
     elif observation.get("coordinates") is not None:
-        print(f"ALREADY_SET: {street_id} obs {observation_id} already has coordinates ({name})")
+        print(f"ALREADY_SET: obs {observation_id} already has coordinates ({name})")
         counts["already_set"] += 1
     else:
         lat, lng = gps
         observation["coordinates"] = {"lat": lat, "lng": lng}
         coords_written = True
         counts["coords_written"] += 1
-        print(f"COORDS_WRITTEN: {street_id} obs {observation_id} -> {lat}, {lng}")
+        print(f"COORDS_WRITTEN: obs {observation_id} -> {lat}, {lng}")
 
     photo_field_set = False
     if not is_cover:
         observation["photo"] = str(Path(photo_path).as_posix())
         photo_field_set = True
-        print(f"PHOTO_SET: {street_id} obs {observation_id} -> {name}")
+        print(f"PHOTO_SET: obs {observation_id} -> {name}")
 
     if coords_written or photo_field_set:
-        street_file.write_text(
-            json.dumps(record, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-        )
+        counts["store_dirty"] = True
 
     had_exif, original_size, new_size = compress_and_strip_exif(photo_path)
     print(f"COMPRESSED: {name} {original_size}B -> {new_size}B")
@@ -218,14 +208,13 @@ def process_photo(photo_path, counts, pending_comments):
 
     tracking_issue = observation.get("tracking_issue")
     if not tracking_issue:
-        print(f"NO_CASE: {street_id} obs {observation_id} has no linked Case ({name})")
+        print(f"NO_CASE: obs {observation_id} has no linked Case ({name})")
         return
 
     entry = {
         "issue": tracking_issue,
         "photo_path": str(Path(photo_path).as_posix()),
         "observation_id": observation_id,
-        "street_id": street_id,
         "coords_written": coords_written,
         "is_cover": is_cover,
     }
@@ -251,6 +240,11 @@ def main():
         if line.strip()
     ]
 
+    store = load_store()
+    if store is None:
+        print(f"ERROR: {OBSERVATIONS_PATH.relative_to(REPO_ROOT)} not found", file=sys.stderr)
+        return 1
+
     counts = {
         "processed": 0,
         "coords_written": 0,
@@ -259,11 +253,18 @@ def main():
         "bad_filename": 0,
         "not_found": 0,
         "comments_queued": 0,
+        "store_dirty": False,
     }
     pending_comments = []
 
     for photo_path in photo_paths:
-        process_photo(photo_path, counts, pending_comments)
+        process_photo(photo_path, counts, pending_comments, store)
+
+    if counts["store_dirty"]:
+        OBSERVATIONS_PATH.write_text(
+            json.dumps(store, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
 
     PENDING_COMMENTS_PATH.write_text(
         json.dumps(pending_comments, indent=2, ensure_ascii=False) + "\n",

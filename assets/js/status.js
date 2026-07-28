@@ -1,7 +1,8 @@
-// Powers status.html. Fetches data/tutrakan-streets.geojson and every
-// audited street's JSON for the summary/resolutions sections, and the
-// public, unauthenticated GitHub Issues API for the open-cases section.
-// No backend, no token: every request here is either a static repo file
+// Powers status.html. Fetches data/tutrakan-streets.geojson and
+// data/observations.json (a single flat, globally-numbered store - see
+// ADR 011) for the summary/resolutions sections, and the public,
+// unauthenticated GitHub Issues API for the open-cases section. No
+// backend, no token: every request here is either a static repo file
 // served alongside this page, or a plain read-only call to
 // api.github.com that works the same for any visitor.
 
@@ -13,15 +14,17 @@ const REPO_OWNER = "MrBr1ghtsid3";
 const REPO_NAME = "street-by-street";
 const GITHUB_ISSUES_API_URL = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=open&labels=case`;
 
-const TRACKS_LINE_RE = /Tracks:\s*streets\/([a-z0-9-]+)\s+observation\s*#(\d+)/i;
+// A Case's linking convention dropped the street entirely (ADR 011):
+// "Tracks: observation #{n}", not "Tracks: streets/{id} observation #{n}".
+const TRACKS_LINE_RE = /Tracks:\s*observation\s*#(\d+)/i;
 
 // Real Cases are opened via .github/ISSUE_TEMPLATE/case.yml, which renders
-// as "### Linked street (if applicable)" / "### Linked observation ID (if
-// applicable)" headings followed by the submitted value (or the literal
-// "_No response_" placeholder if left blank) - not a literal "Tracks:"
-// line. Mirrors scripts/link_case_to_observation.py's extract_field, kept
-// in sync by hand (see the module-doc comment above on duplication).
-const STREET_FIELD_HEADING = "### Linked street (if applicable)";
+// as "### Linked observation ID (if applicable)" followed by the
+// submitted value (or the literal "_No response_" placeholder if left
+// blank) - not a literal "Tracks:" line. Mirrors
+// scripts/link_case_to_observation.py's extract_field, kept in sync by
+// hand (see the module-doc comment above on duplication).
+const OBSERVATION_FIELD_HEADING = "### Linked observation ID (if applicable)";
 const NO_RESPONSE = "_No response_";
 
 function extractIssueFormField(body, heading) {
@@ -55,56 +58,65 @@ async function fetchJSON(path) {
   return response.json();
 }
 
+// An observation's street relationship lives only in nearby_streets[]
+// (ADR 011) - the closest street, flagged primary: true. No street yet
+// (no coordinates, or compute_street_proximity.py hasn't run) is a real,
+// expected state, not an error.
+function primaryStreetName(obs, streetNamesById) {
+  const primary = (obs.nearby_streets || []).find((entry) => entry.primary);
+  if (!primary) {
+    return "Unmapped";
+  }
+  return streetNamesById[primary.street_id] || primary.street_id;
+}
+
 // ---- Summary + resolutions (from repo data) --------------------------
 
 async function loadStreetData() {
-  const geojson = await fetchJSON("data/tutrakan-streets.geojson");
+  const [geojson, observationsData] = await Promise.all([
+    fetchJSON("data/tutrakan-streets.geojson"),
+    fetchJSON("data/observations.json"),
+  ]);
 
   const streetNamesById = {};
   geojson.features.forEach((feature) => {
     streetNamesById[feature.properties.id] = feature.properties.name;
   });
 
-  const auditedFeatures = geojson.features.filter(
+  const streetsAudited = geojson.features.filter(
     (feature) => feature.properties.audited === true
-  );
+  ).length;
 
-  let totalObservations = 0;
+  const observations = observationsData.observations || [];
+  const observationsById = {};
+
   let openIssues = 0;
   let resolvedIssues = 0;
   let totalCostEur = 0;
   let totalPersonHours = 0;
   const resolutions = [];
 
-  await Promise.all(
-    auditedFeatures.map(async (feature) => {
-      const streetId = feature.properties.id;
-      const record = await fetchJSON(`data/streets/${streetId}.json`);
-      const observations = record.observations || [];
+  observations.forEach((obs) => {
+    observationsById[obs.id] = obs;
 
-      totalObservations += observations.length;
+    if (obs.type === "issue") {
+      if (obs.status === "resolved") {
+        resolvedIssues += 1;
+      } else {
+        openIssues += 1;
+      }
+    }
 
-      observations.forEach((obs) => {
-        if (obs.type === "issue") {
-          if (obs.status === "resolved") {
-            resolvedIssues += 1;
-          } else {
-            openIssues += 1;
-          }
-        }
-
-        if (obs.resolution) {
-          if (typeof obs.resolution.cost_eur === "number") {
-            totalCostEur += obs.resolution.cost_eur;
-          }
-          if (typeof obs.resolution.person_hours === "number") {
-            totalPersonHours += obs.resolution.person_hours;
-          }
-          resolutions.push({ streetName: feature.properties.name, obs });
-        }
-      });
-    })
-  );
+    if (obs.resolution) {
+      if (typeof obs.resolution.cost_eur === "number") {
+        totalCostEur += obs.resolution.cost_eur;
+      }
+      if (typeof obs.resolution.person_hours === "number") {
+        totalPersonHours += obs.resolution.person_hours;
+      }
+      resolutions.push({ streetName: primaryStreetName(obs, streetNamesById), obs });
+    }
+  });
 
   resolutions.sort((a, b) =>
     (b.obs.resolution.date || "").localeCompare(a.obs.resolution.date || "")
@@ -112,8 +124,9 @@ async function loadStreetData() {
 
   return {
     streetNamesById,
-    streetsAudited: auditedFeatures.length,
-    totalObservations,
+    observationsById,
+    streetsAudited,
+    totalObservations: observations.length,
     openIssues,
     resolvedIssues,
     totalCostEur,
@@ -200,29 +213,33 @@ function showResolutionsError(message) {
 
 // ---- Open cases (from the public GitHub API) --------------------------
 
-function extractTrackedStreet(body, streetNamesById) {
+function extractTrackedObservation(body, observationsById, streetNamesById) {
   const text = body || "";
 
-  // Try the narrative "Tracks: streets/{id} observation #{id}" convention
-  // first (docs/case-tracking.md's linking convention for a hand-written
-  // Case description), then fall back to the Issue Form's own field
-  // headings, which is what a Case opened via case.yml actually contains.
+  // Try the narrative "Tracks: observation #{id}" convention first (a
+  // hand-written Case description), then fall back to the Issue Form's
+  // own field heading, which is what a Case opened via case.yml actually
+  // contains.
   const tracksMatch = TRACKS_LINE_RE.exec(text);
-  const streetId = tracksMatch
+  const idText = tracksMatch
     ? tracksMatch[1]
-    : extractIssueFormField(text, STREET_FIELD_HEADING);
+    : extractIssueFormField(text, OBSERVATION_FIELD_HEADING);
 
-  if (!streetId) {
+  if (!idText) {
     return null;
   }
-  return { streetId, streetName: streetNamesById[streetId] || streetId };
+  const obs = observationsById[Number(idText)];
+  if (!obs) {
+    return null;
+  }
+  return { id: obs.id, streetName: primaryStreetName(obs, streetNamesById) };
 }
 
 // Returns an array of cases, an empty array if there are genuinely none
 // open, or null if the API call itself failed (including the unauthenticated
 // rate limit, which GitHub reports as a 403/429 - both surface as
 // `!response.ok` here, same as any other failure).
-async function loadOpenCases(streetNamesById) {
+async function loadOpenCases(observationsById, streetNamesById) {
   try {
     const response = await fetch(GITHUB_ISSUES_API_URL, {
       headers: { Accept: "application/vnd.github+json" },
@@ -240,7 +257,7 @@ async function loadOpenCases(streetNamesById) {
       title: issue.title,
       url: issue.html_url,
       openedDate: (issue.created_at || "").slice(0, 10),
-      trackedStreet: extractTrackedStreet(issue.body, streetNamesById),
+      trackedObservation: extractTrackedObservation(issue.body, observationsById, streetNamesById),
     }));
   } catch (err) {
     console.error("Could not load open cases from the GitHub API:", err);
@@ -275,8 +292,8 @@ function renderCases(cases) {
           </div>
           <p class="status-case-card__meta">
             Opened ${escapeHtml(c.openedDate)}${
-              c.trackedStreet
-                ? ` · ${escapeHtml(c.trackedStreet.streetName)}`
+              c.trackedObservation
+                ? ` · ${escapeHtml(c.trackedObservation.streetName)}`
                 : ""
             }
           </p>
@@ -289,20 +306,22 @@ function renderCases(cases) {
 // ---- Init --------------------------------------------------------------
 
 async function init() {
+  let observationsById = {};
   let streetNamesById = {};
 
   try {
     const data = await loadStreetData();
     streetNamesById = data.streetNamesById;
+    observationsById = data.observationsById;
     renderSummary(data);
     renderResolutions(data.resolutions);
   } catch (err) {
-    const message = `Could not load street data. (${err.message})`;
+    const message = `Could not load repository data. (${err.message})`;
     showSummaryError(message);
     showResolutionsError(message);
   }
 
-  const cases = await loadOpenCases(streetNamesById);
+  const cases = await loadOpenCases(observationsById, streetNamesById);
   renderCases(cases);
 }
 

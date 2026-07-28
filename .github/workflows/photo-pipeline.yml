@@ -1,18 +1,19 @@
 name: Photo pipeline
 
-# Ingests field photos committed under assets/images/streets/**: extracts
-# GPS EXIF into the matching observation's coordinates (never overwriting
-# a manually-set coordinate, never creating an observation), strips EXIF
-# from the served copy, comments the photo onto any linked Case, and
-# opens a data PR with the resulting changes for review. See
-# docs/methodology.md#photo-ingestion and
-# decisions/006-photo-pipeline.md for the full design.
+# Ingests field photos committed under assets/images/observations/**:
+# extracts GPS EXIF into the matching observation's coordinates (never
+# overwriting a manually-set coordinate, never creating an observation),
+# strips EXIF from the served copy, comments the photo onto any linked
+# Case, and opens a data PR with the resulting changes for review. See
+# docs/methodology.md#photo-ingestion, decisions/006-photo-pipeline.md
+# for the full design, and ADR 011 for the flat observations store this
+# now reads/writes instead of data/streets/*.json.
 
 on:
   push:
     branches: [main]
     paths:
-      - 'assets/images/streets/**'
+      - 'assets/images/observations/**'
   workflow_dispatch:
 
 permissions:
@@ -42,7 +43,7 @@ jobs:
       - name: Identify newly added photos
         id: new_photos
         run: |
-          git diff --name-only --diff-filter=ACR HEAD~1 HEAD -- 'assets/images/streets/**' \
+          git diff --name-only --diff-filter=ACR HEAD~1 HEAD -- 'assets/images/observations/**' \
             | grep -iE '\.(jpe?g)$' > new_photos.txt || true
 
           if [ -s new_photos.txt ]; then
@@ -172,7 +173,7 @@ jobs:
               body = (
                   "### \U0001F4F7 Field photo added\n\n"
                   f"![{photo_name}]({image_url_for(entry)})\n\n"
-                  f"Tracks: streets/{entry['street_id']} observation #{entry['observation_id']}\n\n"
+                  f"Tracks: observation #{entry['observation_id']}\n\n"
                   f"{coords_line_for(entry)}"
               )
               subprocess.run(["gh", "issue", "comment", str(issue), "--body", body], check=True)
@@ -204,18 +205,18 @@ jobs:
 
           body_parts = [
               "Automated photo ingestion: GPS extraction, EXIF strip, and Case "
-              "comments for field photos added under `assets/images/streets/`.",
+              "comments for field photos added under `assets/images/observations/`.",
               f"\n{summary_line}" if summary_line else "",
               section("Coordinates written", coords_written),
               (f"\n**Cases commented:** {', '.join(f'#{n}' for n in cases_commented)}"
                if cases_commented else "\n**Cases commented:** none"),
               section("Skipped - bad filename", lines_matching("BAD_FILENAME:")),
-              section("Skipped - observation/street not found", not_found),
+              section("Skipped - observation not found", not_found),
               section("Skipped - no GPS EXIF", lines_matching("NO_GPS:")),
               section("Skipped - coordinates already set (kept manual value)", lines_matching("ALREADY_SET:")),
               section("No linked Case (comment not posted)", lines_matching("NO_CASE:")),
               "\n**Review checklist before merging**\n"
-              "- [ ] Coordinates fall on the correct street\n"
+              "- [ ] Coordinates look plausible for this observation\n"
               "- [ ] No manually-set coordinates were changed\n"
               "- [ ] Stripped photo files render fine\n",
               "\n*This PR was opened automatically. Merge only after review.*",
@@ -239,5 +240,5 @@ jobs:
           # run-scratch files, not published data, and must never be
           # committed.
           add-paths: |
-            data/streets/**
-            assets/images/streets/**
+            data/observations.json
+            assets/images/observations/**

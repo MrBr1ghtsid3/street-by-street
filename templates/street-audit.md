@@ -1,9 +1,13 @@
 # Street Audit Template
 
-Copy this file when onboarding a new street. Its sections mirror the JSON
-record structure used in `data/streets/<id>.json` (see
-[docs/architecture.md](../docs/architecture.md#data-model)), so converting
-a filled-in template into the published JSON record is mechanical.
+Copy this file when onboarding a new street. Its **Attributes**, **Trivia**,
+and **Official context** sections mirror `data/streets/<id>.json` (see
+[docs/architecture.md](../docs/architecture.md#data-model)); its **Issues**
+and **Assets** sections instead become entries appended to the flat
+`data/observations.json` store, not to the street's own file — see
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md).
+Converting a filled-in template into the published records is mechanical
+either way.
 
 **Street name (display):**
 
@@ -48,7 +52,10 @@ Unlike Road class, this one is never touched by the automated refresh; see
 Category: `accessibility`, `animal_welfare`, `cleanliness`.
 Status: `open`, `in_progress`, `resolved`. Coordinates are optional —
 leave blank at audit time unless you've already used
-`tools/coordinate-picker.html`; see the note below.
+`tools/coordinate-picker.html`; see the note below. Leave **ID** blank
+too — it's derived as `max(existing ids) + 1` across the whole
+`data/observations.json` store when the entry is actually written, not
+assigned by hand or scoped to this street.
 
 ## Assets
 
@@ -70,10 +77,12 @@ specific living being (an animal, in particular), check
 
 **Not filled in by hand, at audit time or ever:** `nearby_streets` is
 computed later by `scripts/compute_street_proximity.py`, only once a
-coordinate exists. `tracking_issue` is set later, only if a Case is
-opened for that observation — see
-[docs/case-tracking.md](../docs/case-tracking.md). Neither belongs in
-this template.
+coordinate exists — it's also the *only* place a street relationship is
+recorded on an observation; there is no separate `street_id` field.
+`tracking_issue` is set later, only if a Case is opened for that
+observation — see [docs/case-tracking.md](../docs/case-tracking.md).
+`photo` is set later by the photo-ingestion pipeline. None of these
+belong in this template.
 
 ## Trivia
 

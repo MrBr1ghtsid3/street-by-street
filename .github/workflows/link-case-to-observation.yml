@@ -37,6 +37,6 @@ jobs:
           title: "data: link Case #${{ github.event.issue.number }} to observation"
           labels: automated,data-refresh
           body: |
-            Automatically links Case #${{ github.event.issue.number }} to the observation it references via `street-ref` and `observation-ref`.
+            Automatically links Case #${{ github.event.issue.number }} to the observation it references via `observation-ref`.
 
             Review the diff before merging — confirm the correct observation was matched.

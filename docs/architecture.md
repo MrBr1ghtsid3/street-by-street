@@ -30,7 +30,7 @@ street-by-street organises everything into three levels:
 - **City** — Tutrakan. The map's entry point, and the only level at which
   official Bulgarian statistics exist.
 - **Street** — the primary unit. Each street has its own slow-changing
-  attributes and its own list of observations.
+  attributes.
 - **Observation** — the atomic record: a single issue or asset, dated and
   located as precisely as possible.
 
@@ -38,6 +38,13 @@ City rolls up from streets; streets roll up from observations. Nothing is
 recorded at the city level directly except official context figures, which
 exist because no street-level equivalent is available (see
 [data-sources.md](data-sources.md)).
+
+Observations are stored independently of streets, in a single flat
+`data/observations.json` (see [decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md)),
+and carry their own relationship to the street they're nearest to via
+`nearby_streets[].primary` rather than living inside that street's file.
+"Streets roll up from observations" describes the conceptual hierarchy, not
+where the bytes sit.
 
 ## Static-site data flow
 
@@ -56,8 +63,11 @@ page load is:
    the rest of the town.
 3. **On click of an audited street**, the JS does
    `fetch('data/streets/{id}.json')` and renders the result into a side
-   panel: the street's trivia, attributes, official context, and
-   observations list, colour-coded by issue/asset and status.
+   panel: the street's trivia, attributes, and official context, plus its
+   observations list — filtered from the flat `data/observations.json`
+   store (loaded once at startup, see below) on `nearby_streets[]` where
+   `primary` matches this street, not read from the street's own file —
+   colour-coded by issue/asset and status.
 4. Unaudited streets are clickable but show a short "not yet audited"
    message rather than attempting to fetch a JSON record that doesn't
    exist yet.
@@ -72,15 +82,17 @@ Beyond the street's detail panel, observations with a non-null
 `coordinates` field render as individual point markers on the map itself,
 not just as cards in the panel:
 
-- **Rendering** (`assets/js/map.js`) — every audited street's geotagged
-  observations are rendered at once. On load, `loadAllObservationMarkers`
-  iterates all features with `audited: true`, fetches each street's
-  record, and adds a teardrop-shaped `L.divIcon` pin per geotagged
-  observation (coral for issues, teal for assets, matching the existing
-  legend colours), with a Tabler icon inset for its category. All pins
-  live in a single `L.layerGroup` that is populated once at startup and
-  never cleared on street switch — marker visibility is independent of
-  which street's panel is open. Clicking a pin
+- **Rendering** (`assets/js/map.js`) — every geotagged observation is
+  rendered at once, independent of whether its street has been onboarded
+  or audited (see [decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md)).
+  On load, `init()` fetches `data/observations.json` directly alongside
+  the geojson and taxonomy, and `addObservationMarkers` adds a
+  teardrop-shaped `L.divIcon` pin per observation with coordinates (coral
+  for issues, teal for assets, matching the existing legend colours), with
+  a Tabler icon inset for its category. All pins live in a single
+  `L.layerGroup` that is populated once at startup and never cleared on
+  street switch — marker visibility is independent of which street's panel
+  is open, and unrelated to that street's `audited` flag. Clicking a pin
   opens a popup with the observation's title, category, status, a photo
   placeholder (see [ethics.md](ethics.md) — no image upload or blurring
   pipeline exists yet, this is a reserved UI slot), its date, any nearby
@@ -101,9 +113,11 @@ not just as cards in the panel:
 
 ## Data model
 
-Two JSON shapes carry all the data: the GeoJSON base layer (one feature per
-street, used for rendering the map) and the per-street detail record (one
-file per audited street, used for the detail panel).
+Three JSON shapes carry all the data: the GeoJSON base layer (one feature
+per street, used for rendering the map), the per-street detail record (one
+file per audited street, used for the detail panel), and the flat
+observation store (one file, all observations — see
+[decisions/011-flat-observation-store.md](../decisions/011-flat-observation-store.md)).
 
 **`data/tutrakan-streets.geojson`** — a `FeatureCollection` of
 `LineString`/`MultiLineString` features, one per street, each with these
@@ -125,8 +139,13 @@ properties:
 ```
 
 `id` is the slug used to look up the matching file in `data/streets/`.
-`status` and `audited` drive map styling; `observations_count` and
-`issues_open` let the map show a count without a second fetch.
+`status` and `audited` drive map styling. `observations_count` and
+`issues_open` are counts computed at the time a street was last edited by
+hand — they are derivable from `data/observations.json` (count entries
+whose `nearby_streets[].primary` matches this street) but nothing
+currently refreshes them from it, so they're left stale rather than wired
+up, deliberately out of scope for ADR 011 (see that ADR's Consequences
+section).
 
 **`data/streets/<id>.json`** — the full street record, split into the
 blocks described in [data-taxonomy.md](data-taxonomy.md):
@@ -140,16 +159,45 @@ blocks described in [data-taxonomy.md](data-taxonomy.md):
                    "road_class": null, "road_character": null },
   "trivia": { "text": "...", "sources": [], "verified": false, "note": "..." },
   "official_context": [ { "metric": "...", "value": "...", "source": "...",
-                            "source_date": "...", "level": "municipality" } ],
-  "observations": [ { "id": 1, "type": "issue", "category": "cleanliness", "title": "...",
-                        "description": "...", "coordinates": null, "status": "open",
-                        "reported_date": "...", "resolved_date": null } ]
+                            "source_date": "...", "level": "municipality" } ]
 }
 ```
 
+This record no longer has an `observations` block (moved out under ADR
+011, below) — it carries only the slow-changing, street-identity blocks:
+`meta`, `attributes`, `trivia`, `official_context`.
+
+**`data/observations.json`** — a single flat store, `{ "observations": [
+... ] }`, holding every observation across every street:
+
+```json
+{
+  "observations": [
+    {
+      "id": 1, "type": "issue", "category": "cleanliness", "title": "...",
+      "description": "...", "coordinates": { "lat": 44.04, "lng": 26.61 },
+      "status": "open", "reported_date": "...", "resolved_date": null,
+      "tracking_issue": 5,
+      "nearby_streets": [ { "street_id": "ana-ventura", "distance_m": 29.7, "primary": true } ],
+      "photo": "assets/images/observations/obs-1__litter.jpg"
+    }
+  ]
+}
+```
+
+`id` is derived at write time as `max(existing ids) + 1` — there is no
+stored counter. There is deliberately no `street_id` field: an
+observation's street relationship lives entirely in
+`nearby_streets[].primary`, computed by
+`scripts/compute_street_proximity.py` (below), never hand-set. A street's
+observations are found by filtering this store, not by reading a list out
+of that street's own file.
+
 `meta` and `attributes` correspond to the street-attributes half of the
-taxonomy; `observations` is the observations half. `trivia` and
-`official_context` are additional blocks specific to the detail record —
+taxonomy described in [data-taxonomy.md](data-taxonomy.md); the
+observations half now lives in `data/observations.json` above, not in this
+record. `trivia` and `official_context` are additional blocks specific to
+the detail record —
 trivia carries a `verified` flag so unsourced claims are visibly marked as
 such (plus an optional `note`, a free-text data-entry caveat such as
 "DRAFT — unverified, needs sourcing" that is not rendered on the site),
@@ -209,8 +257,8 @@ its contents — tracked here as a checklist, not changed by this pass:
   `refresh-data.yml` assumes — i.e. the `data/*` branch prefix is excluded
   from any "review required" gate, so quarterly refresh PRs don't block on
   a reviewer that a solo maintainer can't provide.
-- [ ] **Case #5 exists on GitHub** — `ana-ventura.json` observation #2
-  points at it via `tracking_issue: 5`, and the map popup links to
+- [ ] **Case #5 exists on GitHub** — `data/observations.json` observation
+  #1 points at it via `tracking_issue: 5`, and the map popup links to
   `/issues/5`.
 
 ## Official-vs-observed juxtaposition

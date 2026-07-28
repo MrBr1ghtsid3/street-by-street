@@ -73,12 +73,15 @@ for the full reasoning:
      official Bulgarian statistics (population, housing stock, registered
      businesses) are available.
    - **Street** — the primary organising unit. A street is both something
-     you can navigate to and a container for everything observed along it.
+     you can navigate to and a rollup of everything observed along it.
      Streets carry their own slow-changing **attributes** (length, dwelling
      count, parking spaces, bus stops, lighting, surface type, official and
      historical name) separately from the **observations** logged on them —
      see [docs/data-taxonomy.md](docs/data-taxonomy.md) for why that split
-     matters.
+     matters, and
+     [decisions/011-flat-observation-store.md](decisions/011-flat-observation-store.md)
+     for why observations live in their own flat store rather than inside
+     a street's file.
    - **Observation** — the atomic record. A single pothole, a single tree,
      a single shop. Each has a type (`issue` or `asset`), a category, a
      status, a date, and optionally a precise map coordinate.
@@ -104,10 +107,18 @@ constraint this implies.
   clickable), while audited streets are highlighted amber ("active", the
   audit is under way) or green ("normal", the record is established and
   current — not a claim that the street is ever "finished").
-- **POI-style observation markers** — geotagged observations render as
-  coloured pin markers directly on the map (coral for issues, teal for
-  assets, with a category icon), independent of the side-panel cards for
-  the selected street; clicking a card or a pin navigates to the other.
+- **POI-style observation markers** — every geotagged observation renders
+  as a coloured pin directly on the map (coral for issues, teal for
+  assets, with a category icon), independent of whether its street has
+  been onboarded or audited — see
+  [decisions/011-flat-observation-store.md](decisions/011-flat-observation-store.md).
+  Clicking a card or a pin navigates to the other.
+- **A single, flat observation store** (`data/observations.json`) — every
+  observation across every street, id'd globally rather than split across
+  per-street files, so an observation can exist before its street has an
+  onboarded record. A street's own JSON record now holds only its
+  slow-changing attributes; its observations list is a filter over the
+  store, not an embedded array.
 - **Tutrakan context modal** ("Context" in the header) — an Official Data
   tab (town crest, an oblast locator map generated from OSM data, a
   coordinates/"Get directions" block, and an official stats table) and an
@@ -117,10 +128,21 @@ constraint this implies.
   `localStorage`.
 - **About modal**, including a dedicated link to
   [docs/ethics.md](docs/ethics.md).
-- **`tools/coordinate-picker.html`** — a small internal workflow utility
-  (not linked from the site navigation) for hand-capturing an
-  observation's coordinates by clicking a map and copying the resulting
-  JSON snippet. See [docs/methodology.md](docs/methodology.md).
+- **A public status page** (`status.html`) — live summary stats,
+  open Cases (fetched unauthenticated from the GitHub API), and recorded
+  resolutions, with no backend of its own.
+- **A photo-ingestion pipeline** (`scripts/photo_pipeline.py`, triggered by
+  `.github/workflows/photo-pipeline.yml`) — extracts GPS EXIF into an
+  observation's coordinates, strips EXIF from the served copy,
+  downscales/recompresses it, and posts it to the observation's linked
+  Case (as a comment, or as the cover embed for a photo named `cover`).
+  See [docs/methodology.md](docs/methodology.md#photo-ingestion).
+- **`scripts/new_street.py`** and **`scripts/new_observation.py`** —
+  onboard a new street, or log a new observation and its vetted photo, as
+  one branch/commit/push/PR each, stopping at "PR opened" — review and
+  merge stay a manual gate. `tools/coordinate-picker.html` (hand-capturing
+  a precise coordinate) is the small internal workflow utility that feeds
+  the latter; see [docs/methodology.md](docs/methodology.md).
 - **Case tracking** via GitHub Issues (`.github/ISSUE_TEMPLATE/case.yml`)
   and a Project (v2) board, separate from the observation data — see
   [docs/case-tracking.md](docs/case-tracking.md).
@@ -134,7 +156,7 @@ constraint this implies.
 street-by-street/
 ├── index.html              interactive map of Tutrakan (Leaflet)
 ├── assets/                  CSS, JS, and images for the map
-├── data/                    GeoJSON street base layer + per-street JSON records
+├── data/                    GeoJSON street base layer, per-street attribute records, and the flat observation store
 ├── docs/                    charter, taxonomy, methodology, architecture, data sources, ethics, case tracking
 ├── decisions/               architecture decision records (ADRs)
 ├── templates/               blank street-audit template for onboarding a new street
