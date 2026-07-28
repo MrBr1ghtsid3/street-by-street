@@ -569,6 +569,87 @@ path.street-line:focus {
   background: var(--color-asset);
 }
 
+/* Street search - a Leaflet control (see createStreetSearchControl in
+   map.js), same floating-box language as .map-legend. */
+.street-search {
+  position: relative;
+  width: 230px;
+}
+
+.street-search__input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.street-search__icon {
+  flex-shrink: 0;
+  color: var(--grey-600);
+  font-size: 0.85rem;
+}
+
+.street-search__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--grey-900);
+}
+
+.street-search__clear {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--grey-600);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.street-search__clear:hover {
+  color: var(--grey-900);
+}
+
+.street-search__results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.street-search__result {
+  padding: 0.4rem 0.65rem;
+  font-size: 0.82rem;
+  color: var(--grey-900);
+  cursor: pointer;
+}
+
+.street-search__result--active,
+.street-search__result:hover {
+  background: var(--grey-100);
+}
+
+.street-search__result-status {
+  color: var(--grey-600);
+  font-size: 0.72rem;
+}
+
 /* Observation pin markers (replaces the old plain circleMarker) */
 .observation-pin {
   background: transparent;
@@ -1498,6 +1579,10 @@ path.street-line:focus {
 
 /* Responsive */
 @media (max-width: 720px) {
+  .street-search {
+    width: 170px;
+  }
+
   .app-main {
     flex-direction: column;
     height: auto;
