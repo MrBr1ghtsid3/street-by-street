@@ -1394,6 +1394,189 @@ path.street-line:focus {
   color: var(--grey-800);
 }
 
+/* Register page - a printable work list over data/observations.json.
+   Reuses .trivia-block (ideation note) and .status-badge (Status column)
+   rather than redefining either. */
+.register-main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 2.5rem;
+}
+
+.register-ideation-note {
+  margin-bottom: 1.5rem;
+}
+
+.register-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.register-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.register-filter__label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--grey-600);
+}
+
+.register-filter__select {
+  border: 1px solid var(--grey-300);
+  border-radius: 4px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: #fff;
+  color: var(--grey-900);
+  min-width: 160px;
+}
+
+.register-controls__spacer {
+  flex: 1 1 auto;
+}
+
+.register-count {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--grey-600);
+  white-space: nowrap;
+}
+
+.register-export {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  background: var(--grey-900);
+  color: var(--grey-50);
+  border: none;
+  border-radius: 4px;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.register-export:hover {
+  background: var(--grey-800);
+}
+
+.register-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--grey-200);
+  border-radius: 6px;
+}
+
+.register-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  background: #fff;
+}
+
+.register-table__header {
+  position: sticky;
+  top: 0;
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  background: var(--grey-900);
+  color: var(--grey-50);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+
+.register-table__header:hover {
+  background: var(--grey-800);
+}
+
+.register-table__header::after {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  margin-left: 0.3em;
+  opacity: 0.5;
+}
+
+.register-table__header--asc::after {
+  content: "▲";
+}
+
+.register-table__header--desc::after {
+  content: "▼";
+}
+
+.register-table__cell {
+  padding: 0.5rem 0.7rem;
+  border-top: 1px solid var(--grey-200);
+  vertical-align: middle;
+}
+
+.register-table__cell--id {
+  color: var(--grey-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.register-table__cell--unassigned {
+  color: var(--grey-600);
+  font-style: italic;
+}
+
+.register-table__cell--category i {
+  color: var(--grey-600);
+}
+
+.register-table__resolved-date {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--grey-600);
+}
+
+.register-table__photo-thumb {
+  display: block;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.register-table__photo-path {
+  display: none;
+}
+
+.register-table__dash {
+  color: var(--grey-400);
+}
+
+.register-table__loading,
+.register-table__empty,
+.register-table__error {
+  padding: 1.25rem 0.7rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--grey-600);
+  font-style: italic;
+}
+
+.register-table__error {
+  color: var(--color-issue);
+  font-style: normal;
+}
+
 /* Responsive */
 @media (max-width: 720px) {
   .street-search {
@@ -1427,5 +1610,70 @@ path.street-line:focus {
 
   .status-stats {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .register-main {
+    padding: 1.25rem 1rem 2rem;
+  }
+
+  .register-controls {
+    align-items: stretch;
+  }
+
+  .register-filter__select {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* Register print stylesheet - the whole point of this page is to produce
+   something a person can put in a folder. Hide everything that isn't the
+   table itself, and swap the photo thumbnail for its file path, since a
+   printed page can't follow a link. */
+@media print {
+  .app-header,
+  .app-footer,
+  .register-ideation-note,
+  .register-controls {
+    display: none;
+  }
+
+  .register-main {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .register-table-wrap {
+    border: none;
+    overflow: visible;
+  }
+
+  .register-table {
+    font-size: 10pt;
+  }
+
+  .register-table__header {
+    position: static;
+    background: none;
+    color: #000;
+    border-bottom: 2px solid #000;
+    cursor: default;
+  }
+
+  .register-table__header::after {
+    content: none;
+  }
+
+  .register-table__cell {
+    border: 1px solid #000;
+  }
+
+  .register-table__photo-link {
+    display: none;
+  }
+
+  .register-table__photo-path {
+    display: inline;
   }
 }
