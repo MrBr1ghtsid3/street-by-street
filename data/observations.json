@@ -55,12 +55,15 @@
       "category": "cleanliness",
       "title": "Container standing on unmade ground beside the footway",
       "description": "General waste container off its hardstanding, on gravel next to the pavement",
-      "coordinates": null,
+      "coordinates": {
+        "lat": 44.042858,
+        "lng": 26.614803
+      },
       "status": "open",
       "reported_date": "2026-07-26",
       "resolved_date": null,
       "tracking_issue": null,
-      "photo": null
+      "photo": "assets/images/observations/obs-3__container-standing-on-unmade-ground-beside-the-footway.jpg"
     }
   ]
 }
