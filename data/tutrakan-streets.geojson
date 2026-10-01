@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "source_pulled": "2026-07-24",
+  "source_pulled": "2026-10-01",
   "features": [
     {
       "type": "Feature",
@@ -5225,6 +5225,10 @@
           [
             26.6252105,
             44.041741
+          ],
+          [
+            26.6239002,
+            44.0404612
           ],
           [
             26.6236461,
